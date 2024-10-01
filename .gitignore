@@ -1,11 +1,6 @@
 .idea
 .phpunit.result.cache
-/Log
-/Temp
 /composer.lock
 /easyDoc.html
-/Public/Upload
-/Upload
 /dist
-/Download
 /.vscode

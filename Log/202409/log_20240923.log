@@ -1,0 +1,501 @@
+[2024-09-23 00:00:06][trigger][notice]:[Undefined variable: lockValue at file:/www/wwwroot/43.199.95.114/App/Service/Market/VipOrderService.php line:192]
+[2024-09-23 00:00:06][trigger][error]:[Argument 2 passed to App\Utility\RedisLock::releaseLock() must be of the type string, null given, called in /www/wwwroot/43.199.95.114/App/Service/Market/VipOrderService.php on line 192 at file:closure://function () {
+            $lockKey = $this->jobName();
+            $lockValue = \App\Utility\RedisLock::lock($lockKey);
+
+            try {
+                \App\Utility\LogHandler::getInstance()->logCustomFile('开始处理超时的VIP订单', $this->logName(), \App\Utility\LogHandler::LOG_LEVEL_INFO, 'info');
+
+                $overtimeOrderList = \App\Model\User\UserVipOrderModel::create()
+                    ->where([
+                        'status' => \App\Model\User\UserVipOrderModel::STATE_WAITING_BUYERS_PAYMENT,
+                        'createTime' => [date('Y-m-d H:i:s', strtotime('-3 days')), '<']
+                    ])
+                    ->all();
+
+                if (!$overtimeOrderList) {
+                    \App\Utility\LogHandler::getInstance()->logCustomFile('目前没有需要处理的超时VIP订单', $this->logName(), \App\Utility\LogHandler::LOG_LEVEL_INFO, 'info');
+                    \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+                    return true;
+                }
+
+                \EasySwoole\ORM\DbManager::getInstance()->startTransactionWithCount();
+
+                foreach ($overtimeOrderList as $item) {
+                    \App\Service\Market\VipOrderService::getInstance()->buyerPaymentTimeout($item->orderNo);
+                }
+
+                \EasySwoole\ORM\DbManager::getInstance()->commitWithCount();
+
+                \App\Utility\LogHandler::getInstance()->logCustomFile('处理超时的VIP订单完成', $this->logName(), \App\Utility\LogHandler::LOG_LEVEL_INFO, 'info');
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+            } catch (\Throwable  $e) {
+                \EasySwoole\ORM\DbManager::getInstance()->rollbackWithCount();
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+                throw new \Exception($e->getMessage(), $e->getCode());
+            }
+
+            return true;
+        } line:35]
+[2024-09-23 00:22:00][trigger][warning]:[file_get_contents(): SSL: Handshake timed out at file:closure://function () {
+            $lockKey = $this->jobName();
+            $lockValue = \App\Utility\RedisLock::lock($lockKey);
+
+            try {
+                \App\Utility\LogHandler::getInstance()->logCustomFile('开始统计渠道成本记录', $this->logName(), \App\Utility\LogHandler::LOG_LEVEL_INFO, 'info');
+
+                $channelCosts = \App\Model\Merchant\ChannelCostStatisticModel::create()->all();
+                foreach ($channelCosts as $channelCost){
+                    $response = file_get_contents($channelCost['apiUrl']);
+                    if($response){
+                        \App\Model\Merchant\ChannelCostStatisticModel::create()->where(['channelCostId' => $channelCost['channelCostId']])->update(['dhJson' => $response]);
+                    }
+                }
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+            } catch (\Throwable  $e) {
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+                throw new \Exception($e->getMessage(), $e->getCode());
+            }
+
+            return true;
+        } line:11]
+[2024-09-23 00:22:00][trigger][warning]:[file_get_contents(): Failed to enable crypto at file:closure://function () {
+            $lockKey = $this->jobName();
+            $lockValue = \App\Utility\RedisLock::lock($lockKey);
+
+            try {
+                \App\Utility\LogHandler::getInstance()->logCustomFile('开始统计渠道成本记录', $this->logName(), \App\Utility\LogHandler::LOG_LEVEL_INFO, 'info');
+
+                $channelCosts = \App\Model\Merchant\ChannelCostStatisticModel::create()->all();
+                foreach ($channelCosts as $channelCost){
+                    $response = file_get_contents($channelCost['apiUrl']);
+                    if($response){
+                        \App\Model\Merchant\ChannelCostStatisticModel::create()->where(['channelCostId' => $channelCost['channelCostId']])->update(['dhJson' => $response]);
+                    }
+                }
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+            } catch (\Throwable  $e) {
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+                throw new \Exception($e->getMessage(), $e->getCode());
+            }
+
+            return true;
+        } line:11]
+[2024-09-23 00:22:00][trigger][warning]:[file_get_contents(https://yxz100.3frnunw8r.com:82/api/tongbu/dhclick?kname=爱波比社区): failed to open stream: operation failed at file:closure://function () {
+            $lockKey = $this->jobName();
+            $lockValue = \App\Utility\RedisLock::lock($lockKey);
+
+            try {
+                \App\Utility\LogHandler::getInstance()->logCustomFile('开始统计渠道成本记录', $this->logName(), \App\Utility\LogHandler::LOG_LEVEL_INFO, 'info');
+
+                $channelCosts = \App\Model\Merchant\ChannelCostStatisticModel::create()->all();
+                foreach ($channelCosts as $channelCost){
+                    $response = file_get_contents($channelCost['apiUrl']);
+                    if($response){
+                        \App\Model\Merchant\ChannelCostStatisticModel::create()->where(['channelCostId' => $channelCost['channelCostId']])->update(['dhJson' => $response]);
+                    }
+                }
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+            } catch (\Throwable  $e) {
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+                throw new \Exception($e->getMessage(), $e->getCode());
+            }
+
+            return true;
+        } line:11]
+[2024-09-23 00:41:20][trigger][warning]:[file_get_contents(): SSL: Handshake timed out at file:closure://function () {
+            $lockKey = $this->jobName();
+            $lockValue = \App\Utility\RedisLock::lock($lockKey);
+
+            try {
+                \App\Utility\LogHandler::getInstance()->logCustomFile('开始统计渠道成本记录', $this->logName(), \App\Utility\LogHandler::LOG_LEVEL_INFO, 'info');
+
+                $channelCosts = \App\Model\Merchant\ChannelCostStatisticModel::create()->all();
+                foreach ($channelCosts as $channelCost){
+                    $response = file_get_contents($channelCost['apiUrl']);
+                    if($response){
+                        \App\Model\Merchant\ChannelCostStatisticModel::create()->where(['channelCostId' => $channelCost['channelCostId']])->update(['dhJson' => $response]);
+                    }
+                }
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+            } catch (\Throwable  $e) {
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+                throw new \Exception($e->getMessage(), $e->getCode());
+            }
+
+            return true;
+        } line:11]
+[2024-09-23 00:41:20][trigger][warning]:[file_get_contents(): Failed to enable crypto at file:closure://function () {
+            $lockKey = $this->jobName();
+            $lockValue = \App\Utility\RedisLock::lock($lockKey);
+
+            try {
+                \App\Utility\LogHandler::getInstance()->logCustomFile('开始统计渠道成本记录', $this->logName(), \App\Utility\LogHandler::LOG_LEVEL_INFO, 'info');
+
+                $channelCosts = \App\Model\Merchant\ChannelCostStatisticModel::create()->all();
+                foreach ($channelCosts as $channelCost){
+                    $response = file_get_contents($channelCost['apiUrl']);
+                    if($response){
+                        \App\Model\Merchant\ChannelCostStatisticModel::create()->where(['channelCostId' => $channelCost['channelCostId']])->update(['dhJson' => $response]);
+                    }
+                }
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+            } catch (\Throwable  $e) {
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+                throw new \Exception($e->getMessage(), $e->getCode());
+            }
+
+            return true;
+        } line:11]
+[2024-09-23 00:41:20][trigger][warning]:[file_get_contents(https://nf102.gdagvbn.com:82/api/tongbu/dhclick?kname=爱波比社区): failed to open stream: operation failed at file:closure://function () {
+            $lockKey = $this->jobName();
+            $lockValue = \App\Utility\RedisLock::lock($lockKey);
+
+            try {
+                \App\Utility\LogHandler::getInstance()->logCustomFile('开始统计渠道成本记录', $this->logName(), \App\Utility\LogHandler::LOG_LEVEL_INFO, 'info');
+
+                $channelCosts = \App\Model\Merchant\ChannelCostStatisticModel::create()->all();
+                foreach ($channelCosts as $channelCost){
+                    $response = file_get_contents($channelCost['apiUrl']);
+                    if($response){
+                        \App\Model\Merchant\ChannelCostStatisticModel::create()->where(['channelCostId' => $channelCost['channelCostId']])->update(['dhJson' => $response]);
+                    }
+                }
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+            } catch (\Throwable  $e) {
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+                throw new \Exception($e->getMessage(), $e->getCode());
+            }
+
+            return true;
+        } line:11]
+[2024-09-23 01:41:17][trigger][warning]:[file_get_contents(https://bd102.4tb6bhufz.com:82/api/tongbu/dhclick?kname=爱波比社区): failed to open stream: HTTP request failed! at file:closure://function () {
+            $lockKey = $this->jobName();
+            $lockValue = \App\Utility\RedisLock::lock($lockKey);
+
+            try {
+                \App\Utility\LogHandler::getInstance()->logCustomFile('开始统计渠道成本记录', $this->logName(), \App\Utility\LogHandler::LOG_LEVEL_INFO, 'info');
+
+                $channelCosts = \App\Model\Merchant\ChannelCostStatisticModel::create()->all();
+                foreach ($channelCosts as $channelCost){
+                    $response = file_get_contents($channelCost['apiUrl']);
+                    if($response){
+                        \App\Model\Merchant\ChannelCostStatisticModel::create()->where(['channelCostId' => $channelCost['channelCostId']])->update(['dhJson' => $response]);
+                    }
+                }
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+            } catch (\Throwable  $e) {
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+                throw new \Exception($e->getMessage(), $e->getCode());
+            }
+
+            return true;
+        } line:11]
+[2024-09-23 01:51:24][trigger][warning]:[file_get_contents(): SSL: Handshake timed out at file:closure://function () {
+            $lockKey = $this->jobName();
+            $lockValue = \App\Utility\RedisLock::lock($lockKey);
+
+            try {
+                \App\Utility\LogHandler::getInstance()->logCustomFile('开始统计渠道成本记录', $this->logName(), \App\Utility\LogHandler::LOG_LEVEL_INFO, 'info');
+
+                $channelCosts = \App\Model\Merchant\ChannelCostStatisticModel::create()->all();
+                foreach ($channelCosts as $channelCost){
+                    $response = file_get_contents($channelCost['apiUrl']);
+                    if($response){
+                        \App\Model\Merchant\ChannelCostStatisticModel::create()->where(['channelCostId' => $channelCost['channelCostId']])->update(['dhJson' => $response]);
+                    }
+                }
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+            } catch (\Throwable  $e) {
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+                throw new \Exception($e->getMessage(), $e->getCode());
+            }
+
+            return true;
+        } line:11]
+[2024-09-23 01:51:24][trigger][warning]:[file_get_contents(): Failed to enable crypto at file:closure://function () {
+            $lockKey = $this->jobName();
+            $lockValue = \App\Utility\RedisLock::lock($lockKey);
+
+            try {
+                \App\Utility\LogHandler::getInstance()->logCustomFile('开始统计渠道成本记录', $this->logName(), \App\Utility\LogHandler::LOG_LEVEL_INFO, 'info');
+
+                $channelCosts = \App\Model\Merchant\ChannelCostStatisticModel::create()->all();
+                foreach ($channelCosts as $channelCost){
+                    $response = file_get_contents($channelCost['apiUrl']);
+                    if($response){
+                        \App\Model\Merchant\ChannelCostStatisticModel::create()->where(['channelCostId' => $channelCost['channelCostId']])->update(['dhJson' => $response]);
+                    }
+                }
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+            } catch (\Throwable  $e) {
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+                throw new \Exception($e->getMessage(), $e->getCode());
+            }
+
+            return true;
+        } line:11]
+[2024-09-23 01:51:24][trigger][warning]:[file_get_contents(https://yj101.p6uyj47np.com:82/api/tongbu/dhclick?kname=爱波比社区): failed to open stream: operation failed at file:closure://function () {
+            $lockKey = $this->jobName();
+            $lockValue = \App\Utility\RedisLock::lock($lockKey);
+
+            try {
+                \App\Utility\LogHandler::getInstance()->logCustomFile('开始统计渠道成本记录', $this->logName(), \App\Utility\LogHandler::LOG_LEVEL_INFO, 'info');
+
+                $channelCosts = \App\Model\Merchant\ChannelCostStatisticModel::create()->all();
+                foreach ($channelCosts as $channelCost){
+                    $response = file_get_contents($channelCost['apiUrl']);
+                    if($response){
+                        \App\Model\Merchant\ChannelCostStatisticModel::create()->where(['channelCostId' => $channelCost['channelCostId']])->update(['dhJson' => $response]);
+                    }
+                }
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+            } catch (\Throwable  $e) {
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+                throw new \Exception($e->getMessage(), $e->getCode());
+            }
+
+            return true;
+        } line:11]
+[2024-09-23 01:52:52][trigger][warning]:[file_get_contents(https://bd102.4tb6bhufz.com:82/api/tongbu/dhclick?kname=爱波比社区): failed to open stream: HTTP request failed! at file:closure://function () {
+            $lockKey = $this->jobName();
+            $lockValue = \App\Utility\RedisLock::lock($lockKey);
+
+            try {
+                \App\Utility\LogHandler::getInstance()->logCustomFile('开始统计渠道成本记录', $this->logName(), \App\Utility\LogHandler::LOG_LEVEL_INFO, 'info');
+
+                $channelCosts = \App\Model\Merchant\ChannelCostStatisticModel::create()->all();
+                foreach ($channelCosts as $channelCost){
+                    $response = file_get_contents($channelCost['apiUrl']);
+                    if($response){
+                        \App\Model\Merchant\ChannelCostStatisticModel::create()->where(['channelCostId' => $channelCost['channelCostId']])->update(['dhJson' => $response]);
+                    }
+                }
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+            } catch (\Throwable  $e) {
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+                throw new \Exception($e->getMessage(), $e->getCode());
+            }
+
+            return true;
+        } line:11]
+[2024-09-23 02:31:03][trigger][warning]:[file_get_contents(): SSL: Handshake timed out at file:closure://function () {
+            $lockKey = $this->jobName();
+            $lockValue = \App\Utility\RedisLock::lock($lockKey);
+
+            try {
+                \App\Utility\LogHandler::getInstance()->logCustomFile('开始统计渠道成本记录', $this->logName(), \App\Utility\LogHandler::LOG_LEVEL_INFO, 'info');
+
+                $channelCosts = \App\Model\Merchant\ChannelCostStatisticModel::create()->all();
+                foreach ($channelCosts as $channelCost){
+                    $response = file_get_contents($channelCost['apiUrl']);
+                    if($response){
+                        \App\Model\Merchant\ChannelCostStatisticModel::create()->where(['channelCostId' => $channelCost['channelCostId']])->update(['dhJson' => $response]);
+                    }
+                }
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+            } catch (\Throwable  $e) {
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+                throw new \Exception($e->getMessage(), $e->getCode());
+            }
+
+            return true;
+        } line:11]
+[2024-09-23 02:31:03][trigger][warning]:[file_get_contents(): Failed to enable crypto at file:closure://function () {
+            $lockKey = $this->jobName();
+            $lockValue = \App\Utility\RedisLock::lock($lockKey);
+
+            try {
+                \App\Utility\LogHandler::getInstance()->logCustomFile('开始统计渠道成本记录', $this->logName(), \App\Utility\LogHandler::LOG_LEVEL_INFO, 'info');
+
+                $channelCosts = \App\Model\Merchant\ChannelCostStatisticModel::create()->all();
+                foreach ($channelCosts as $channelCost){
+                    $response = file_get_contents($channelCost['apiUrl']);
+                    if($response){
+                        \App\Model\Merchant\ChannelCostStatisticModel::create()->where(['channelCostId' => $channelCost['channelCostId']])->update(['dhJson' => $response]);
+                    }
+                }
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+            } catch (\Throwable  $e) {
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+                throw new \Exception($e->getMessage(), $e->getCode());
+            }
+
+            return true;
+        } line:11]
+[2024-09-23 02:31:03][trigger][warning]:[file_get_contents(https://df101.3q5c5bztk.com:82/api/tongbu/dhclick?kname=爱波比社区): failed to open stream: operation failed at file:closure://function () {
+            $lockKey = $this->jobName();
+            $lockValue = \App\Utility\RedisLock::lock($lockKey);
+
+            try {
+                \App\Utility\LogHandler::getInstance()->logCustomFile('开始统计渠道成本记录', $this->logName(), \App\Utility\LogHandler::LOG_LEVEL_INFO, 'info');
+
+                $channelCosts = \App\Model\Merchant\ChannelCostStatisticModel::create()->all();
+                foreach ($channelCosts as $channelCost){
+                    $response = file_get_contents($channelCost['apiUrl']);
+                    if($response){
+                        \App\Model\Merchant\ChannelCostStatisticModel::create()->where(['channelCostId' => $channelCost['channelCostId']])->update(['dhJson' => $response]);
+                    }
+                }
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+            } catch (\Throwable  $e) {
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+                throw new \Exception($e->getMessage(), $e->getCode());
+            }
+
+            return true;
+        } line:11]
+[2024-09-23 02:33:10][trigger][warning]:[file_get_contents(): SSL: Handshake timed out at file:closure://function () {
+            $lockKey = $this->jobName();
+            $lockValue = \App\Utility\RedisLock::lock($lockKey);
+
+            try {
+                \App\Utility\LogHandler::getInstance()->logCustomFile('开始统计渠道成本记录', $this->logName(), \App\Utility\LogHandler::LOG_LEVEL_INFO, 'info');
+
+                $channelCosts = \App\Model\Merchant\ChannelCostStatisticModel::create()->all();
+                foreach ($channelCosts as $channelCost){
+                    $response = file_get_contents($channelCost['apiUrl']);
+                    if($response){
+                        \App\Model\Merchant\ChannelCostStatisticModel::create()->where(['channelCostId' => $channelCost['channelCostId']])->update(['dhJson' => $response]);
+                    }
+                }
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+            } catch (\Throwable  $e) {
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+                throw new \Exception($e->getMessage(), $e->getCode());
+            }
+
+            return true;
+        } line:11]
+[2024-09-23 02:33:10][trigger][warning]:[file_get_contents(): Failed to enable crypto at file:closure://function () {
+            $lockKey = $this->jobName();
+            $lockValue = \App\Utility\RedisLock::lock($lockKey);
+
+            try {
+                \App\Utility\LogHandler::getInstance()->logCustomFile('开始统计渠道成本记录', $this->logName(), \App\Utility\LogHandler::LOG_LEVEL_INFO, 'info');
+
+                $channelCosts = \App\Model\Merchant\ChannelCostStatisticModel::create()->all();
+                foreach ($channelCosts as $channelCost){
+                    $response = file_get_contents($channelCost['apiUrl']);
+                    if($response){
+                        \App\Model\Merchant\ChannelCostStatisticModel::create()->where(['channelCostId' => $channelCost['channelCostId']])->update(['dhJson' => $response]);
+                    }
+                }
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+            } catch (\Throwable  $e) {
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+                throw new \Exception($e->getMessage(), $e->getCode());
+            }
+
+            return true;
+        } line:11]
+[2024-09-23 02:33:10][trigger][warning]:[file_get_contents(https://bd102.4tb6bhufz.com:82/api/tongbu/dhclick?kname=爱波比社区): failed to open stream: operation failed at file:closure://function () {
+            $lockKey = $this->jobName();
+            $lockValue = \App\Utility\RedisLock::lock($lockKey);
+
+            try {
+                \App\Utility\LogHandler::getInstance()->logCustomFile('开始统计渠道成本记录', $this->logName(), \App\Utility\LogHandler::LOG_LEVEL_INFO, 'info');
+
+                $channelCosts = \App\Model\Merchant\ChannelCostStatisticModel::create()->all();
+                foreach ($channelCosts as $channelCost){
+                    $response = file_get_contents($channelCost['apiUrl']);
+                    if($response){
+                        \App\Model\Merchant\ChannelCostStatisticModel::create()->where(['channelCostId' => $channelCost['channelCostId']])->update(['dhJson' => $response]);
+                    }
+                }
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+            } catch (\Throwable  $e) {
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+                throw new \Exception($e->getMessage(), $e->getCode());
+            }
+
+            return true;
+        } line:11]
+[2024-09-23 09:51:02][trigger][warning]:[file_get_contents(https://yj101.p6uyj47np.com:82/api/tongbu/dhclick?kname=爱波比社区): failed to open stream: HTTP request failed! at file:closure://function () {
+            $lockKey = $this->jobName();
+            $lockValue = \App\Utility\RedisLock::lock($lockKey);
+
+            try {
+                \App\Utility\LogHandler::getInstance()->logCustomFile('开始统计渠道成本记录', $this->logName(), \App\Utility\LogHandler::LOG_LEVEL_INFO, 'info');
+
+                $channelCosts = \App\Model\Merchant\ChannelCostStatisticModel::create()->all();
+                foreach ($channelCosts as $channelCost){
+                    $response = file_get_contents($channelCost['apiUrl']);
+                    if($response){
+                        \App\Model\Merchant\ChannelCostStatisticModel::create()->where(['channelCostId' => $channelCost['channelCostId']])->update(['dhJson' => $response]);
+                    }
+                }
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+            } catch (\Throwable  $e) {
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+                throw new \Exception($e->getMessage(), $e->getCode());
+            }
+
+            return true;
+        } line:11]
+[2024-09-23 12:11:12][trigger][warning]:[file_get_contents(): SSL: Handshake timed out at file:closure://function () {
+            $lockKey = $this->jobName();
+            $lockValue = \App\Utility\RedisLock::lock($lockKey);
+
+            try {
+                \App\Utility\LogHandler::getInstance()->logCustomFile('开始统计渠道成本记录', $this->logName(), \App\Utility\LogHandler::LOG_LEVEL_INFO, 'info');
+
+                $channelCosts = \App\Model\Merchant\ChannelCostStatisticModel::create()->all();
+                foreach ($channelCosts as $channelCost){
+                    $response = file_get_contents($channelCost['apiUrl']);
+                    if($response){
+                        \App\Model\Merchant\ChannelCostStatisticModel::create()->where(['channelCostId' => $channelCost['channelCostId']])->update(['dhJson' => $response]);
+                    }
+                }
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+            } catch (\Throwable  $e) {
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+                throw new \Exception($e->getMessage(), $e->getCode());
+            }
+
+            return true;
+        } line:11]
+[2024-09-23 12:11:12][trigger][warning]:[file_get_contents(): Failed to enable crypto at file:closure://function () {
+            $lockKey = $this->jobName();
+            $lockValue = \App\Utility\RedisLock::lock($lockKey);
+
+            try {
+                \App\Utility\LogHandler::getInstance()->logCustomFile('开始统计渠道成本记录', $this->logName(), \App\Utility\LogHandler::LOG_LEVEL_INFO, 'info');
+
+                $channelCosts = \App\Model\Merchant\ChannelCostStatisticModel::create()->all();
+                foreach ($channelCosts as $channelCost){
+                    $response = file_get_contents($channelCost['apiUrl']);
+                    if($response){
+                        \App\Model\Merchant\ChannelCostStatisticModel::create()->where(['channelCostId' => $channelCost['channelCostId']])->update(['dhJson' => $response]);
+                    }
+                }
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+            } catch (\Throwable  $e) {
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+                throw new \Exception($e->getMessage(), $e->getCode());
+            }
+
+            return true;
+        } line:11]
+[2024-09-23 12:11:12][trigger][warning]:[file_get_contents(https://bf100.m6xupxj.com:82/api/tongbu/dhclick?kname=爱波比社区): failed to open stream: operation failed at file:closure://function () {
+            $lockKey = $this->jobName();
+            $lockValue = \App\Utility\RedisLock::lock($lockKey);
+
+            try {
+                \App\Utility\LogHandler::getInstance()->logCustomFile('开始统计渠道成本记录', $this->logName(), \App\Utility\LogHandler::LOG_LEVEL_INFO, 'info');
+
+                $channelCosts = \App\Model\Merchant\ChannelCostStatisticModel::create()->all();
+                foreach ($channelCosts as $channelCost){
+                    $response = file_get_contents($channelCost['apiUrl']);
+                    if($response){
+                        \App\Model\Merchant\ChannelCostStatisticModel::create()->where(['channelCostId' => $channelCost['channelCostId']])->update(['dhJson' => $response]);
+                    }
+                }
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+            } catch (\Throwable  $e) {
+                \App\Utility\RedisLock::releaseLock($lockKey, $lockValue);
+                throw new \Exception($e->getMessage(), $e->getCode());
+            }
+
+            return true;
+        } line:11]
