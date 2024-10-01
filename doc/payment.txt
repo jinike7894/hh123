@@ -1,0 +1,13 @@
+支付流程
+1.添加新的支付商先在 payment_platform 表中添加对应的数据，需要记录升级SQL
+2.在 payment_white_list 表中添加对应的白名单，需要记录升级SQL
+3.在 payment_channel 表中添加对应的渠道定义，需要记录升级SQL
+
+4.在代码 Payment 目录下创建对应的 支付商的类文件，类名与数据库定义的相同
+
+5.参考其他支付文件完成
+public function __construct()
+public function createOrder($data)
+public function handleCallback($param, $body, $ip)
+public function getSign($data, $secretKey)
+4个通用接口方法的编写

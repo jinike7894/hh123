@@ -1,0 +1,17 @@
+-- 注意新增了表
+-- payment_white_list
+-- user_vip_goods
+-- user_vip_order
+-- payment_platform
+-- payment_type
+-- payment_channel
+
+新增：
+1.增加了用户体系
+2.增加了手机和身份卡的登录方式
+3.新增了三方支付的架构
+4.增加了订单的部分延时处理逻辑
+
+修改：
+1.修复了N多问题
+
