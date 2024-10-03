@@ -80,11 +80,8 @@ class AwsOssService
 
         $mediaType = explode('/', $uploadFile->getClientMediaType());
         $mediaType = $mediaType[1] ?? '';
-        if (!in_array($mediaType, ['png', 'jpg', 'gif', 'jpeg', 'webp', 'm3u8',"mp4"])) {
+        if (!in_array($mediaType, ['png', 'jpg', 'gif', 'jpeg', 'webp', 'm3u8'])) {
             throw new Exception('文件类型不正确！类型：' . $mediaType, Status::CODE_BAD_REQUEST);
-        }
-        if($uploadFile->getSize()>10*1024*1024){
-            throw new Exception('上传图片最大不能超过10m', Status::CODE_BAD_REQUEST);
         }
         $path = Upload::getImageDatePath($type);
         // 如果要防止图片被抓的话，这里可以改为其他后缀。
@@ -114,7 +111,7 @@ class AwsOssService
 
         $mediaType = explode('/', $uploadFile->getClientMediaType());
         $mediaType = $mediaType[1] ?? '';
-        if (!in_array($mediaType, ['png', 'jpg', 'gif', 'jpeg', 'webp', 'm3u8',"mp4"])) {
+        if (!in_array($mediaType, ['png', 'jpg', 'gif', 'jpeg', 'webp', 'm3u8'])) {
             throw new Exception('文件类型不正确！类型：' . $mediaType, Status::CODE_BAD_REQUEST);
         }
         if($uploadFile->getSize()>10*1024*1024){
