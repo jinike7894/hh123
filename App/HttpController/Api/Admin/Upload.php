@@ -61,7 +61,7 @@ class Upload extends AdminBase
     {
         $param = $this->request()->getRequestParam();
         try {
-            $result = AwsOssService::getInstance()->uploadImage($this->request(), $param['type']);
+            $result = AwsOssService::getInstance()->uploadFile($this->request(), $param['type']);
         } catch (\Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }

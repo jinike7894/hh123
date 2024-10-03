@@ -103,7 +103,40 @@ class AwsOssService
             //'path' => DIRECTORY_SEPARATOR . $fileName,
         ];
     }
+    //发帖上传图片
+    public function uploadFile(Request $request, string $type, string $formKey = 'file'): array
+    {
+        /** @var UploadFile $uploadFile */
+        $uploadFile = $request->getUploadedFile($formKey);
+        if (!$uploadFile) {
+            throw new Exception('请选择上传的文件！', Status::CODE_BAD_REQUEST);
+        }
 
+        $mediaType = explode('/', $uploadFile->getClientMediaType());
+        $mediaType = $mediaType[1] ?? '';
+        if (!in_array($mediaType, ['png', 'jpg', 'gif', 'jpeg', 'webp', 'm3u8',"mp4"])) {
+            throw new Exception('文件类型不正确！类型：' . $mediaType, Status::CODE_BAD_REQUEST);
+        }
+        if($uploadFile->getSize()>10*1024*1024){
+            throw new Exception('上传图片最大不能超过10m', Status::CODE_BAD_REQUEST);
+        }
+        $path = Upload::getImageDatePath($type);
+        // 如果要防止图片被抓的话，这里可以改为其他后缀。
+        //$fileName = Func::CreateGuid() . '.' . $mediaType;
+        $fileName = Func::CreateGuid() . '.' . 'xyz';
+        $this->s3Client->putObject([
+            'Bucket' => $this->s3Config[OssConfigKey::AWS_S3_BUCKET],
+            'Key' => $path . DIRECTORY_SEPARATOR . $fileName,
+            //'Key' => $fileName,
+            'Body' => mt_rand(100, 999) . $uploadFile->getStream(), // 原生使用这个 fopen('/path/to/image.jpg', 'r'),
+            'ContentType' => $uploadFile->getClientMediaType(), // 必须要加这个才能以图片返回。（否则是下载文件）
+        ]);
+
+        return [
+            'path' => DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . $fileName,
+            //'path' => DIRECTORY_SEPARATOR . $fileName,
+        ];
+    }
     public function putImage($key, $body, $mimetype)
     {
         $this->s3Client->putObject([
