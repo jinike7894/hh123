@@ -330,7 +330,7 @@ class Video extends UserBase
 
         return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
     }
-    //获取免费视频
+    //获取免费视频  
     public function videoFree(){
         $param = $this->request()->getRequestParam();
 
