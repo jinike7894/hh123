@@ -11,7 +11,7 @@ use App\Model\Post\PostModel;
 use App\Model\Post\PostReplyModel;
 use EasySwoole\Http\Message\Status;
 use EasySwoole\ORM\DbManager;
-use App\Service\Oss\LocalOssService;
+use App\Service\Oss\AwsOssService;
 use Exception;
 use Throwable;
 
@@ -240,11 +240,10 @@ class Post extends UserBase
     {
         $param = $this->request()->getRequestParam();
         try {
-            $result = LocalOssService::getInstance()->uploadFile($this->request(), $param['type']);
+            $result = AwsOssService::getInstance()->uploadImage($this->request(), $param['type']);
         } catch (\Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
-
         return $this->writeJson(Status::CODE_OK, $result, '上传成功');
     }
 }
