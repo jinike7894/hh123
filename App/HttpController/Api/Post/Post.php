@@ -11,7 +11,7 @@ use App\Model\Post\PostModel;
 use App\Model\Post\PostReplyModel;
 use EasySwoole\Http\Message\Status;
 use EasySwoole\ORM\DbManager;
-use App\Service\Oss\AwsOssService;
+
 use Exception;
 use Throwable;
 
@@ -235,15 +235,5 @@ class Post extends UserBase
 
         return $this->writeJson(Status::CODE_OK, [], Status::getReasonPhrase(Status::CODE_OK));
     }
-    //上传图片/视频
-    public function upload()
-    {
-        $param = $this->request()->getRequestParam();
-        try {
-            $result = AwsOssService::getInstance()->uploadImage($this->request(), $param['type']);
-        } catch (\Throwable $e) {
-            return $this->writeJson($e->getCode(), [], $e->getMessage());
-        }
-        return $this->writeJson(Status::CODE_OK, $result, '上传成功');
-    }
+  
 }

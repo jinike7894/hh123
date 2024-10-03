@@ -28,6 +28,7 @@ use EasySwoole\HttpAnnotation\AnnotationTag\ApiSuccess;
 use EasySwoole\HttpAnnotation\AnnotationTag\Method;
 use EasySwoole\HttpAnnotation\AnnotationTag\Param;
 use EasySwoole\RedisPool\RedisPool;
+use App\Service\Oss\AwsOssService;
 use Exception;
 use Throwable;
 
@@ -473,4 +474,14 @@ class Index extends ApiBase
 
         return $this->writeJson(Status::CODE_OK, $ip, Status::getReasonPhrase(Status::CODE_OK));
     }
+       //上传图片/视频
+       public function upload()
+       {
+           try {
+               $result = AwsOssService::getInstance()->uploadImage($this->request(), "");
+           } catch (\Throwable $e) {
+               return $this->writeJson($e->getCode(), [], $e->getMessage());
+           }
+           return $this->writeJson(Status::CODE_OK, $result, '上传成功');
+       }
 }
