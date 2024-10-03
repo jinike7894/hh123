@@ -17,7 +17,8 @@ class TypeModel extends BaseModel implements CommonStatusInterface
         self::MODULE_ADULT => 'fuli',
         self::MODULE_HOME => 'shouyefuli',
     ];
-
+    const DELETED = 0;
+    const NODELETED = 1;
     protected $tableName = 'mac_type';
 
     protected $primaryKey = 'type_id';

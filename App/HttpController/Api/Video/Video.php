@@ -330,4 +330,25 @@ class Video extends UserBase
 
         return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
     }
+    //获取免费视频
+    public function videoFree(){
+        $param = $this->request()->getRequestParam();
+
+        try {
+            $keyword = [];
+            $page = (int)($param['page'] ?? 1);
+            $pageSize = (int)($param['pageSize'] ?? SystemConfigKey::PAGE_SIZE);
+            $videoModel=VideoModel::create()->alias('video');
+            $videoType=TypeModel::create();
+            $data = $videoModel
+                ->join($videoType->getTableName() . ' AS type', 'type.type_id = video.vod_id', 'LEFT')
+                ->where(["type.is_free"=>1])
+                ->order("video.vod_time_add","desc")
+                ->getAll($page, $keyword, $pageSize, ['vod_id as vodId', 'vod_name as vodName', 'vod_pic as vodPic','vod_score_num as vodScoreNum']);
+
+        } catch (Throwable $e) {
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
+        return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
+    }
 }
