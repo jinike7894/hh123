@@ -60,14 +60,67 @@ class User extends UserBase
             $data['identityCard'] = UserService::getInstance()->getIdentityCard($user);
             $data['userId'] = $user->userId;
             $data['nickname'] = $user->nickname;
+            $data['userName'] = $user->userName;
+            $data['avatar'] = $user->avatar;
+            $data['gender'] = $user->gender;
+            $data['profile'] = $user->profile;
+        } catch (Throwable $e) {
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
+        return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
+    }
+    //更新用户信息
+    public function updateUserInfo(){
+        $param = $this->request()->getRequestParam();
 
+        try {
+            $user = UserModel::create()->get($this->who['userId']);
+            if(!$user){
+                throw new Exception('用户错误。', Status::CODE_BAD_REQUEST);
+            }
+            $data=[];
+            if(isset($param["userName"])&&$param["userName"]!=""){
+                $data['userName'] = $param["userName"];
+            }
+            if(isset($param["nickname"])&&$param["nickname"]!=""){
+                $data['nickname'] = $param["nickname"];
+            }
+            if(isset($param["avatar"])&&$param["avatar"]!=""){
+                $data['avatar'] = $param["avatar"];
+            }
+            if(isset($param["gender"])&&$param["gender"]!=""){
+                $data['gender'] = $param["gender"];
+            }
+            if(isset($param["profile"])){
+                $data['profile'] = $param["profile"];
+            }
+            UserModel::create()->update($data,["userId "=>$this->who['userId']]);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
 
         return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
     }
-
+    //修改密码
+    public function updatePass(){
+        $param = $this->request()->getRequestParam();
+        
+        try {
+            if(!isset($param["password"])&&$param["password"]==""){
+                throw new Exception('参数错误', Status::CODE_BAD_REQUEST);
+            }
+            $user = UserModel::create()->get($this->who['userId']);
+            if(!$user){
+                throw new Exception('用户错误。', Status::CODE_BAD_REQUEST);
+            }
+            $data=[];
+            $data['password'] = md5($param["password"]);
+            UserModel::create()->update($data,["userId "=>$this->who['userId']]);
+        } catch (Throwable $e) {
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
+        return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
+    }
     /**
      * 绑定手机号
      * @Api(name="绑定手机号",path="/Api/User/User/bindCellPhone")

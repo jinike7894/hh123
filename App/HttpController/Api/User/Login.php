@@ -2,6 +2,7 @@
 
 namespace App\HttpController\Api\User;
 
+use App\Model\User\UserModel;
 use App\Service\User\UserService;
 use EasySwoole\Http\Message\Status;
 use EasySwoole\HttpAnnotation\AnnotationTag\Param;
@@ -110,7 +111,79 @@ class Login extends UserBase
 
         return $this->writeJson(Status::CODE_OK, $result, Status::getReasonPhrase(Status::CODE_OK));
     }
+    //注册
+    public function register(){
+        $param = $this->request()->getRequestParam();
+        
+        try {
+            if(!isset($param["userName"])&&$param["userName"]==""){
+                throw new Exception('请填写用户名', Status::CODE_BAD_REQUEST); 
+            }
+            if(!isset($param["password"])&&$param["password"]==""){
+                throw new Exception('请填写密码', Status::CODE_BAD_REQUEST); 
+            }
+            //判断是否已注册
+            if(!userModel::create()->get(["userName"=>$param["userName"]])){
+                throw new Exception('该账号已被注册', Status::CODE_BAD_REQUEST); 
+            }
+            $ip = $this->clientRealIP();
+            //channelId和pageid自定义8888
+            $data = [
+                'deviceId' => trim($param['deviceId']),
+                'userName' => trim($param['userName']),
+                'password' => md5(trim($param['password'])),
+                'nickname' => '游客' . strtoupper(uniqid()),//昵称随机
+                'regIpLong' =>ip2long($ip),
+                'regDate' => date('Y-m-d'),
+                "lastLoginIpLong"=>ip2long($ip),
+                "lastLoginTime"=>date("Y-m-d H:i:s",time()),
+                "pageId"=>8888,
+                "channelId"=>8888,
+            ];
+            $res = UserModel::create($data)->save();
+            if(!$res){
+                throw new Exception('注册失败，请重试', Status::CODE_BAD_REQUEST); 
+            }
+        } catch (Throwable $e) {
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
+        return $this->writeJson(Status::CODE_OK, $res, Status::getReasonPhrase(Status::CODE_OK));
+    }
+    //通过密码登录
+    public function passWdLogin(){
+        $param = $this->request()->getRequestParam();
+       
+        try {
+            if(!isset($param["userName"])&&$param["userName"]==""){
+                throw new Exception('请填写用户名', Status::CODE_BAD_REQUEST); 
+            }
+            if(!isset($param["password"])&&$param["password"]==""){
+                throw new Exception('请填写密码', Status::CODE_BAD_REQUEST); 
+            }
+            $ip = $this->clientRealIP();
+            $where = [
+                'userName' => trim($param['userName']),
+                'password' => md5(trim($param['password'])),
+                "status"=>1,
+                // 'ip' => ip2long($ip),
+            ];
+            $user = UserModel::create()->get($where);
+            if(!$user){
+                throw new Exception('用户名或者密码错误', Status::CODE_BAD_REQUEST);      
+            }
+            //更新登录ip和时间
+            $data=[
+                "lastLoginIpLong"=>ip2long($ip),
+                "lastLoginTime"=>date("Y-m-d H:i:s",time()),
+            ];
+            UserModel::create()->update($data,["userId"=>$user->userId]);
+        } catch (Throwable $e) {
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
 
+        return $this->writeJson(Status::CODE_OK, [], Status::getReasonPhrase(Status::CODE_OK));
+    }
+    
     /**
      * 通过短信登陆
      * @Api(name="通过短信登陆",path="/Api/User/Login/messageLogin")

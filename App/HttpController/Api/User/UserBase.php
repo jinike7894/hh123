@@ -32,7 +32,7 @@ class UserBase extends ApiBase
         '/Api/User/Login/deviceLogin', // 设备登录
         '/Api/User/Login/identityCardLogin', // 通过身份卡登陆
         '/Api/User/Login/messageLogin', // 通过短信登陆
-
+        '/Api/User/Login/passWdLogin', // 通过密码登录
         // 不需要登录就能获取数据的
         '/Api/Video/Adult/getTypeList', // 获取成人分类列表
         '/Api/Video/Adult/adultList', // 获取成人视频列表
