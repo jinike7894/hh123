@@ -177,11 +177,19 @@ class Login extends UserBase
                 "lastLoginTime"=>date("Y-m-d H:i:s",time()),
             ];
             UserModel::create()->update($data,["userId"=>$user->userId]);
+            //签发token
+            $payload = $this->getUserTokenData($user);
+            $token = $this->generateToken($payload);
+            $loginData = $this->getUserLoginData($user);
+            $result = [
+                'token' => $token,
+                'userInfo' => $loginData,
+            ];
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
 
-        return $this->writeJson(Status::CODE_OK, [], Status::getReasonPhrase(Status::CODE_OK));
+        return $this->writeJson(Status::CODE_OK, $result, Status::getReasonPhrase(Status::CODE_OK));
     }
     
     /**
