@@ -56,6 +56,7 @@ class Banner extends ApiBase
                 'status',
             ];
             $result = BannerModel::create()
+                ->where(["status"=>1])
                 ->where(["is_del"=>BannerModel::STATE_No])
                 ->order("sort","desc")
                 ->getAll($page, $keyword, $pageSize, $field);
