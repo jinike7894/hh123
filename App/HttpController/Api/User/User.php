@@ -30,7 +30,7 @@ use EasySwoole\HttpAnnotation\AnnotationTag\Method;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiRequestExample;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiSuccess;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiFail;
-use EasySwoole\Utility\File;
+use EasySwoole\ORM\DbManager;
 use Exception;
 use Throwable;
 
@@ -120,6 +120,36 @@ class User extends UserBase
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
         return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
+    }
+    //邀请码
+    public function inviteCode(){
+        $param = $this->request()->getRequestParam();
+        try {
+            if(!isset($param["inviteCode"])||$param["inviteCode"]!=""){
+                throw new Exception('邀请码异常', Status::CODE_BAD_REQUEST);
+            }
+            $userId=$this->who['userId'];
+            DbManager::getInstance()->startTransactionWithCount();
+            $UserInviteModel = UserInviteModel::create();
+            $UserModel = UserModel::create();
+            $userData=$UserModel->get(["userId"=>$userId]);
+            if(!$userData){
+                throw new Exception('邀请码异常!', Status::CODE_BAD_REQUEST);
+            }
+            //判断是否推广码是否首次
+            $inviteData=$UserInviteModel->get(["inviterId"=>$param["inviteCode"]]);
+            if(!$inviteData){
+                 //新用户首次增加7天
+            }else{
+                //新用户首次增加3天
+            }
+            DbManager::getInstance()->commitWithCount();
+        } catch (Throwable $e) {
+            DbManager::getInstance()->rollbackWithCount();
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
+
+        return $this->writeJson(Status::CODE_OK, [], Status::getReasonPhrase(Status::CODE_OK));
     }
     /**
      * 绑定手机号

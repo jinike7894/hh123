@@ -63,14 +63,11 @@ class UserService
                 if ($times >= 100) {
                     throw new Exception('ip超过最大注册限制', Status::CODE_BAD_REQUEST);
                 }
-
                 if ($times == 1) {
                     $redis->expire($key, Func::getRemainingSeconds());
                 }
-
                 // 2023-11-25 注册时增加关联的渠道id
                 $channel = ChannelService::getInstance()->getPageAndChannelIdByPageName($pageName);
-
                 // 3.成功自动注册后返回账号
                 $user = UserModel::create([
                     'userGroupId' => UserGroupModel::GROUP_TOURIST_ID,
@@ -91,7 +88,6 @@ class UserService
                 if ($userId === false) {
                     throw new Exception('创建用户失败', Status::CODE_INTERNAL_SERVER_ERROR);
                 }
-
                 // 新创建用户检查是否给邀请人奖励
                 if ($inviteCode) {
                     $inviter = UserModel::create()->lockForUpdate()->get($inviteCode);
@@ -406,7 +402,7 @@ class UserService
 
             // 现在给邀请者发奖励在这里
             // 现在的业务是邀请一个人，邀请者获得2天VIP
-            $this->increaseVIPDays($inviter, 2);
+            $this->increaseVIPDays($inviter, 3);
 
             DbManager::getInstance()->commitWithCount();
         } catch (Throwable  $e) {

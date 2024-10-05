@@ -340,6 +340,7 @@ class Video extends UserBase
             $pageSize = (int)($param['pageSize'] ?? SystemConfigKey::PAGE_SIZE);
             $videoModel=VideoModel::create()->alias('video');
             $videoType=TypeModel::create();
+            return $this->writeJson(Status::CODE_OK, $videoType->getTableName(), Status::getReasonPhrase(Status::CODE_OK));
             $data = $videoModel
                 ->join($videoType->getTableName() . ' AS type', 'type.type_id = video.vod_id', 'LEFT')
                 ->where(["type.is_free"=>1])
