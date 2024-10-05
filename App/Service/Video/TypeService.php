@@ -31,7 +31,7 @@ class TypeService
             $pid = TypeModel::create()->where(['type_en' => $typeEn])->val('type_id');
 
             $data = TypeModel::create()
-                ->field(['type_id AS typeId', 'type_name AS typeName'])
+                ->field(['type_id AS typeId', 'type_name AS typeName',"is_free"])
                 ->where([
                     'type_mid' => TypeModel::MID_ADULT_VIDEO,
                     'type_pid' => $pid,
