@@ -342,13 +342,12 @@ class Video extends UserBase
             $videoModel=VideoNewModel::create()->alias('video');
             $videoType=TypeModel::create();
             $data = $videoModel
-                ->join($videoType->getTableName() . ' AS type', 'type.type_id = video.vod_id', 'LEFT')
+                ->join($videoType->getTableName() . ' AS type', 'type.type_id = video.type_id', 'LEFT')
                 ->where(["type.is_free"=>1])
-                ->where(["vod_status"=>1])
+                ->where(["video.vod_status"=>1])
                 ->order("video.vod_up","desc")
                 ->getAll($page, $keyword, $pageSize, ['vod_id as vodId', 'vod_name as vodName', 'vod_pic as vodPic','vod_score_num as vodScoreNum']);
                
-            return $this->writeJson(Status::CODE_OK, DbManager::getInstance()->getLastQuery()->getLastQuery(), Status::getReasonPhrase(Status::CODE_OK));
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
