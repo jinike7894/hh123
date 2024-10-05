@@ -9,6 +9,7 @@ use App\HttpController\Api\User\UserBase;
 use App\Model\User\UserVideoRecordModel;
 use App\Model\Video\TypeModel;
 use App\Model\Video\VideoModel;
+use App\Model\Video\VideoNewModel;
 use App\RedisKey\Video\VideoKey;
 use App\Service\Video\TypeService;
 use App\Service\Video\VideoService;
@@ -338,11 +339,12 @@ class Video extends UserBase
             $keyword = [];
             $page = (int)($param['page'] ?? 1);
             $pageSize = (int)($param['pageSize'] ?? SystemConfigKey::PAGE_SIZE);
-            $videoModel=VideoModel::create()->alias('video');
+            $videoModel=VideoNewModel::create()->alias('video');
             $videoType=TypeModel::create();
             $data = $videoModel
                 ->join($videoType->getTableName() . ' AS type', 'type.type_id = video.vod_id', 'LEFT')
                 ->where(["type.is_free"=>1])
+                ->where(["vod_status"=>1])
                 ->order("video.vod_up","desc")
                 ->getAll($page, $keyword, $pageSize, ['vod_id as vodId', 'vod_name as vodName', 'vod_pic as vodPic','vod_score_num as vodScoreNum']);
                
