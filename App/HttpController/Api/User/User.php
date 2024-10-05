@@ -29,7 +29,7 @@ use EasySwoole\HttpAnnotation\AnnotationTag\ApiGroupDescription;
 use EasySwoole\HttpAnnotation\AnnotationTag\Method;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiRequestExample;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiSuccess;
-use EasySwoole\HttpAnnotation\AnnotationTag\ApiFail;
+
 use EasySwoole\ORM\DbManager;
 use Exception;
 use Throwable;
@@ -140,9 +140,17 @@ class User extends UserBase
             $inviteData=$UserInviteModel->get(["inviterId"=>$param["inviteCode"]]);
             if(!$inviteData){
                  //新用户首次增加7天
+                 UserService::getInstance()->increaseVIPDays($userData, 7);
             }else{
                 //新用户首次增加3天
+                UserService::getInstance()->increaseVIPDays($userData, 3);
             }
+            //添加邀请记录
+            $userInviteId = UserInviteModel::create([
+                'inviterId' => $userData->userId,
+                'inviteeId' => $userId,
+                'createDate' => date('Y-m-d'),
+            ])->save();
             DbManager::getInstance()->commitWithCount();
         } catch (Throwable $e) {
             DbManager::getInstance()->rollbackWithCount();
