@@ -23,7 +23,7 @@ use EasySwoole\HttpAnnotation\AnnotationTag\ApiRequestExample;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiSuccess;
 use EasySwoole\HttpAnnotation\AnnotationTag\Method;
 use EasySwoole\HttpAnnotation\AnnotationTag\Param;
-use EasySwoole\RedisPool\RedisPool;
+use EasySwoole\ORM\DbManager;
 use Exception;
 use Throwable;
 
