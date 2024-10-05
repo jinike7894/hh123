@@ -340,13 +340,13 @@ class Video extends UserBase
             $pageSize = (int)($param['pageSize'] ?? SystemConfigKey::PAGE_SIZE);
             $videoModel=VideoModel::create()->alias('video');
             $videoType=TypeModel::create();
-            return $this->writeJson(Status::CODE_OK, $videoType->getTableName(), Status::getReasonPhrase(Status::CODE_OK));
             $data = $videoModel
                 ->join($videoType->getTableName() . ' AS type', 'type.type_id = video.vod_id', 'LEFT')
                 ->where(["type.is_free"=>1])
                 ->order("video.vod_up","desc")
                 ->getAll($page, $keyword, $pageSize, ['vod_id as vodId', 'vod_name as vodName', 'vod_pic as vodPic','vod_score_num as vodScoreNum']);
-
+               
+            return $this->writeJson(Status::CODE_OK, $videoModel->lastQuery(), Status::getReasonPhrase(Status::CODE_OK));
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
