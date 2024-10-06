@@ -146,7 +146,7 @@ class ShortVideoDy extends UserBase
                 foreach($data["list"] as $kl=>$vl){
                     foreach($collectRes as $kc=>$vc){
                             if($vl->vodId==$vc->vodId){
-                                $data["list"][$kl]["is_collect"]=1;   
+                                $data["list"][$kl]->isCollect=1;   
                             }
                     }
                 }
@@ -156,7 +156,7 @@ class ShortVideoDy extends UserBase
                 foreach($data["list"] as $kl=>$vl){
                     foreach($clickRes as $kc=>$vc){
                             if($vl->vodId==$vc->vodId){
-                                $data["list"][$kl]["is_click"]=1;   
+                                $data["list"][$kl]->isClick=1;   
                             }
                     }
                 }
