@@ -9,9 +9,6 @@ class ShortVideoDyUserModel extends BaseModel implements CommonStatusInterface
 {
     protected $tableName = 'mac_short_vod_dy_user';
     protected $primaryKey = 'id';
-    protected $autoTimeStamp = 'datetime';
-    protected $createTime = 'createTime';
-    protected $updateTime = 'updateTime';
 
     const FILE_TYPE_UP = 'up';
     const FILE_TYPE_URL = 'url';

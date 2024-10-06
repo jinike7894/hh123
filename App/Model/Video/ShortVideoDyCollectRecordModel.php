@@ -8,9 +8,6 @@ class ShortVideoDyCollectRecordModel extends BaseModel implements CommonStatusIn
 {
     protected $tableName = 'mac_short_vod_collect_record';
     protected $primaryKey = 'id';
-    protected $autoTimeStamp = 'datetime';
-    protected $createTime = 'createTime';
-    protected $updateTime = 'updateTime';
 
     const FILE_TYPE_UP = 'up';
     const FILE_TYPE_URL = 'url';
