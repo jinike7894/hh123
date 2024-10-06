@@ -142,19 +142,17 @@ class ShortVideoDy extends UserBase
                     $vodIdArray[]=$v->vodId;
                 }
                 //是否已收藏
-                // $collectRes=ShortVideoDyCollectRecordModel::create()->where(["uid"=>$userId])->where(["vod_id",$vodIdArray,"in"])->field("vod_id")->get();
+                $collectRes=ShortVideoDyCollectRecordModel::create()->where(["uid"=>$userId])->where("vod_id",$vodIdArray,"in")->field("vod_id")->all();
                 
-                // foreach($data["list"] as $kl=>$vl){
-                //     foreach($collectRes as $kc=>$vc){
-                //             if($vl->vodId==$vc->vodId){
-                //                 $data["list"][$kl]->isCollect=1;   
-                //             }
-                //     }
-                // }
+                foreach($data["list"] as $kl=>$vl){
+                    foreach($collectRes as $kc=>$vc){
+                            if($vl->vodId==$vc->vodId){
+                                $data["list"][$kl]->isCollect=1;   
+                            }
+                    }
+                }
                 //是否已点击-心过
-                $this->writeJson(Status::CODE_OK, $vodIdArray, Status::getReasonPhrase(Status::CODE_OK));
-                $clickRes=ShortVideoDyClickRecordModel::create()->where(["uid"=>$userId])->where("vod_id",$vodIdArray,"in")->all();
-                return $this->writeJson(Status::CODE_OK,  DbManager::getInstance()->getLastQuery()->getLastQuery(), Status::getReasonPhrase(Status::CODE_OK));
+                $clickRes=ShortVideoDyClickRecordModel::create()->where(["uid"=>$userId])->where("vod_id",$vodIdArray,"in")->field("vod_id")->all();
                 foreach($data["list"] as $kl=>$vl){
                     foreach($clickRes as $kc=>$vc){
                             if($vl->vodId==$vc->vodId){
