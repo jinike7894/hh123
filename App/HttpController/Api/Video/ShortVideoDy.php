@@ -139,8 +139,8 @@ class ShortVideoDy extends UserBase
             if($data["list"]){
                 $vodIdArray=[];
                 foreach($data["list"] as $k=>$v){
-                    return $this->writeJson(Status::CODE_OK, $v, Status::getReasonPhrase(Status::CODE_OK));
-                    $vodIdArray[]=$v["vod_id"];
+                    return $this->writeJson(Status::CODE_OK, $v->vodId, Status::getReasonPhrase(Status::CODE_OK));
+                    $vodIdArray[]=$v->vodId;
                 }
                 //是否已收藏
                 $collectRes=ShortVideoDyCollectRecordModel::create()->where(["uid"=>$userId])->where(["vod_id",$vodIdArray,"in"])->field("vod_id")->get();
