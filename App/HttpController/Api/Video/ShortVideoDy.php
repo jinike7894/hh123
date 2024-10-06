@@ -86,7 +86,7 @@ class ShortVideoDy extends UserBase
                 ->where(["status"=>1])
                 ->setDefaultOrder()
                 ->getAll($page, $keyword, $pageSize, $field);
-            var_dump($data);
+                throw new Exception($data["list"], Status::CODE_BAD_REQUEST);
             // 短视频分页还是按照正常的顺序分页，但是返回的列表打乱一下顺序保证每次都不一样。
             shuffle($data['list']);
         } catch (Throwable $e) {
