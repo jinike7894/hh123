@@ -98,7 +98,7 @@ class ShortVideoDy extends UserBase
     public function videoLists()
     {
         $param = $this->request()->getRequestParam();
-
+        $userId=$this->who['userId'];
         try {
             $keyword = [];
             $page = (int)($param['page'] ?? 1);
@@ -136,7 +136,30 @@ class ShortVideoDy extends UserBase
                 ->where(["status"=>1])
                 ->setDefaultOrder()
                 ->getAll($page, $keyword, $pageSize, $field);
-            $this->writeJson(Status::CODE_OK, $data["list"], Status::getReasonPhrase(Status::CODE_OK));
+            if($data["list"]){
+                $vodIdArray=[];
+                foreach($data["list"] as $k=>$v){
+                    $vodIdArray[]=$v["vod_id"];
+                }
+                //是否已收藏
+                $collectRes=ShortVideoDyCollectRecordModel::create()->where(["uid"=>$userId])->where(["vod_id",$vodIdArray,"in"])->field("vod_id")->get();
+                foreach($data["list"] as $kl=>$vl){
+                    foreach($collectRes as $kc=>$vc){
+                            if($vl["vod_id"]==$vc["vod_id"]){
+                                $data["list"]["is_collect"]=1;   
+                            }
+                    }
+                }
+                //是否已点击-心过
+                $clickRes=ShortVideoDyClickRecordModel::create()->where(["uid"=>$userId])->where(["vod_id",$vodIdArray,"in"])->get();
+                foreach($data["list"] as $kl=>$vl){
+                    foreach($clickRes as $kc=>$vc){
+                            if($vl["vod_id"]==$vc["vod_id"]){
+                                $data["list"]["is_click"]=1;   
+                            }
+                    }
+                }
+            }
             // 短视频分页还是按照正常的顺序分页，但是返回的列表打乱一下顺序保证每次都不一样。
             shuffle($data['list']);
         } catch (Throwable $e) {
