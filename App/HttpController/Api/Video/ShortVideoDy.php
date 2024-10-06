@@ -200,7 +200,7 @@ class ShortVideoDy extends UserBase
             $userId=$this->who['userId'];
             $data =$model
                 ->where(["uid"=>$userId,"vod_id"=>$param["vodId"]])
-                ->order('sort', 'DESC')
+                ->order('create_at', 'DESC')
                 ->setDefaultOrder()
                 ->getAll($page, $keyword, $pageSize, $field);
             // 短视频分页还是按照正常的顺序分页，但是返回的列表打乱一下顺序保证每次都不一样。
