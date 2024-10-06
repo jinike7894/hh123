@@ -139,6 +139,7 @@ class ShortVideoDy extends UserBase
             if($data["list"]){
                 $vodIdArray=[];
                 foreach($data["list"] as $k=>$v){
+                    return $this->writeJson(Status::CODE_OK, $v, Status::getReasonPhrase(Status::CODE_OK));
                     $vodIdArray[]=$v["vod_id"];
                 }
                 //是否已收藏
@@ -146,17 +147,17 @@ class ShortVideoDy extends UserBase
                 foreach($data["list"] as $kl=>$vl){
                     foreach($collectRes as $kc=>$vc){
                             if($vl["vod_id"]==$vc["vod_id"]){
-                                $data["list"]["is_collect"]=1;   
+                                $data["list"][$kl]["is_collect"]=1;   
                             }
                     }
                 }
                 //是否已点击-心过
                 $clickRes=ShortVideoDyClickRecordModel::create()->where(["uid"=>$userId])->where(["vod_id",$vodIdArray,"in"])->get()->lastQuery();
-                return $this->writeJson(Status::CODE_OK, $vodIdArray, Status::getReasonPhrase(Status::CODE_OK));
+               
                 foreach($data["list"] as $kl=>$vl){
                     foreach($clickRes as $kc=>$vc){
                             if($vl["vod_id"]==$vc["vod_id"]){
-                                $data["list"]["is_click"]=1;   
+                                $data["list"][$kl]["is_click"]=1;   
                             }
                     }
                 }
