@@ -7,6 +7,8 @@ use App\Enum\RedisDb;
 use App\HttpController\Api\User\UserBase;
 use App\Model\Video\ShortVideoDyModel;
 use App\Model\Video\ShortVideoDyClickRecordModel;
+use App\Model\Video\ShortVideoDyCollectRecordModel;
+
 use App\Model\Video\ShortVideoDyUserModel;
 use App\Model\Video\ShortVideoDyReplyModel;
 use EasySwoole\Http\Message\Status;
@@ -140,6 +142,62 @@ class ShortVideoDy extends UserBase
             $res=ShortVideoDyClickRecordModel::create()->get(["uid"=>$userId,"vod_id"=>$param["vodId"]]);
             if($res){
                 ShortVideoDyClickRecordModel::create()->destroy(["uid"=>$userId,"vod_id"=>$param["vodId"]],true);
+            }
+           DbManager::getInstance()->commitWithCount();
+        } catch (Throwable $e) {
+            DbManager::getInstance()->rollbackWithCount();
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
+        return $this->writeJson(Status::CODE_OK, [], Status::getReasonPhrase(Status::CODE_OK));
+    }
+    //收藏
+    public function collect()
+    {
+        $param = $this->request()->getRequestParam();
+        $userId=$this->who['userId'];
+        try {
+            DbManager::getInstance()->startTransactionWithCount();
+            $videoModel = ShortVideoDyModel::create();
+            //点赞数+1
+            //点赞数据添加
+            $videoData=ShortVideoDyModel::create()->where(["vodId"=>$param["vodId"]])->lockForUpdate()->get();
+            if(!$videoData){
+                throw new Exception('无效的vodId参数', Status::CODE_BAD_REQUEST);
+            }
+            $videoModel->where(["vodId"=>$param["vodId"]])->update(["collection"=>$videoData["collection"]+1]);
+            $videocoolectRecordData=[
+            "vod_id"=>$param["vodId"],
+            "uid"=>$userId,
+            "create_at"=>time(),
+            "update_at"=>time(),
+            ];
+           ShortVideoDyCollectRecordModel::create($videocoolectRecordData)->save();
+           DbManager::getInstance()->commitWithCount();
+        } catch (Throwable $e) {
+            DbManager::getInstance()->rollbackWithCount();
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
+        return $this->writeJson(Status::CODE_OK, [], Status::getReasonPhrase(Status::CODE_OK));
+    }
+    //取消收藏
+    public function collectCancel()
+    {
+        $param = $this->request()->getRequestParam();
+        $userId=$this->who['userId'];
+        try {
+            DbManager::getInstance()->startTransactionWithCount();
+            $videoModel = ShortVideoDyModel::create();
+            //点赞数-1
+            //点赞数据删除
+            $videoData=ShortVideoDyModel::create()->where(["vodId"=>$param["vodId"]])->lockForUpdate()->get();
+            if(!$videoData){
+                throw new Exception('无效的vodId参数', Status::CODE_BAD_REQUEST);
+            }
+            $videoModel->where(["vodId"=>$param["vodId"]])->update(["collection"=>$videoData["collection"]-1]);
+
+            $res=ShortVideoDyCollectRecordModel::create()->get(["uid"=>$userId,"vod_id"=>$param["vodId"]]);
+            if($res){
+                ShortVideoDyCollectRecordModel::create()->destroy(["uid"=>$userId,"vod_id"=>$param["vodId"]],true);
             }
            DbManager::getInstance()->commitWithCount();
         } catch (Throwable $e) {
