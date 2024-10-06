@@ -86,7 +86,57 @@ class ShortVideoDy extends UserBase
                 ->where(["status"=>1])
                 ->setDefaultOrder()
                 ->getAll($page, $keyword, $pageSize, $field);
-                throw new Exception($data["list"], Status::CODE_BAD_REQUEST);
+              
+            // 短视频分页还是按照正常的顺序分页，但是返回的列表打乱一下顺序保证每次都不一样。
+            shuffle($data['list']);
+        } catch (Throwable $e) {
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
+
+        return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
+    }
+    public function videoLists()
+    {
+        $param = $this->request()->getRequestParam();
+
+        try {
+            $keyword = [];
+            $page = (int)($param['page'] ?? 1);
+            $pageSize = (int)($param['pageSize'] ?? SystemConfigKey::PAGE_SIZE);     
+            $model=ShortVideoDyModel::create()->alias('video');
+            //推荐or最新
+            if(isset($param['sortType']) && $param['sortType']) {
+                switch($param['sortType']){
+                    case 1:
+                        //推荐
+                        $model->where(["video.is_recommod"=> 1]);
+                        break;
+                    default:
+                        //最新
+                        break;
+                }
+            }
+            $keyword['status'] = ShortVideoDyModel::STATE_NORMAL;
+            $field = [
+                'video.vodId',
+                'video.vodName',
+                'video.vodPic',
+                'video.vodPlayUrl',
+                'video.click',
+                'video.collection',
+                "video.reply",
+                "video.fake_uid",
+                "user.id",
+                "user.username",
+                "user.img_src",
+            ];
+            $data =$model
+                ->join(ShortVideoDyUserModel::create()->getTableName() . ' AS user', 'user.id = video.fake_uid', 'LEFT')
+                ->order('video.sort', 'DESC')
+                ->where(["status"=>1])
+                ->setDefaultOrder()
+                ->getAll($page, $keyword, $pageSize, $field);
+              
             // 短视频分页还是按照正常的顺序分页，但是返回的列表打乱一下顺序保证每次都不一样。
             shuffle($data['list']);
         } catch (Throwable $e) {
