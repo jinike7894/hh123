@@ -146,7 +146,7 @@ class ShortVideoDy extends UserBase
                 
                 foreach($data["list"] as $kl=>$vl){
                     foreach($collectRes as $kc=>$vc){
-                            if($vl->vodId==$vc->vodId){
+                            if($vl->vodId==["vod_id"]){
                                 $data["list"][$kl]->isCollect=1;   
                             }
                     }
@@ -156,9 +156,7 @@ class ShortVideoDy extends UserBase
               
                 foreach($data["list"] as $kl=>$vl){
                     foreach($clickRes as $kc=>$vc){
-                        $this->writeJson(Status::CODE_OK, $vl->vodId."data------", Status::getReasonPhrase(Status::CODE_OK));
-                        $this->writeJson(Status::CODE_OK, $vc["vod_id"]."cdata-----", Status::getReasonPhrase(Status::CODE_OK));
-                            if($vl->vodId==$vc->vodId){
+                            if($vl->vodId==$vc["vod_id"]){
                                 $data["list"][$kl]->isClick=1;   
                             }
                     }
