@@ -212,7 +212,7 @@ class Post extends UserBase
            $postModel->where(["is_del"=>PostModel::NO_DELETE,"id"=>$param["postId"]])->update(["reply"=>$postData["reply"]+1]);
            $replyData=[
             "content"=>$param["content"],
-            "post_id"=>$param["post_id"],
+            "post_id"=>$param["postId"],
             "uid"=>$userId,
             "create_at"=>time(),
             "update_at"=>time(),
