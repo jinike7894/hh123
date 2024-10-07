@@ -45,57 +45,8 @@ class ShortVideoDy extends UserBase
      * @Param(name="vodName", alias="影片名", type="string", optional="", mbLengthMin="1", description="影片名")
      * @ApiSuccess({"code":200,"result":{"total":20,"list":[{"vodId":1,"vodName":"测试3323","likeCount":32,"vodPic":"https://img.kuaikanzy.net/upload/vod/20230328-1/e8ab7380b082c0d8fd341d1e6afc2918.jpg","vodPlayUrl":"https://vip.kuaikan-cdn1.com/20230831/9NaVrPXy/index.m3u8","sort":1}],"options":[]},"systemTimestamp":1698046584,"systemDateTime":"2023-10-23 15:36:24","msg":"OK"})
      */
+   
     public function videoList()
-    {
-        $param = $this->request()->getRequestParam();
-
-        try {
-            $keyword = [];
-            $page = (int)($param['page'] ?? 1);
-            $pageSize = (int)($param['pageSize'] ?? SystemConfigKey::PAGE_SIZE);     
-            $model=ShortVideoDyModel::create()->alias('video');
-            //推荐or最新
-            if(isset($param['sortType']) && $param['sortType']) {
-                switch($param['sortType']){
-                    case 1:
-                        //推荐
-                        $model->where(["video.is_recommod"=> 1]);
-                        break;
-                    default:
-                        //最新
-                        break;
-                }
-            }
-            $keyword['status'] = ShortVideoDyModel::STATE_NORMAL;
-            $field = [
-                'video.vodId',
-                'video.vodName',
-                'video.vodPic',
-                'video.vodPlayUrl',
-                'video.click',
-                'video.collection',
-                "video.reply",
-                "video.fake_uid",
-                "user.id",
-                "user.username",
-                "user.img_src",
-            ];
-            $data =$model
-                ->join(ShortVideoDyUserModel::create()->getTableName() . ' AS user', 'user.id = video.fake_uid', 'LEFT')
-                ->order('video.sort', 'DESC')
-                ->where(["status"=>1])
-                ->setDefaultOrder()
-                ->getAll($page, $keyword, $pageSize, $field);
-              
-            // 短视频分页还是按照正常的顺序分页，但是返回的列表打乱一下顺序保证每次都不一样。
-            shuffle($data['list']);
-        } catch (Throwable $e) {
-            return $this->writeJson($e->getCode(), [], $e->getMessage());
-        }
-
-        return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
-    }
-    public function videoLists()
     {
         $param = $this->request()->getRequestParam();
         $userId=$this->who['userId'];

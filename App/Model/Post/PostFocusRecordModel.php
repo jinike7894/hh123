@@ -15,9 +15,9 @@ use EasySwoole\Mysqli\QueryBuilder;
  * @property $status string | 状态
  * @property $create_at string | 添加时间
  */
-class PostClickRecordModel extends BaseModel implements CommonStatusInterface
+class PostFocusRecordModel extends BaseModel implements CommonStatusInterface
 {
-    protected $tableName = 'mac_post_click_record';
+    protected $tableName = 'mac_post_focus_record';
 
     protected $primaryKey = 'id';
     protected $autoTimeStamp = 'int';

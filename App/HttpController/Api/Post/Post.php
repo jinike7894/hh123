@@ -9,6 +9,9 @@ use App\HttpController\Api\User\UserBase;
 use App\Model\User\UserModel;
 use App\Model\Post\PostModel;
 use App\Model\Post\PostReplyModel;
+use App\Model\Post\PostClickRecordModel;
+use App\Model\Post\PostFocusRecordModel;
+
 use EasySwoole\Http\Message\Status;
 use EasySwoole\ORM\DbManager;
 
@@ -23,6 +26,7 @@ class Post extends UserBase
     {
         $param = $this->request()->getRequestParam();
         try {
+            $userId=$this->who['userId'];
             $keyword = [];
             $page = (int)($param['page'] ?? 1);
             $pageSize = (int)($param['pageSize'] ?? SystemConfigKey::PAGE_SIZE);
@@ -60,6 +64,30 @@ class Post extends UserBase
             $result= $model
                 ->where(["post.is_del"=>PostModel::NO_DELETE])
                 ->getAll($page, $keyword, $pageSize, $field);
+           if($result["list"]){
+                    $postIdArray=[];
+                    foreach($result["list"] as $k=>$v){
+                        $postIdArray[]=$v->id;
+                    }
+                     //是否关注、点赞
+                    $ClickRes=PostClickRecordModel::create()->where(["uid"=>$userId])->where("post_id",$postIdArray,"in")->all(); 
+                    foreach($result["list"] as $kl=>$vl){
+                        foreach($ClickRes as $kc=>$vc){
+                                if($vl->id==["post_id"]){
+                                    $ClickRes["list"][$kl]->isClick=1;   
+                                }
+                        }
+                    }
+                    $fouceRes=PostFocusRecordModel::create()->where(["uid"=>$userId])->where("post_id",$postIdArray,"in")->all();  
+                    foreach($result["list"] as $kl=>$vl){
+                        foreach($ClickRes as $kc=>$vc){
+                                if($vl->id==["post_id"]){
+                                    $ClickRes["list"][$kl]->isFouce=1;   
+                                }
+                        }
+                    }
+            }
+                  
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
@@ -76,8 +104,9 @@ class Post extends UserBase
             $model = PostModel::create();
             $result["userData"]= UserModel::create()->get($this->who['userId']);
             $result["PostInfoData"]= [
-                "click"=>PostReplyModel::create()->where(["uid"=>$userId])->count(1),
-                "release"=>$model->where(["uid"=>$userId]) ->where(["is_del"=>PostModel::NO_DELETE])->count(1)
+                "click"=>PostClickRecordModel::create()->where(["uid"=>$userId])->count(1),
+                "release"=>$model->where(["uid"=>$userId]) ->where(["is_del"=>PostModel::NO_DELETE])->count(1),
+                "fouce"=>PostFocusRecordModel::create()->where(["uid"=>$userId]) ->where(["is_del"=>PostModel::NO_DELETE])->count(1)
             ];
             //查询帖子
             $keyword = [];
@@ -185,7 +214,7 @@ class Post extends UserBase
             "create_at"=>time(),
             "update_at"=>time(),
            ];
-           PostReplyModel::create($replyData)->save();
+           PostReplyRecordModel::create($replyData)->save();
             DbManager::getInstance()->commitWithCount();
         } catch (Throwable $e) {
             DbManager::getInstance()->rollbackWithCount();
@@ -201,20 +230,18 @@ class Post extends UserBase
             $userId=$this->who['userId'];
             DbManager::getInstance()->startTransactionWithCount();
             $postModel = PostModel::create();
-            //帖子回复数+1
-            //回帖数据添加
-            $field = ['click',];
+            $field = ['click'];
             //判断帖子、回复 
             switch($param["type"]){
                 case 1:
                     // 点赞帖子
                     $postData=PostModel::create()->where(["is_del"=>PostModel::NO_DELETE,"id"=>$param["postId"]])->field($field)->lockForUpdate()->get();
-                    $postModel->where(["is_del"=>PostModel::NO_DELETE,"id"=>$param["postId"]])->update(["reply"=>$postData["reply"]+1]);
+                    $postModel->where(["is_del"=>PostModel::NO_DELETE,"id"=>$param["postId"]])->update(["click"=>$postData["click"]+1]);
                     break;
                 case 2:
                     //点赞回复
                     $postReplyData=PostReplyModel::create()->where(["id"=>$param["postId"]])->field($field)->lockForUpdate()->get();
-                    PostReplyModel::create()->where(["id"=>$param["postId"]])->update(["reply"=>$postReplyData["reply"]+1]);
+                    PostReplyModel::create()->where(["id"=>$param["postId"]])->update(["click"=>$postReplyData["click"]+1]);
                     break;
                 default:
                 throw new Exception('错误的type', Status::CODE_BAD_REQUEST);
@@ -226,7 +253,7 @@ class Post extends UserBase
             "create_at"=>time(),
             "update_at"=>time(),
             ];
-           PostReplyModel::create($replyRecordData)->save();
+           PostClickRecordModel::create($replyRecordData)->save();
            DbManager::getInstance()->commitWithCount();
         } catch (Throwable $e) {
             DbManager::getInstance()->rollbackWithCount();
@@ -235,5 +262,94 @@ class Post extends UserBase
 
         return $this->writeJson(Status::CODE_OK, [], Status::getReasonPhrase(Status::CODE_OK));
     }
-  
+    //取消点赞/回复
+    public function clickCancel(){
+        $param = $this->request()->getRequestParam();
+        try {
+            $userId=$this->who['userId'];
+            DbManager::getInstance()->startTransactionWithCount();
+            $postModel = PostModel::create();
+            //帖子回复数+1
+            //回帖数据添加
+            //判断帖子、回复 
+            switch($param["type"]){
+                case 1:
+                    // 点赞帖子
+                    $postData=PostModel::create()->where(["is_del"=>PostModel::NO_DELETE,"id"=>$param["postId"]])->lockForUpdate()->get();
+                    if($postData->uid!==$userId){
+                        throw new Exception('取消失败', Status::CODE_INTERNAL_SERVER_ERROR);
+                    }
+                    $postModel->where(["is_del"=>PostModel::NO_DELETE,"id"=>$param["postId"]])->update(["reply"=>$postData["reply"]-1]);
+                    break;
+                case 2:
+                    //点赞回复
+                    $postReplyData=PostReplyModel::create()->where(["id"=>$param["postId"]])->lockForUpdate()->get();
+                    if($postReplyData->uid!==$userId){
+                        throw new Exception('取消失败', Status::CODE_INTERNAL_SERVER_ERROR);
+                    }
+                    PostReplyModel::create()->where(["id"=>$param["postId"]])->update(["reply"=>$postReplyData["reply"]-1]);
+                    break;
+                default:
+                throw new Exception('错误的type', Status::CODE_BAD_REQUEST);
+            }
+           PostReplyModel::create()->destroy(["id"=>$param["postId"],"uid"=>$userId],true);
+           DbManager::getInstance()->commitWithCount();
+        } catch (Throwable $e) {
+            DbManager::getInstance()->rollbackWithCount();
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
+
+        return $this->writeJson(Status::CODE_OK, [], Status::getReasonPhrase(Status::CODE_OK));
+    }
+    //关注
+    public function focus(){
+        $param = $this->request()->getRequestParam();
+        try {
+            $userId=$this->who['userId'];
+            DbManager::getInstance()->startTransactionWithCount();
+            $postModel = PostModel::create();
+            //帖子回复数+1
+            //回帖数据添加
+            //判断帖子、回复 
+            $postData=PostModel::create()->where(["is_del"=>PostModel::NO_DELETE,"id"=>$param["postId"]])->lockForUpdate()->get();
+            $postModel->where(["is_del"=>PostModel::NO_DELETE,"id"=>$param["postId"]])->update(["focus"=>$postData["focus"]+1]);
+            $focusRecordData=[
+            "post_id"=>$param["post_id"],
+            "uid"=>$userId,
+            "create_at"=>time(),
+            "update_at"=>time(),
+            "post_uid"=>$postData->uid,
+            ];
+           PostFocusRecordModel::create($focusRecordData)->save();
+           DbManager::getInstance()->commitWithCount();
+        } catch (Throwable $e) {
+            DbManager::getInstance()->rollbackWithCount();
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
+
+        return $this->writeJson(Status::CODE_OK, [], Status::getReasonPhrase(Status::CODE_OK));
+    }
+     //取消关注
+     public function focusCancel(){
+        $param = $this->request()->getRequestParam();
+        try {
+            $userId=$this->who['userId'];
+            DbManager::getInstance()->startTransactionWithCount();
+            $postModel = PostModel::create();
+            //帖子回复数+1
+            //回帖数据添加
+            $postData=PostModel::create()->where(["is_del"=>PostModel::NO_DELETE,"id"=>$param["postId"]])->lockForUpdate()->get();
+            if($postData->uid!==$userId){
+                throw new Exception('取消失败', Status::CODE_INTERNAL_SERVER_ERROR);
+            }
+            $postModel->where(["is_del"=>PostModel::NO_DELETE,"id"=>$param["postId"]])->update(["focus"=>$postData["focus"]-1]);
+                    
+           PostFocusRecordModel::create()->destroy(["id"=>$param["postId"],"uid"=>$userId],true);
+           DbManager::getInstance()->commitWithCount();
+        } catch (Throwable $e) {
+            DbManager::getInstance()->rollbackWithCount();
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
+        return $this->writeJson(Status::CODE_OK, [], Status::getReasonPhrase(Status::CODE_OK));
+    }
 }
