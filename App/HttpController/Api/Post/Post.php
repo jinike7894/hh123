@@ -76,7 +76,7 @@ class Post extends UserBase
                     $ClickRes=PostClickRecordModel::create()->where(["uid"=>$userId])->where("post_id",$postIdArray,"in")->all(); 
                     foreach($result["list"] as $kl=>$vl){
                         foreach($ClickRes as $kc=>$vc){
-                                if($vl->id==["post_id"]){
+                                if($vl->id==$vc["post_id"]){
                                     $ClickRes["list"][$kl]->isClick=1;   
                                 }
                         }
@@ -84,7 +84,7 @@ class Post extends UserBase
                     $fouceRes=PostFocusRecordModel::create()->where(["uid"=>$userId])->where("post_id",$postIdArray,"in")->all();  
                     foreach($result["list"] as $kl=>$vl){
                         foreach($ClickRes as $kc=>$vc){
-                                if($vl->id==["post_id"]){
+                                if($vl->id==$vc["post_id"]){
                                     $ClickRes["list"][$kl]->isFouce=1;   
                                 }
                         }
