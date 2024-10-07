@@ -149,7 +149,7 @@ class Post extends UserBase
                 'create_at'=>time(),
                 'update_at'=>time(),
                 'vodio_src'=>$param["vodio_src"],
-                'img_src'=>$param["vodio_src"],
+                'img_src'=>$param["img_src"],
                 'uid'=>$userId,
             ];
             $result= PostModel::create($data)->save();
