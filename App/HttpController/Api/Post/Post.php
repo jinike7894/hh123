@@ -217,7 +217,7 @@ class Post extends UserBase
             "create_at"=>time(),
             "update_at"=>time(),
            ];
-           PostReplyRecordModel::create($replyData)->save();
+           PostReplyModel::create($replyData)->save();
             DbManager::getInstance()->commitWithCount();
         } catch (Throwable $e) {
             DbManager::getInstance()->rollbackWithCount();
