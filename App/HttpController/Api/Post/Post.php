@@ -251,7 +251,7 @@ class Post extends UserBase
             }
             $replyRecordData=[
             "type"=>$param["type"],
-            "post_id"=>$param["post_id"],
+            "post_id"=>$param["postId"],
             "uid"=>$userId,
             "create_at"=>time(),
             "update_at"=>time(),
@@ -317,7 +317,7 @@ class Post extends UserBase
             $postData=PostModel::create()->where(["is_del"=>PostModel::NO_DELETE,"id"=>$param["postId"]])->lockForUpdate()->get();
             $postModel->where(["is_del"=>PostModel::NO_DELETE,"id"=>$param["postId"]])->update(["focus"=>$postData["focus"]+1]);
             $focusRecordData=[
-            "post_id"=>$param["post_id"],
+            "post_id"=>$param["postId"],
             "uid"=>$userId,
             "create_at"=>time(),
             "update_at"=>time(),
