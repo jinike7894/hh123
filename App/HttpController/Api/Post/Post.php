@@ -76,8 +76,8 @@ class Post extends UserBase
             $model = PostModel::create();
             $result["userData"]= UserModel::create()->get($this->who['userId']);
             $result["PostInfoData"]= [
-                "click"=>PostReplyModel::create()->where(["uid"=>$userId])->count(),
-                "release"=>$model->where(["uid"=>$userId]) ->where(["is_del"=>PostModel::NO_DELETE])->count()
+                "click"=>PostReplyModel::create()->where(["uid"=>$userId])->count(1),
+                "release"=>$model->where(["uid"=>$userId]) ->where(["is_del"=>PostModel::NO_DELETE])->count(1)
             ];
             //查询帖子
             $keyword = [];
