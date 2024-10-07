@@ -15,14 +15,14 @@ use EasySwoole\Mysqli\QueryBuilder;
  * @property $status string | 状态
  * @property $create_at string | 添加时间
  */
-// class PostReplyRecordModel extends BaseModel implements CommonStatusInterface
-// {
-//     protected $tableName = 'mac_post_click_record';
+class PostClickRecordModel extends BaseModel implements CommonStatusInterface
+{
+    protected $tableName = 'mac_post_click_record';
 
-//     protected $primaryKey = 'id';
-//     protected $autoTimeStamp = 'int';
-//     protected $createTime = 'create_at';
-//     protected $updateTime = 'update_at';
-//     // const DELETE = 1;
-//     // const NO_DELETE = 0;
-// }
+    protected $primaryKey = 'id';
+    protected $autoTimeStamp = 'int';
+    protected $createTime = 'create_at';
+    protected $updateTime = 'update_at';
+    // const DELETE = 1;
+    // const NO_DELETE = 0;
+}
