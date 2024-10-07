@@ -20,9 +20,6 @@ class PostReplyModel extends BaseModel implements CommonStatusInterface
     protected $tableName = 'mac_post_reply';
 
     protected $primaryKey = 'id';
-    protected $autoTimeStamp = 'int';
-    protected $createTime = 'create_at';
-    protected $updateTime = 'update_at';
     // const DELETE = 1;
     // const NO_DELETE = 0;
 }
