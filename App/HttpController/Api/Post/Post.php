@@ -168,8 +168,7 @@ class Post extends UserBase
                 ->alias('reply')
                 ->join(UserModel::create()->getTableName() . ' AS user', 'reply.uid = user.userId', 'LEFT')
                 ->order("reply.create_at","desc")
-                ->field(["reply.*","user.nickname","user.avatar"])
-                ->getAll($page, $keyword, $pageSize, $replyField);  
+                ->getAll($page, $keyword, $pageSize, ["reply.*","user.nickname","user.avatar"]);  
           return $this->writeJson(Status::CODE_OK, DbManager::getInstance()->getLastQuery()->getLastQuery(), Status::getReasonPhrase(Status::CODE_OK));
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
