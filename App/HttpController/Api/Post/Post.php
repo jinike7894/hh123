@@ -283,17 +283,11 @@ class Post extends UserBase
                 case 1:
                     // 点赞帖子
                     $postData=PostModel::create()->where(["is_del"=>PostModel::NO_DELETE,"id"=>$param["postId"]])->lockForUpdate()->get();
-                    if($postData->uid!==$userId){
-                        throw new Exception('取消失败', Status::CODE_INTERNAL_SERVER_ERROR);
-                    }
                     $postModel->where(["is_del"=>PostModel::NO_DELETE,"id"=>$param["postId"]])->update(["click"=>$postData["click"]-1]);
                     break;
                 case 2:
                     //点赞回复
                     $postReplyData=PostReplyModel::create()->where(["id"=>$param["postId"]])->lockForUpdate()->get();
-                    if($postReplyData->uid!==$userId){
-                        throw new Exception('取消失败', Status::CODE_INTERNAL_SERVER_ERROR);
-                    }
                     PostReplyModel::create()->where(["id"=>$param["postId"]])->update(["click"=>$postReplyData["click"]-1]);
                     break;
                 default:
