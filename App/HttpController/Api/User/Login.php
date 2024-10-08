@@ -123,7 +123,7 @@ class Login extends UserBase
                 throw new Exception('请填写密码', Status::CODE_BAD_REQUEST); 
             }
             //判断是否已注册
-            if(!userModel::create()->get(["userName"=>$param["userName"]])){
+            if(userModel::create()->get(["userName"=>$param["userName"]])){
                 throw new Exception('该账号已被注册', Status::CODE_BAD_REQUEST); 
             }
             $ip = $this->clientRealIP();
