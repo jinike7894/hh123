@@ -139,7 +139,6 @@ class Login extends UserBase
                 "lastLoginTime"=>date("Y-m-d H:i:s",time()),
                 "pageId"=>8888,
                 "channelId"=>8888,
-                "gender"=>"",
             ];
             $res = UserModel::create($data)->save();
             if(!$res){
