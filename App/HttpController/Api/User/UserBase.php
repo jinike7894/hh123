@@ -79,6 +79,10 @@ class UserBase extends ApiBase
             'balance' => $user->balance,
             'phoneState' => $user->phoneNumber ? 1 : 0, // 是否绑定手机号
             'identityCard' => UserService::getInstance()->getIdentityCard($user),
+            'userName'=>$user->userName,
+            'avatar'=>$user->avatar,
+            'profile'=>$user->profile,
+            "gender"=>$user->gender,
         ];
     }
 
