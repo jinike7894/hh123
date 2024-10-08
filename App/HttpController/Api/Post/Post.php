@@ -170,6 +170,7 @@ class Post extends UserBase
                 ->order("reply.create_at","desc")
                 ->field(["reply.*","user.nickname","user.avatar"])
                 ->getAll($page, $keyword, $pageSize, $replyField);  
+          return $this->writeJson(Status::CODE_OK, DbManager::getInstance()->getLastQuery()->getLastQuery(), Status::getReasonPhrase(Status::CODE_OK));
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
