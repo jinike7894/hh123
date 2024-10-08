@@ -340,9 +340,7 @@ class Post extends UserBase
             //帖子回复数+1
             //回帖数据添加
             $postData=PostModel::create()->where(["is_del"=>PostModel::NO_DELETE,"id"=>$param["postId"]])->lockForUpdate()->get();
-            if($postData->uid!==$userId){
-                throw new Exception('取消失败', Status::CODE_INTERNAL_SERVER_ERROR);
-            }
+           
             $postModel->where(["is_del"=>PostModel::NO_DELETE,"id"=>$param["postId"]])->update(["focus"=>$postData["focus"]-1]);
                     
            PostFocusRecordModel::create()->destroy(["post_id"=>$param["postId"],"uid"=>$userId],true);
