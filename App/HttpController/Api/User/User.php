@@ -94,7 +94,7 @@ class User extends UserBase
             if(isset($param["profile"])){
                 $data['profile'] = $param["profile"];
             }
-            UserModel::create()->update($data,["userId "=>$this->who['userId']]);
+            UserModel::create()->update($data,["userId"=>$this->who['userId']]);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
