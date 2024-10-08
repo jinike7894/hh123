@@ -164,7 +164,7 @@ class Post extends UserBase
                 'uid',
                 'click',
             ];
-            $result["replyData"]= $postRplyModel
+            $result["replyData"]= PostReplyModel::create()
                 ->alias('reply')
                 ->join(UserModel::create()->getTableName() . ' AS user', 'reply.uid = user.userId', 'LEFT')
                 ->order("reply.create_at","desc")
