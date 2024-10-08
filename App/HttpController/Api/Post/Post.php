@@ -71,6 +71,8 @@ class Post extends UserBase
                     $postIdArray=[];
                     foreach($result["list"] as $k=>$v){
                         $postIdArray[]=$v->id;
+                        $result["list"][$k]->isClick=0;
+                        $result["list"][$k]->isFouce=0;
                     }
                      //是否关注、点赞
                     $ClickRes=PostClickRecordModel::create()->where(["uid"=>$userId])->where("post_id",$postIdArray,"in")->all(); 
