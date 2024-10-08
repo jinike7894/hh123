@@ -88,6 +88,7 @@ class Post extends UserBase
                     foreach($result["list"] as $kl=>$vl){
                         foreach($fouceRes as $kf=>$vf){
                                 if($vl->id==$vf->post_id){
+
                                     $result["list"][$kl]->isFouce=1;   
                                 }
                         }
@@ -298,7 +299,7 @@ class Post extends UserBase
                 default:
                 throw new Exception('错误的type', Status::CODE_BAD_REQUEST);
             }
-           PostReplyModel::create()->destroy(["id"=>$param["postId"],"uid"=>$userId],true);
+           PostReplyModel::create()->destroy(["post_id"=>$param["postId"],"uid"=>$userId],true);
            DbManager::getInstance()->commitWithCount();
         } catch (Throwable $e) {
             DbManager::getInstance()->rollbackWithCount();
@@ -350,7 +351,7 @@ class Post extends UserBase
             }
             $postModel->where(["is_del"=>PostModel::NO_DELETE,"id"=>$param["postId"]])->update(["focus"=>$postData["focus"]-1]);
                     
-           PostFocusRecordModel::create()->destroy(["id"=>$param["postId"],"uid"=>$userId],true);
+           PostFocusRecordModel::create()->destroy(["post_id"=>$param["postId"],"uid"=>$userId],true);
            DbManager::getInstance()->commitWithCount();
         } catch (Throwable $e) {
             DbManager::getInstance()->rollbackWithCount();
