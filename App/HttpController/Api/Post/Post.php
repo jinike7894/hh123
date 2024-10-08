@@ -84,10 +84,10 @@ class Post extends UserBase
                         }
                     }
                     $fouceRes=PostFocusRecordModel::create()->where(["uid"=>$userId])->where("post_id",$postIdArray,"in")->all();  
-                    return $this->writeJson(Status::CODE_OK, DbManager::getInstance()->getLastQuery()->getLastQuery(), Status::getReasonPhrase(Status::CODE_OK));
+                   
                     foreach($result["list"] as $kl=>$vl){
                         foreach($fouceRes as $kc=>$vc){
-                                if($vl->id==$vc["post_id"]){
+                                if($vl->id==$vc->post_id){
                                     $fouceRes["list"][$kl]->isFouce=1;   
                                 }
                         }
