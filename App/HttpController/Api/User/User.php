@@ -115,7 +115,7 @@ class User extends UserBase
             }
             $data=[];
             $data['password'] = md5($param["password"]);
-            UserModel::create()->update($data,["userId "=>$this->who['userId']]);
+            UserModel::create()->update($data,["userId"=>$this->who['userId']]);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
