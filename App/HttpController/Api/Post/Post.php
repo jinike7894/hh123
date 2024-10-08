@@ -299,7 +299,7 @@ class Post extends UserBase
                 default:
                 throw new Exception('错误的type', Status::CODE_BAD_REQUEST);
             }
-           PostReplyModel::create()->destroy(["post_id"=>$param["postId"],"uid"=>$userId],true);
+            PostClickRecordModel::create()->destroy(["post_id"=>$param["postId"],"uid"=>$userId],true);
            DbManager::getInstance()->commitWithCount();
         } catch (Throwable $e) {
             DbManager::getInstance()->rollbackWithCount();
