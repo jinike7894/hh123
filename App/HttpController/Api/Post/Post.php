@@ -79,7 +79,7 @@ class Post extends UserBase
                     foreach($result["list"] as $kl=>$vl){
                         foreach($ClickRes as $kc=>$vc){
                                 if($vl->id==$vc["post_id"]){
-                                    $ClickRes["list"][$kl]->isClick=1;   
+                                    $result["list"][$kl]->isClick=1;   
                                 }
                         }
                     }
@@ -89,8 +89,7 @@ class Post extends UserBase
                         foreach($fouceRes as $kc=>$vc){
                           
                                 if($vl->id==$vc->post_id){
-                                    $this->writeJson(Status::CODE_OK, "fouce", Status::getReasonPhrase(Status::CODE_OK));
-                                    $fouceRes["list"][$kl]->isFouce=1;   
+                                    $result["list"][$kl]->isFouce=1;   
                                 }
                         }
                     }
