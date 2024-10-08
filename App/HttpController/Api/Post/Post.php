@@ -144,6 +144,7 @@ class Post extends UserBase
         try {
             $postModel = PostModel::create();
             $postRplyModel = PostReplyModel::create();
+            $userId=$this->who['userId'];
             //查询帖子数据
             $field = [
                 'id',
@@ -169,7 +170,24 @@ class Post extends UserBase
                 ->join(UserModel::create()->getTableName() . ' AS user', 'reply.uid = user.userId', 'LEFT')
                 ->order("reply.create_at","desc")
                 ->getAll($page, $keyword, $pageSize, ["reply.*","user.nickname","user.avatar"]);  
-    
+           //判断是否点赞过评论
+           if($result["reply"]["list"]){
+            $postIdArray=[];
+            foreach($result["reply"]["list"] as $k=>$v){
+                $postIdArray[]=$v->id;
+                $result["reply"]["list"][$k]->isClick=0;
+            }
+             //是否关注、点赞
+            $ClickRes=PostClickRecordModel::create()->where(["uid"=>$userId,"type"=>2])->where("post_id",$postIdArray,"in")->all(); 
+            foreach($result["list"] as $kl=>$vl){
+                foreach($ClickRes as $kc=>$vc){
+                        if($vl->id==$vc["post_id"]){
+                            $result["reply"]["list"][$kl]->isClick=1;   
+                        }
+                }
+            }
+
+        }
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
