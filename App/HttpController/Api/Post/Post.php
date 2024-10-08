@@ -290,11 +290,11 @@ class Post extends UserBase
                     break;
                 case 2:
                     //点赞回复
-                    $postReplyData=PostReplyModel::create()->where(["id"=>$param["postId"]])->lockForUpdate()->get();
+                    $postReplyData=PostModel::create()->where(["id"=>$param["postId"]])->lockForUpdate()->get();
                     if($postReplyData->uid!==$userId){
                         throw new Exception('取消失败', Status::CODE_INTERNAL_SERVER_ERROR);
                     }
-                    PostReplyModel::create()->where(["id"=>$param["postId"]])->update(["reply"=>$postReplyData["reply"]-1]);
+                    PostModel::create()->where(["id"=>$param["postId"]])->update(["reply"=>$postReplyData["reply"]-1]);
                     break;
                 default:
                 throw new Exception('错误的type', Status::CODE_BAD_REQUEST);
