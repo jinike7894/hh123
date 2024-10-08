@@ -111,7 +111,7 @@ class Post extends UserBase
             $result["PostInfoData"]= [
                 "click"=>PostClickRecordModel::create()->where(["uid"=>$userId])->count(1),
                 "release"=>$model->where(["uid"=>$userId]) ->where(["is_del"=>PostModel::NO_DELETE])->count(1),
-                "fouce"=>PostFocusRecordModel::create()->where(["uid"=>$userId]) ->where(["is_del"=>PostModel::NO_DELETE])->count(1)
+                "fouce"=>PostFocusRecordModel::create()->where(["uid"=>$userId])->count(1)
             ];
             //查询帖子
             $keyword = [];
