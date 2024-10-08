@@ -284,7 +284,7 @@ class Post extends UserBase
                     if($postData->uid!==$userId){
                         throw new Exception('取消失败', Status::CODE_INTERNAL_SERVER_ERROR);
                     }
-                    $postModel->where(["is_del"=>PostModel::NO_DELETE,"id"=>$param["postId"]])->update(["reply"=>$postData["reply"]-1]);
+                    $postModel->where(["is_del"=>PostModel::NO_DELETE,"id"=>$param["postId"]])->update(["click"=>$postData["click"]-1]);
                     break;
                 case 2:
                     //点赞回复
