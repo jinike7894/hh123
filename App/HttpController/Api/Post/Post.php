@@ -168,7 +168,7 @@ class Post extends UserBase
                 ->alias('reply')
                 ->join(UserModel::create()->getTableName() . ' AS user', 'reply.uid = user.userId', 'LEFT')
                 ->order("reply.create_at","desc")
-                ->field("reply.*,user.nickname,user.avatar")
+                ->field(["reply.*","user.nickname","user.avatar"])
                 ->getAll($page, $keyword, $pageSize, $replyField);  
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
