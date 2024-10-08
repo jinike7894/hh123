@@ -351,4 +351,26 @@ class Post extends UserBase
         }
         return $this->writeJson(Status::CODE_OK, [], Status::getReasonPhrase(Status::CODE_OK));
     }
+    //删除帖子
+    public function delete(){
+        $param = $this->request()->getRequestParam();
+        try {
+            $userId=$this->who['userId'];
+            DbManager::getInstance()->startTransactionWithCount();
+            $postModel = PostModel::create();
+            //帖子回复数+1
+            //回帖数据添加
+            $postData=PostModel::create()->where(["is_del"=>PostModel::NO_DELETE,"id"=>$param["postId"]])->get();
+            if($postData->uid!=$userId){
+                throw new Exception('删除失败', Status::CODE_INTERNAL_SERVER_ERROR);
+            }
+                    
+           PostModel::create()->update(["id"=>$param["postId"],"is_del"=>PostModel::DELETE]);
+           DbManager::getInstance()->commitWithCount();
+        } catch (Throwable $e) {
+            DbManager::getInstance()->rollbackWithCount();
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
+        return $this->writeJson(Status::CODE_OK, [], Status::getReasonPhrase(Status::CODE_OK));
+    }
 }
