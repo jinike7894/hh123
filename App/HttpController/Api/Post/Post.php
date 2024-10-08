@@ -87,9 +87,9 @@ class Post extends UserBase
                    
                     foreach($result["list"] as $kl=>$vl){
                         foreach($fouceRes as $kc=>$vc){
-                            $this->writeJson(Status::CODE_OK, $vl->id, Status::getReasonPhrase(Status::CODE_OK));
-                            $this->writeJson(Status::CODE_OK, $vc->post_id, Status::getReasonPhrase(Status::CODE_OK));
+                          
                                 if($vl->id==$vc->post_id){
+                                    $this->writeJson(Status::CODE_OK, "fouce", Status::getReasonPhrase(Status::CODE_OK));
                                     $fouceRes["list"][$kl]->isFouce=1;   
                                 }
                         }
