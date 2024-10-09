@@ -38,6 +38,7 @@ class Notice extends UserBase
                 ->where(["is_del"=>NoticeModel::NODELETE])
                 ->order("create_at","desc")
                 ->getAll($page, $keyword, $pageSize, $field);
+                return $this->writeJson(Status::CODE_OK, DbManager::getInstance()->getLastQuery()->getLastQuery(), Status::getReasonPhrase(Status::CODE_OK));   
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
