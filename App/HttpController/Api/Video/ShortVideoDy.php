@@ -8,8 +8,8 @@ use App\HttpController\Api\User\UserBase;
 use App\Model\Video\ShortVideoDyModel;
 use App\Model\Video\ShortVideoDyClickRecordModel;
 use App\Model\Video\ShortVideoDyCollectRecordModel;
-
 use App\Model\Video\ShortVideoDyUserModel;
+
 use App\Model\Video\ShortVideoDyReplyModel;
 use EasySwoole\Http\Message\Status;
 use EasySwoole\HttpAnnotation\AnnotationTag\Api;
@@ -295,5 +295,32 @@ class ShortVideoDy extends UserBase
         }
 
         return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
+    }
+    //关注
+    public function focus(){
+        $param = $this->request()->getRequestParam();
+        $userId=$this->who['userId'];
+        try {
+            $RecordData=[
+            "fask_uid"=>$param["fask_uid"],
+            "uid"=>$userId,
+            "create_at"=>time(),
+            "update_at"=>time(),
+            ];
+            ShortVideoDyUserModel::create($RecordData)->save();
+        } catch (Throwable $e) {
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
+        return $this->writeJson(Status::CODE_OK, [], Status::getReasonPhrase(Status::CODE_OK));
+    }
+    public function focusCancel(){
+        $param = $this->request()->getRequestParam();
+        $userId=$this->who['userId'];
+        try {
+            ShortVideoDyUserModel::create()->destroy(["uid"=>$userId,"fask_uid"=>$param["fask_uid"]],true);;
+        } catch (Throwable $e) {
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
+        return $this->writeJson(Status::CODE_OK, [], Status::getReasonPhrase(Status::CODE_OK));
     }
 }
