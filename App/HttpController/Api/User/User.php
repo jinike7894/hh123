@@ -125,7 +125,7 @@ class User extends UserBase
     public function inviteCode(){
         $param = $this->request()->getRequestParam();
         try {
-            if(!isset($param["inviteCode"])||$param["inviteCode"]!=""){
+            if(!isset($param["inviteCode"])||$param["inviteCode"]==""){
                 throw new Exception('邀请码异常', Status::CODE_BAD_REQUEST);
             }
             $userId=$this->who['userId'];
