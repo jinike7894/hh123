@@ -112,6 +112,15 @@ class ShortVideoDy extends UserBase
                             }
                     }
                 }
+                //是否已关注
+                $focusRes=ShortVideoDyUserModel::create()->where(["uid"=>$userId])->all();
+                foreach($data["list"] as $kl=>$vl){
+                    foreach($focusRes as $kc=>$vc){
+                            if($vl->fake_uid==$vc["fake_uid"]){
+                                $data["list"][$kl]->isFocus=1;   
+                            }
+                    }
+                }
             }
             // 短视频分页还是按照正常的顺序分页，但是返回的列表打乱一下顺序保证每次都不一样。
             shuffle($data['list']);

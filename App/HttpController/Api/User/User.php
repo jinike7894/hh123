@@ -11,6 +11,7 @@ use App\Model\User\UserAiFaceRecordModel;
 use App\Model\User\UserAiPicTempModel;
 use App\Model\User\UserAiRecordModel;
 use App\Model\User\UserAiStripRecordModel;
+use App\Model\Video\ShortVideoDyFocusRecordModel;
 use App\Model\User\UserAiVideoTempModel;
 use App\Model\User\UserInviteModel;
 use App\Model\User\UserModel;
@@ -29,7 +30,7 @@ use EasySwoole\HttpAnnotation\AnnotationTag\ApiGroupDescription;
 use EasySwoole\HttpAnnotation\AnnotationTag\Method;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiRequestExample;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiSuccess;
-
+use App\Model\Video\ShortVideoDyUserModel;
 use EasySwoole\ORM\DbManager;
 use Exception;
 use Throwable;
@@ -154,6 +155,25 @@ class User extends UserBase
             DbManager::getInstance()->commitWithCount();
         } catch (Throwable $e) {
             DbManager::getInstance()->rollbackWithCount();
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
+
+        return $this->writeJson(Status::CODE_OK, [], Status::getReasonPhrase(Status::CODE_OK));
+    }
+    //收藏的短视频会员
+    public function focusDy(){
+        $param = $this->request()->getRequestParam();
+        $userId=$this->who['userId'];
+        try {
+            $page = (int)($param['page'] ?? 1);
+            $pageSize = (int)($param['pageSize'] ?? SystemConfigKey::PAGE_SIZE);
+            $data = ShortVideoDyFocusRecordModel::create()
+            ->alias('focus')
+            ->join(ShortVideoDyUserModel::create()->getTableName() . ' AS user', 'user.id = focus.fake_uid', 'LEFT')
+            ->where(["uid"=>$userId])
+            ->order('focus.create_at', 'DESC')
+            ->getAll($page, [], $pageSize, ["*"]);
+        } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
 
