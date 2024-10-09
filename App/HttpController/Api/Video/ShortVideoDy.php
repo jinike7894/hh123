@@ -113,10 +113,10 @@ class ShortVideoDy extends UserBase
                     }
                 }
                 //是否已关注
-                $focusRes=ShortVideoDyUserModel::create()->where(["uid"=>$userId])->all();
+                $focusRes=ShortVideoDyUserModel::create()->where(["id"=>$userId])->all();
                 foreach($data["list"] as $kl=>$vl){
                     foreach($focusRes as $kc=>$vc){
-                            if($vl->fake_uid==$vc["fake_uid"]){
+                            if($vl->fake_uid==$vc["id"]){
                                 $data["list"][$kl]->isFocus=1;   
                             }
                     }
