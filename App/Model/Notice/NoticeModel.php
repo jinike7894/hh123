@@ -1,4 +1,3 @@
-
 <?php
 namespace App\Model\Notice;
 use App\Component\CommonStatusInterface;
