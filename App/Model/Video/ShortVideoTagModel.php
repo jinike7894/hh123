@@ -20,7 +20,7 @@ use App\Model\BaseModel;
  */
 class ShortVideoTagModel extends BaseModel implements CommonStatusInterface
 {
-    protected $tableName = 'mac_short_vod_tag';
+    protected $tableName = 'mac_short_video_tag';
 
     protected $primaryKey = 'id';
     protected $autoTimeStamp = 'int';
