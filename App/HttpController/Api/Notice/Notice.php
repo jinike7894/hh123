@@ -10,6 +10,7 @@ use App\Model\Notice\NoticeModel;
 use EasySwoole\Http\Message\Status;
 use EasySwoole\ORM\DbManager;
 use App\Service\Oss\LocalOssService;
+use EasySwoole\Mysqli\QueryBuilder;
 use Exception;
 use Throwable;
 
@@ -33,17 +34,15 @@ class Notice extends UserBase
                 'create_at',
             ];
             $model = NoticeModel::create();
-            $result= $model
-                ->where("(property=1 or uid="+$userId+")")//全员/私信
-                ->where(["is_del"=>NoticeModel::NODELETE])
-                ->order("create_at","desc")
-                ->getAll($page, $keyword, $pageSize, $field);
-                return $this->writeJson(Status::CODE_OK, DbManager::getInstance()->getLastQuery()->getLastQuery(), Status::getReasonPhrase(Status::CODE_OK));   
+            $queryBuild = new QueryBuilder();
+            $queryBuild->raw("select id,type,title,content,create_at from notice where (property=? or uid=?) and is_del  = ? order by create_at desc limit ?,?", [1,$userId,0,$page-1,$pageSize]);
+            $data = DbManager::getInstance()->query($queryBuild, true, 'default');
+    
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
 
-        return $this->writeJson(Status::CODE_OK, $result, Status::getReasonPhrase(Status::CODE_OK));
+        return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
     }
 
 }
