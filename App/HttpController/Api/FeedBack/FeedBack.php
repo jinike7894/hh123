@@ -1,5 +1,5 @@
 <?php
-namespace App\HttpController\Api\Post;
+namespace App\HttpController\Api\FeedBack;
 
 use App\Enum\ConfigKey\SystemConfigKey;
 use App\Enum\ConfigKey\AppConfigKey;
