@@ -24,7 +24,7 @@ class Notice extends UserBase
         $userId=$this->who['userId'];
         try {
             $keyword = [];
-            $page = (int)($param['page'] ?? 1);
+            $page = (int)($param['page'] ?? 1)-1;
             $pageSize = (int)($param['pageSize'] ?? SystemConfigKey::PAGE_SIZE);
             $field = [
                 'id ',
@@ -35,7 +35,7 @@ class Notice extends UserBase
             ];
             $model = NoticeModel::create();
             $queryBuild = new QueryBuilder();
-            $queryBuild->raw("select id,type,title,content,create_at from notice where (property=? or uid=?) and is_del  = ?  order by create_at desc limit ?,?", [1,$userId,0,$page-1,$pageSize]);
+            $queryBuild->raw("select id,type,title,content,create_at from notice where (property1} or uid=".$userId.") and is_del  = 0  order by create_at desc LIMIT {$page}, {$pageSize}", []);
             $data = DbManager::getInstance()->query($queryBuild, true, 'default');
 
         } catch (Throwable $e) {
