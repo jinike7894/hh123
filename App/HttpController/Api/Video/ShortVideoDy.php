@@ -9,7 +9,7 @@ use App\Model\Video\ShortVideoDyModel;
 use App\Model\Video\ShortVideoDyClickRecordModel;
 use App\Model\Video\ShortVideoDyCollectRecordModel;
 use App\Model\Video\ShortVideoDyUserModel;
-
+use App\Model\Video\ShortVideoDyFocusRecordModel;
 use App\Model\Video\ShortVideoDyReplyModel;
 use EasySwoole\Http\Message\Status;
 use EasySwoole\HttpAnnotation\AnnotationTag\Api;
@@ -316,7 +316,7 @@ class ShortVideoDy extends UserBase
             "create_at"=>time(),
             "update_at"=>time(),
             ];
-            ShortVideoDyUserModel::create($RecordData)->save();
+            ShortVideoDyFocusRecordModel::create($RecordData)->save();
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
@@ -326,7 +326,7 @@ class ShortVideoDy extends UserBase
         $param = $this->request()->getRequestParam();
         $userId=$this->who['userId'];
         try {
-            ShortVideoDyUserModel::create()->destroy(["uid"=>$userId,"fask_uid"=>$param["fask_uid"]],true);;
+            ShortVideoDyFocusRecordModel::create()->destroy(["uid"=>$userId,"fask_uid"=>$param["fask_uid"]],true);;
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
