@@ -178,7 +178,7 @@ class Post extends UserBase
                 $postIdArray[]=$v->post_id;
                 $result["replyData"]["list"][$k]->isClick=0;
             }
- 
+            $this->writeJson(Status::CODE_OK, $postIdArray, Status::getReasonPhrase(Status::CODE_OK));
             $ClickRes=PostClickRecordModel::create()->where(["uid"=>$userId,"type"=>2])->where("post_id",$postIdArray,"in")->all();
             return $this->writeJson(Status::CODE_OK, $ClickRes, Status::getReasonPhrase(Status::CODE_OK));
             foreach($result["list"] as $kl=>$vl){
