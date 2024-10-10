@@ -181,7 +181,7 @@ class Post extends UserBase
 
             $ClickRes=PostClickRecordModel::create()->where(["uid"=>$userId,"type"=>2])->where("post_id",$postIdArray,"in")->all();
            
-            foreach($result["list"] as $kl=>$vl){
+            foreach($result["replyData"]["list"] as $kl=>$vl){
                 foreach($ClickRes as $kc=>$vc){
                         if($vl->post_id==$vc["post_id"]){
                             $result["replyData"]["list"][$kl]->isClick=1;   
