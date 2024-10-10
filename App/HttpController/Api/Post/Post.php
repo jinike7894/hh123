@@ -175,10 +175,10 @@ class Post extends UserBase
            if($result["replyData"]["list"]){
             $postIdArray=[];
             foreach($result["replyData"]["list"] as $k=>$v){
-                $postIdArray[]=$v->id;
+                $postIdArray[]=$v->post_id;
                 $result["replyData"]["list"][$k]->isClick=0;
             }
-             //是否关注、点赞
+ 
             $ClickRes=PostClickRecordModel::create()->where(["uid"=>$userId,"type"=>2])->where("post_id",$postIdArray,"in")->all(); 
             foreach($result["list"] as $kl=>$vl){
                 foreach($ClickRes as $kc=>$vc){
