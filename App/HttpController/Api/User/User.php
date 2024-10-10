@@ -169,7 +169,7 @@ class User extends UserBase
             $pageSize = (int)($param['pageSize'] ?? SystemConfigKey::PAGE_SIZE);
             $data = ShortVideoDyFocusRecordModel::create()
             ->alias('focus')
-            ->join(ShortVideoDyUserModel::create()->getTableName() . ' AS user', 'user.id = focus.fake_uid', 'LEFT')
+            ->join(ShortVideoDyUserModel::create()->getTableName() . ' AS user', 'user.id = focus.fask_uid', 'LEFT')
             ->where(["uid"=>$userId])
             ->order('focus.create_at', 'DESC')
             ->getAll($page, [], $pageSize, ["*"]);
