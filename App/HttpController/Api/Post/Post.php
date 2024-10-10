@@ -179,7 +179,8 @@ class Post extends UserBase
                 $result["replyData"]["list"][$k]->isClick=0;
             }
  
-            $ClickRes=PostClickRecordModel::create()->where(["uid"=>$userId,"type"=>2])->where("post_id",$postIdArray,"in")->all(); 
+            $ClickRes=PostClickRecordModel::create()->where(["uid"=>$userId,"type"=>2])->where("post_id",$postIdArray,"in")->all();
+            return $this->writeJson(Status::CODE_OK, $ClickRes, Status::getReasonPhrase(Status::CODE_OK));
             foreach($result["list"] as $kl=>$vl){
                 foreach($ClickRes as $kc=>$vc){
                         if($vl->id==$vc["post_id"]){
