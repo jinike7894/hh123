@@ -168,6 +168,7 @@ class Post extends UserBase
             $result["replyData"]= PostReplyModel::create()
                 ->alias('reply')
                 ->join(UserModel::create()->getTableName() . ' AS user', 'reply.uid = user.userId', 'LEFT')
+                ->where(["reply.post_id"=>$param["postId"]])
                 ->order("reply.create_at","desc")
                 ->getAll($page, $keyword, $pageSize, ["reply.*","user.nickname","user.avatar"]);  
            //判断是否点赞过评论
