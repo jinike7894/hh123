@@ -272,7 +272,7 @@ class Post extends UserBase
                 case 2:
                     //点赞回复
                     $postReplyData=PostReplyModel::create()->where(["id"=>$param["postId"]])->field($field)->lockForUpdate()->get();
-                    PostReplyModel::create()->where(["id"=>$param["postId"]])->update(["click"=>$postReplyData["click"]+1]);
+                    PostReplyModel::create()->where(["post_id"=>$param["postId"]])->update(["click"=>$postReplyData["click"]+1]);
                     break;
                 default:
                 throw new Exception('错误的type', Status::CODE_BAD_REQUEST);
