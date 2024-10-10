@@ -183,7 +183,7 @@ class Post extends UserBase
            
             foreach($result["replyData"]["list"] as $kl=>$vl){
                 foreach($ClickRes as $kc=>$vc){
-                        if($vl->post_id==$vc["post_id"]){
+                        if($vl->id==$vc["post_id"]){
                             $result["replyData"]["list"][$kl]->isClick=1;   
                         }
                 }
