@@ -118,7 +118,7 @@ class ShortVideoDy extends UserBase
                             }
                     }
                 }
-                return $this->writeJson(Status::CODE_OK, $data["list"], Status::getReasonPhrase(Status::CODE_OK)); 
+      
                 //是否已关注
                 $focusRes=ShortVideoDyFocusRecordModel::create()->where(["uid"=>$userId])->all();
                 foreach($data["list"] as $kl=>$vl){
