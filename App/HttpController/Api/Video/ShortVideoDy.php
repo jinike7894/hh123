@@ -109,10 +109,9 @@ class ShortVideoDy extends UserBase
                 $clickRes=ShortVideoDyClickRecordModel::create()->where(["uid"=>$userId])->where("vod_id",$vodIdArray,"in")->field("vod_id")->all();
                 
                 foreach($data["list"] as $kcl=>$vcl){
-                    foreach($clickRes as $kc=>$vc){
+                    foreach($clickRes as $kclick=>$vclick){
                        
-                            if($vcl->vodId==$vc["vod_id"]){
-                                return $this->writeJson(Status::CODE_OK, $vc, Status::getReasonPhrase(Status::CODE_OK));
+                            if($vcl->vodId==$vclick["vod_id"]){
                                 $data["list"][$kcl]->isClick=1;   
                             }
                     }
