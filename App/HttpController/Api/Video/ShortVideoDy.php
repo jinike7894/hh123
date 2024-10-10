@@ -91,6 +91,9 @@ class ShortVideoDy extends UserBase
                 $vodIdArray=[];
                 foreach($data["list"] as $k=>$v){
                     $vodIdArray[]=$v->vodId;
+                    $data["list"][$k]->isCollect=0;
+                    $data["list"][$k]->isClick=0;
+                    $data["list"][$k]->isFocus=0;
                 }
                 //是否已收藏
                 $collectRes=ShortVideoDyCollectRecordModel::create()->where(["uid"=>$userId])->where("vod_id",$vodIdArray,"in")->field("vod_id")->all();
