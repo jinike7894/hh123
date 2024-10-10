@@ -112,7 +112,7 @@ class ShortVideoDy extends UserBase
                     foreach($clickRes as $kc=>$vc){
                         
                             if($vcl->vodId==$vc["vod_id"]){
-                                $data["list"][$kl]->isClick=1;   
+                                $data["list"][$kcl]->isClick=1;   
                             }
                     }
                 }
