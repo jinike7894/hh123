@@ -114,10 +114,11 @@ class ShortVideoDy extends UserBase
                             if($vcl->vodId==$vclick["vod_id"]){
                                
                                 $data["list"][$kcl]->isClick=1; 
-                                return $this->writeJson(Status::CODE_OK, $data["list"][$kcl]->isClick, Status::getReasonPhrase(Status::CODE_OK));  
+                                 
                             }
                     }
                 }
+                return $this->writeJson(Status::CODE_OK, $data["list"], Status::getReasonPhrase(Status::CODE_OK)); 
                 //是否已关注
                 $focusRes=ShortVideoDyFocusRecordModel::create()->where(["uid"=>$userId])->all();
                 foreach($data["list"] as $kl=>$vl){
