@@ -98,10 +98,10 @@ class ShortVideoDy extends UserBase
                 //是否已收藏
                 $collectRes=ShortVideoDyCollectRecordModel::create()->where(["uid"=>$userId])->where("vod_id",$vodIdArray,"in")->field("vod_id")->all();
                 
-                foreach($data["list"] as $kl=>$vl){
-                    foreach($collectRes as $kc=>$vc){
-                            if($vl->vodId==["vod_id"]){
-                                $data["list"][$kl]->isCollect=1;   
+                foreach($data["list"] as $kcollect=>$vcollect){
+                    foreach($collectRes as $kcollects=>$vcollects){
+                            if($vcollect->vodId==$vcollects["vod_id"]){
+                                $data["list"][$kcollect]->isCollect=1;   
                             }
                     }
                 }
