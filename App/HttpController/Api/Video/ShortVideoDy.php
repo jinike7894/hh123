@@ -112,6 +112,7 @@ class ShortVideoDy extends UserBase
                     foreach($clickRes as $kclick=>$vclick){
                        
                             if($vcl->vodId==$vclick["vod_id"]){
+                                return $this->writeJson(Status::CODE_OK, $vclick["vod_id"], Status::getReasonPhrase(Status::CODE_OK));
                                 $data["list"][$kcl]->isClick=1;   
                             }
                     }
