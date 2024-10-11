@@ -189,6 +189,7 @@ class Adult extends UserBase
             foreach($typeData as $typek=>$typev){
                 $typeIdData[]=$typev->type_id;
             }
+            return $this->writeJson(Status::CODE_OK, $typeIdData, Status::getReasonPhrase(Status::CODE_OK));
             if (in_array($data['typeId'], $typeIdData)) {
                 $data['isFree'] = 1;
             }
