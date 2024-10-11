@@ -9,6 +9,7 @@ use App\HttpController\Api\User\UserBase;
 use App\Model\Common\ConfigModel;
 use App\Model\User\UserVideoRecordModel;
 use App\Model\Video\VideoModel;
+use App\Model\Video\typeModel;
 use App\RedisKey\Navigation\TemplateKey;
 use App\Service\Video\TypeService;
 use App\Service\Video\VideoService;
@@ -182,10 +183,15 @@ class Adult extends UserBase
                 $data['vodApi'] = '';
             }
             $data['isFree'] = 0;
-            if($data['typeId'] == 70){
+            //查询type 是否是isfree
+            $typeData=typeModel::create()->where(["type_status"=>1])->field("type_id")->all();
+            $typeIdData=[];
+            foreach($typeData as $typek=>$typev){
+                $typeIdData[]=$typev->type_id;
+            }
+            if (in_array($data['typeId'], $typeIdData)) {
                 $data['isFree'] = 1;
             }
-
             $data['vodPlayFrom'] = VideoService::getInstance()->convertSourceText($data['vodPlayFrom']);
 
             $data->where(['vod_id' => $data->vodId])->update(['vod_hits' => QueryBuilder::inc()]);
