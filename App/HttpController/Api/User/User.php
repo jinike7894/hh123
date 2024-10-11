@@ -177,7 +177,7 @@ class User extends UserBase
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
 
-        return $this->writeJson(Status::CODE_OK, [], Status::getReasonPhrase(Status::CODE_OK));
+        return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
     }
     /**
      * 绑定手机号
