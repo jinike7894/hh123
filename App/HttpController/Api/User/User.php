@@ -170,7 +170,7 @@ class User extends UserBase
             $data = ShortVideoDyFocusRecordModel::create()
             ->alias('focus')
             ->join(ShortVideoDyUserModel::create()->getTableName() . ' AS user', 'user.id = focus.fask_uid', 'LEFT')
-            ->where(["uid"=>$userId])
+            ->where(["focus.uid"=>$userId])
             ->order('focus.create_at', 'DESC')
             ->getAll($page, [], $pageSize, ["*"]);
         } catch (Throwable $e) {
