@@ -184,12 +184,11 @@ class Adult extends UserBase
             }
             $data['isFree'] = 0;
             //查询type 是否是isfree
-            $typeData=typeModel::create()->where(["type_status"=>1])->field("type_id")->all();
+            $typeData=typeModel::create()->where(["type_status"=>1,"is_free"=>1])->field("type_id")->all();
             $typeIdData=[];
             foreach($typeData as $typek=>$typev){
                 $typeIdData[]=$typev->type_id;
             }
-            return $this->writeJson(Status::CODE_OK, $typeIdData, Status::getReasonPhrase(Status::CODE_OK));
             if (in_array($data['typeId'], $typeIdData)) {
                 $data['isFree'] = 1;
             }
