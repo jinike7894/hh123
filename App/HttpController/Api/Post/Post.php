@@ -130,6 +130,7 @@ class Post extends UserBase
             
             $result["postData"]= $model
                 ->where(["is_del"=>PostModel::NO_DELETE])
+                ->where(["uid"=>$userId])
                 ->order("create_at","desc")
                 ->getAll($page, $keyword, $pageSize, $field);
         } catch (Throwable $e) {
