@@ -40,6 +40,7 @@ class Post extends UserBase
                 'post.vodio_src',
                 'post.focus',
                 'post.uid',
+                'post.create_at',
                 'user.userId',
                 'user.avatar',
                 'user.nickname',
