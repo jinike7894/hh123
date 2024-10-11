@@ -301,12 +301,11 @@ class ShortVideoDy extends UserBase
                 "user.nickname",
                 "user.avatar",
             ];
-            $userId=$this->who['userId'];
+
             $data =ShortVideoDyReplyModel::create()->alias('reply')
                 ->join(UserModel::create()->getTableName() . ' AS user', 'reply.uid = user.userId', 'LEFT')
                 ->where(["reply.vod_id"=>$param["vodId"]])
-                ->order('create_at', 'DESC')
-                ->setDefaultOrder()
+                ->order('reply.create_at', 'DESC')
                 ->getAll($page, $keyword, $pageSize, $field);
             // 短视频分页还是按照正常的顺序分页，但是返回的列表打乱一下顺序保证每次都不一样。
             shuffle($data['list']);
