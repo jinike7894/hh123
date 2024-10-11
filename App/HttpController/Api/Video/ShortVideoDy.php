@@ -11,6 +11,7 @@ use App\Model\Video\ShortVideoDyCollectRecordModel;
 use App\Model\Video\ShortVideoDyUserModel;
 use App\Model\Video\ShortVideoDyFocusRecordModel;
 use App\Model\Video\ShortVideoDyReplyModel;
+use App\Model\User\UserModel;
 use EasySwoole\Http\Message\Status;
 use EasySwoole\HttpAnnotation\AnnotationTag\Api;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiDescription;
@@ -287,20 +288,23 @@ class ShortVideoDy extends UserBase
             $keyword = [];
             $page = (int)($param['page'] ?? 1);
             $pageSize = (int)($param['pageSize'] ?? SystemConfigKey::PAGE_SIZE);     
-            $model=ShortVideoDyReplyModel::create();
             $keyword['status'] = ShortVideoDyReplyModel::STATE_NORMAL;
             $field = [
-                'id',
-                'uid',
-                'click',
-                'content',
-                'create_at',
-                'update_at',
-                "vod_id",
+                'reply.id',
+                'reply.uid',
+                'reply.click',
+                'reply.content',
+                'reply.create_at',
+                'reply.update_at',
+                "reply.vod_id",
+                "user.userId",
+                "user.nickname",
+                "user.avatar",
             ];
             $userId=$this->who['userId'];
-            $data =$model
-                ->where(["uid"=>$userId,"vod_id"=>$param["vodId"]])
+            $data =ShortVideoDyReplyModel::create()->alias('reply')
+                ->join(UserModel::create()->getTableName() . ' AS user', 'reply.uid = user.userId', 'LEFT')
+                ->where(["reply.vod_id"=>$param["vodId"]])
                 ->order('create_at', 'DESC')
                 ->setDefaultOrder()
                 ->getAll($page, $keyword, $pageSize, $field);
