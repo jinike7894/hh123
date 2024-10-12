@@ -161,7 +161,7 @@ class ConfigModel extends AbstractModel
     public function getConfigValueByGroup(string $group)
     {
         $keyList = $this->where(['configGroup' => $group])->column('cfgKey');
-        throw new Exception('删除失败',606,null);
+        return $keyList;
         return $this->getConfigValueList($keyList);
     }
 }
