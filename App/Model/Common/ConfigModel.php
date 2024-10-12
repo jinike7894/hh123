@@ -5,7 +5,7 @@ namespace App\Model\Common;
 use EasySwoole\Http\Message\Status;
 use EasySwoole\ORM\AbstractModel;
 use EasySwoole\RedisPool\RedisPool;
-
+use Exception;
 /**
  * Class ConfigModel
  * @package App\Model\Common
@@ -161,6 +161,7 @@ class ConfigModel extends AbstractModel
     public function getConfigValueByGroup(string $group)
     {
         $keyList = $this->where(['configGroup' => $group])->column('cfgKey');
+        throw new Exception('删除失败',606,null);
         return $this->getConfigValueList($keyList);
     }
 }
