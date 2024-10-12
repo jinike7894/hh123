@@ -77,7 +77,6 @@ class AwsOssService
         if (!$uploadFile) {
             throw new Exception('请选择上传的文件！', Status::CODE_BAD_REQUEST);
         }
-
         $mediaType = explode('/', $uploadFile->getClientMediaType());
         $mediaType = $mediaType[1] ?? '';
         if (!in_array($mediaType, ['png', 'jpg', 'gif', 'jpeg', 'webp', 'm3u8'])) {
@@ -91,7 +90,7 @@ class AwsOssService
             'Bucket' => $this->s3Config[OssConfigKey::AWS_S3_BUCKET],
             'Key' => $path . DIRECTORY_SEPARATOR . $fileName,
             //'Key' => $fileName,
-            'Body' => mt_rand(100, 999) . $uploadFile->getStream(), // 原生使用这个 fopen('/path/to/image.jpg', 'r'),
+            'Body' => base64_encode($uploadFile->getStream()), // 原生使用这个 fopen('/path/to/image.jpg', 'r'),
             'ContentType' => $uploadFile->getClientMediaType(), // 必须要加这个才能以图片返回。（否则是下载文件）
         ]);
 
