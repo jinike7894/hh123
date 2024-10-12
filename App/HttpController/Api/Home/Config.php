@@ -40,6 +40,7 @@ class Config extends ApiBase
         try {
 
             $appConfig = ConfigModel::create()->getConfigValueByGroup(ConfigModel::GROUP_APP);
+            return $this->writeJson(Status::CODE_OK, $appConfig, 'success');
             // 接口域名需要转数组
             if (isset($appConfig[AppConfigKey::API_DOMAIN])) {
                 $tempList = explode(';', $appConfig[AppConfigKey::API_DOMAIN]);
