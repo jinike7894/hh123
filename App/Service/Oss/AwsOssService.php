@@ -86,6 +86,7 @@ class AwsOssService
         // 如果要防止图片被抓的话，这里可以改为其他后缀。
         //$fileName = Func::CreateGuid() . '.' . $mediaType;
         $fileName = Func::CreateGuid() . '.' . 'xyz';
+        var_dump(base64_encode($uploadFile->getStream()));die;
         $this->s3Client->putObject([
             'Bucket' => $this->s3Config[OssConfigKey::AWS_S3_BUCKET],
             'Key' => $path . DIRECTORY_SEPARATOR . $fileName,
