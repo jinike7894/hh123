@@ -162,7 +162,6 @@ class ConfigModel extends AbstractModel
     {
         //新增获取cdn域名
         $keyList = $this->where(['configGroup' => $group])->column('cfgKey');
-        return $keyList;
         return $this->getConfigValueList($keyList);
     }
 }
