@@ -161,8 +161,8 @@ class ConfigModel extends AbstractModel
     public function getConfigValueByGroup(string $group)
     {
         //新增获取cdn域名
-        $keyList=["AndroidVersion","AndroidMinVersion","AndroidDownloadUrl","IOSVersion","IOSMinVersion","IOSDownloadUrl","DownloadPageUrl","ApiDomain","CDN"];
-        // $keyList = $this->where('cfgKey', $cfg,"in")->column('cfgKey');
+        $keyList = $this->where(['configGroup' => $group])->column('cfgKey');
+        return $keyList;
         return $this->getConfigValueList($keyList);
     }
 }
