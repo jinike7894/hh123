@@ -31,6 +31,8 @@ class Video extends AdminBase
             isset($param['vodId']) && $keyword['vodId'] = $param['vodId'];
             isset($param['vodName']) && $keyword['vodName'] = $param['vodName'];
             isset($param['vod_status']) && $keyword['vod_status'] = intval($param['status']);
+
+            return $this->writeJson(Status::CODE_OK, $keyword, Status::getReasonPhrase(Status::CODE_OK));
             $field = [
                 '*',
             ];
