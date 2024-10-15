@@ -6,9 +6,11 @@ use App\Enum\Upload;
 use App\HttpController\Api\Admin\AdminBase;
 use App\Model\Admin\AdminLogsModel;
 use App\Model\Video\VideoModel;
+use App\Model\Video\TypeModel;
 use App\Service\Oss\AwsOssService;
 use App\Service\Oss\LocalOssService;
 use App\Service\Video\ShortVideoService;
+
 use App\Utility\Func;
 use EasySwoole\Http\Message\Status;
 use Exception;
@@ -69,16 +71,15 @@ class Video extends AdminBase
     public function add()
     {
         $param = $this->request()->getRequestParam();
-
         try {
             $data = [
                 'vodName' => trim($param['vod_name']), //名称
                 'fileType' => trim($param['file_type']), //url:远程图片awsS3:s3类型
                 'vodPic' => trim($param['vod_pic']), //封面
                 'vodPlayUrl' => trim($param['vod_play_url']),  //播放地址
-                'likeCount' => intval($param['like_count']),  //点赞量
-                'sort' => intval($param['sort']), //排序
-                'vod_status' => intval($param['status']), //是否开启
+                'click' => intval($param['click']),  //点赞量
+                'vod_up' => intval($param['vod_up']), //排序
+                'vod_status' => intval($param['vod_status']), //是否开启
                 'type_id' => intval($param['type_id']),//分类id
                 'is_recommod' => intval($param['is_recommod']),//是否推荐
             ];
@@ -86,13 +87,10 @@ class Video extends AdminBase
             /* 处理图片路径 begin */
             // $this->verifyAdParamStep2($data, $param);
             /* 处理图片路径 end */
-
             $result = VideoModel::create($data)->save();
-
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
-
         return $this->writeJson(
             Status::CODE_OK,
             $result,
@@ -107,14 +105,14 @@ class Video extends AdminBase
 
         try {
             $data = [
-                'vodName' => trim($param['vodName']),
-                'fileType' => trim($param['fileType']),
-                'vodPic' => trim($param['vodPic']),
-                'vodPlayUrl' => trim($param['vodPlayUrl']),
-                'likeCount' => intval($param['likeCount']),
-                'sort' => intval($param['sort']),
-                'status' => intval($param['status']),
-                'shortTag' => intval($param['shortTag']),
+                'vodName' => trim($param['vod_name']),
+                'fileType' => trim($param['file_type']),
+                'vodPic' => trim($param['vod_pic']),
+                'vodPlayUrl' => trim($param['vod_play_url']),
+                'click' => intval($param['click']),
+                'vod_up' => intval($param['vod_up']),
+                'vod_status' => intval($param['vod_status']),
+                'type_id' => intval($param['type_id']),
                 // 'is_recommod' => intval($param['is_recommod']),
             ];
 
@@ -125,27 +123,26 @@ class Video extends AdminBase
             }
 
             /* 处理图片路径 begin */
-            if ($shortVideo['fileType'] != $param['fileType'] || $shortVideo['vodPic'] != $param['vodPic']) {
-                $this->verifyAdParamStep2($data, $param);
-            }
+            // if ($shortVideo['fileType'] != $param['fileType'] || $shortVideo['vodPic'] != $param['vodPic']) {
+            //     $this->verifyAdParamStep2($data, $param);
+            // }
             /* 处理图片路径 end */
-            $result = VideoModel::create()->update($data,["vodId"=>intval($param['vodId'])]);
+            // $result = VideoModel::create()->update($data,["vodId"=>intval($param['vodId'])]);
             // 最后要删除之前的老图片（如果有修改图片的话）
-            if ($shortVideo['fileType'] != $param['fileType'] || $shortVideo['vodPic'] != $param['vodPic']) {
-                switch ($shortVideo['fileType']) {
-                    case VideoModel::FILE_TYPE_UP:
-                        LocalOssService::getInstance()->deleteObject($shortVideo['vodPic']);
-                        break;
-                    case VideoModel::FILE_TYPE_AWS_S3:
-                        AwsOssService::getInstance()->deleteObject($shortVideo['vodPic']);
-                        break;
-                }
-            }
-
+            // if ($shortVideo['fileType'] != $param['fileType'] || $shortVideo['vodPic'] != $param['vodPic']) {
+            //     switch ($shortVideo['fileType']) {
+            //         case VideoModel::FILE_TYPE_UP:
+            //             LocalOssService::getInstance()->deleteObject($shortVideo['vodPic']);
+            //             break;
+            //         case VideoModel::FILE_TYPE_AWS_S3:
+            //             AwsOssService::getInstance()->deleteObject($shortVideo['vodPic']);
+            //             break;
+            //     }
+            // }
+            $result = VideoModel::create()->update($data,["vodId"=>intval($param['vodId'])]);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
-
         return $this->writeJson(
             Status::CODE_OK,
             $result,
@@ -178,28 +175,28 @@ class Video extends AdminBase
         );
     }
     //设置推荐
-    public function setRecommod(){
+    // public function setRecommod(){
 
-        $param = $this->request()->getRequestParam();
-        try {
-            $data = [   
-                'is_recommod' => intval($param['is_recommod']),
-            ];
-            $result = VideoModel::create()->update($data,['vodId' => $param['vodId']]);
+    //     $param = $this->request()->getRequestParam();
+    //     try {
+    //         $data = [   
+    //             'is_recommod' => intval($param['is_recommod']),
+    //         ];
+    //         $result = VideoModel::create()->update($data,['vodId' => $param['vodId']]);
 
-        } catch (Throwable $e) {
-            return $this->writeJson($e->getCode(), [], $e->getMessage());
-        }
+    //     } catch (Throwable $e) {
+    //         return $this->writeJson($e->getCode(), [], $e->getMessage());
+    //     }
 
-        return $this->writeJson(
-            Status::CODE_OK,
-            $result,
-            Status::getReasonPhrase(Status::CODE_OK),
-            AdminLogsModel::TYPE_UPDATE,
-            json_encode($param, JSON_UNESCAPED_UNICODE)
-        );
+    //     return $this->writeJson(
+    //         Status::CODE_OK,
+    //         $result,
+    //         Status::getReasonPhrase(Status::CODE_OK),
+    //         AdminLogsModel::TYPE_UPDATE,
+    //         json_encode($param, JSON_UNESCAPED_UNICODE)
+    //     );
 
-    }
+    // }
     public function delete()
     {
         $param = $this->request()->getRequestParam();
@@ -257,6 +254,23 @@ class Video extends AdminBase
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
 
+        return $this->writeJson(
+            Status::CODE_OK,
+            $result,
+            Status::getReasonPhrase(Status::CODE_OK),
+            AdminLogsModel::TYPE_UPDATE,
+            json_encode($param, JSON_UNESCAPED_UNICODE)
+        );
+    }
+    //获取标签
+    public function getTag(){
+        $param = $this->request()->getRequestParam();
+
+        try {
+            $result = TypeModel::create()->where(["type_status"=>1])->all();
+        } catch (Throwable $e) {
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
         return $this->writeJson(
             Status::CODE_OK,
             $result,
