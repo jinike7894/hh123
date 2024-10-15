@@ -7,6 +7,7 @@ use App\Enum\Upload;
 use App\HttpController\Api\Admin\AdminBase;
 use App\Model\Admin\AdminLogsModel;
 use App\Model\Video\ShortVideoModel;
+use App\Model\Video\ShortVideoTagModel;
 use App\Service\Oss\AwsOssService;
 use App\Service\Oss\LocalOssService;
 use App\Service\Video\ShortVideoService;
@@ -190,15 +191,7 @@ class ShortVideo extends AdminBase
         );
     }
 
-    /**
-     * 短视频修改状态
-     * @Api(name="短视频修改状态",path="/Api/Admin/Video/ShortVideo/setStatus")
-     * @ApiDescription("短视频修改状态")
-     * @Method(allow=["POST"])
-     * @Param(name="vodId", alias="短视频id", type="int", required="", min="1", description="短视频id")
-     * @Param(name="status", alias="状态", type="int", required="", inArray=[1, 0], description="状态")
-     * @apiSuccess({"code":200,"result":true,"systemTimestamp":1692699050,"systemDateTime":"2023-08-22 18:10:50","msg":"OK"})
-     */
+
     public function setStatus()
     {
         $param = $this->request()->getRequestParam();
@@ -246,14 +239,7 @@ class ShortVideo extends AdminBase
         );
 
     }
-    /**
-     * 短视频删除
-     * @Api(name="短视频删除",path="/Api/Admin/Video/ShortVideo/delete")
-     * @ApiDescription("短视频删除")
-     * @Method(allow=["POST"])
-     * @Param(name="vodId", alias="短视频id", type="int", required="", min="1", description="短视频id")
-     * @ApiSuccess({"code":200,"result":true,"systemTimestamp":1692699050,"systemDateTime":"2023-08-22 18:10:50","msg":"OK"})
-     */
+   
     public function delete()
     {
         $param = $this->request()->getRequestParam();
@@ -277,7 +263,26 @@ class ShortVideo extends AdminBase
             json_encode($param, JSON_UNESCAPED_UNICODE)
         );
     }
+    //获取标签
+    public function getTag(){
+        $param = $this->request()->getRequestParam();
 
+        try {
+
+            $result = ShortVideoTagModel::create()->where(["is_del"=>0])->all();
+
+        } catch (Throwable $e) {
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
+
+        return $this->writeJson(
+            Status::CODE_OK,
+            $result,
+            Status::getReasonPhrase(Status::CODE_OK),
+            AdminLogsModel::TYPE_DELETE,
+            json_encode($param, JSON_UNESCAPED_UNICODE)
+        );
+    }
     // private function verifyAdParamStep2(&$data, $param)
     // {
     //     // 2023-10-26 因为图片可以留空，则需要判断一下。
