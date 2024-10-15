@@ -117,7 +117,7 @@ class Video extends AdminBase
             ];
 
             // 这里获取的是当前数据，用作对比判断。
-            $shortVideo = VideoModel::create()->get($param['vodId']);
+            $shortVideo = VideoModel::create()->get($param['vod_id']);
             if (!$shortVideo) {
                 throw new Exception('无效的视频id', Status::CODE_BAD_REQUEST);
             }
@@ -157,10 +157,10 @@ class Video extends AdminBase
 
         try {
             $data = [
-                'status' => intval($param['status']),
+                'vod_status' => intval($param['vod_status']),
             ];
 
-            $result = VideoModel::create()->update($data,["vodId"=>$param['vodId']]);
+            $result = VideoModel::create()->update($data,["vod_id"=>$param['vod_id']]);
 
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
@@ -265,7 +265,6 @@ class Video extends AdminBase
     //获取标签
     public function getTag(){
         $param = $this->request()->getRequestParam();
-
         try {
             $result = TypeModel::create()->where(["type_status"=>1])->all();
         } catch (Throwable $e) {
