@@ -109,6 +109,7 @@ class ShortVideo extends AdminBase
                 'status' => intval($param['status']),
                 'shortTag' => intval($param['shortTag']),
                 'is_recommod' => intval($param['is_recommod']),
+                "createTime"=>date("Y-m-d H:i:s"),
             ];
 
             /* 处理图片路径 begin */
@@ -276,23 +277,23 @@ class ShortVideo extends AdminBase
         );
     }
 
-    private function verifyAdParamStep2(&$data, $param)
-    {
-        // 2023-10-26 因为图片可以留空，则需要判断一下。
-        if($param['vodPic']){
-            switch ($param['fileType']) {
-                case ShortVideoModel::FILE_TYPE_UP:
-                    // 如果是上传的文件需要将临时文件转到广告目录
-                    $data['vodPic'] = Func::moveTempFile($param['vodPic'], Upload::TYPE_VIDEO);
-                    break;
-                case ShortVideoModel::FILE_TYPE_AWS_S3:
-                    // 亚马逊S3也是使用的相对路径，不需要处理本地图片。
-                case ShortVideoModel::FILE_TYPE_URL:
-                    $data['vodPic'] = $param['vodPic'];
-                    break;
-            }
-        }
-    }
+    // private function verifyAdParamStep2(&$data, $param)
+    // {
+    //     // 2023-10-26 因为图片可以留空，则需要判断一下。
+    //     if($param['vodPic']){
+    //         switch ($param['fileType']) {
+    //             case ShortVideoModel::FILE_TYPE_UP:
+    //                 // 如果是上传的文件需要将临时文件转到广告目录
+    //                 $data['vodPic'] = Func::moveTempFile($param['vodPic'], Upload::TYPE_VIDEO);
+    //                 break;
+    //             case ShortVideoModel::FILE_TYPE_AWS_S3:
+    //                 // 亚马逊S3也是使用的相对路径，不需要处理本地图片。
+    //             case ShortVideoModel::FILE_TYPE_URL:
+    //                 $data['vodPic'] = $param['vodPic'];
+    //                 break;
+    //         }
+    //     }
+    // }
 
     /**
      * 生成视频封面

@@ -88,7 +88,7 @@ class Video extends AdminBase
             /* 处理图片路径 begin */
             // $this->verifyAdParamStep2($data, $param);
             /* 处理图片路径 end */
-            $result = VideoModel::create($data)->save();
+            $result = VideoNewModel::create($data)->save();
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
