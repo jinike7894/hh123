@@ -56,7 +56,7 @@ class Video extends AdminBase
         try {
             $article = VideoModel::create()
                 ->get([
-                    'vodId' => $param['vodId'],
+                    'vodId' => $param['vod_id'],
                     // 'status' => [VideoModel::STATE_DELETED, '>'],
                 ]);
 
@@ -72,19 +72,19 @@ class Video extends AdminBase
 
         try {
             $data = [
-                'vodName' => trim($param['vodName']), //名称
-                'fileType' => trim($param['fileType']), //url:远程图片awsS3:s3类型
-                'vodPic' => trim($param['vodPic']), //封面
-                'vodPlayUrl' => trim($param['vodPlayUrl']),  //播放地址
-                'likeCount' => intval($param['likeCount']),  //点赞量
+                'vodName' => trim($param['vod_name']), //名称
+                'fileType' => trim($param['file_type']), //url:远程图片awsS3:s3类型
+                'vodPic' => trim($param['vod_pic']), //封面
+                'vodPlayUrl' => trim($param['vod_play_url']),  //播放地址
+                'likeCount' => intval($param['like_count']),  //点赞量
                 'sort' => intval($param['sort']), //排序
-                'status' => intval($param['status']), //是否开启
+                'vod_status' => intval($param['status']), //是否开启
                 'type_id' => intval($param['type_id']),//分类id
                 'is_recommod' => intval($param['is_recommod']),//是否推荐
             ];
 
             /* 处理图片路径 begin */
-            $this->verifyAdParamStep2($data, $param);
+            // $this->verifyAdParamStep2($data, $param);
             /* 处理图片路径 end */
 
             $result = VideoModel::create($data)->save();
