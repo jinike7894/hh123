@@ -83,6 +83,7 @@ class Video extends AdminBase
                 'vod_up' => intval($param['vod_up']), //排序
                 'vod_status' => intval($param['vod_status']), //是否开启
                 'type_id' => intval($param['type_id']),//分类id
+                "vod_time_add"=>date("Y-m-d H:i:s"),
                 // 'is_recommod' => intval($param['is_recommod']),//是否推荐
             ];
 
