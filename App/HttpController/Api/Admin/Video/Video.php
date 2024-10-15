@@ -74,7 +74,7 @@ class Video extends AdminBase
         $param = $this->request()->getRequestParam();
         try {
             $data = [
-                'vodName' => trim($param['vod_name']), //名称
+                'vod_name' => trim($param['vod_name']), //名称
                 'fileType' => trim($param['file_type']), //url:远程图片awsS3:s3类型
                 'vodPic' => trim($param['vod_pic']), //封面
                 'vodPlayUrl' => trim($param['vod_play_url']),  //播放地址
