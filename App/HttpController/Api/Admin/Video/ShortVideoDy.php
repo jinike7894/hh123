@@ -27,7 +27,7 @@ use Exception;
 use Throwable;
 
 
-class ShortVideo extends AdminBase
+class ShortVideoDy extends AdminBase
 {
     public function shortVideoList()
     {

@@ -81,7 +81,7 @@ class Video extends AdminBase
                 'vod_up' => intval($param['vod_up']), //排序
                 'vod_status' => intval($param['vod_status']), //是否开启
                 'type_id' => intval($param['type_id']),//分类id
-                'is_recommod' => intval($param['is_recommod']),//是否推荐
+                // 'is_recommod' => intval($param['is_recommod']),//是否推荐
             ];
 
             /* 处理图片路径 begin */
@@ -115,7 +115,6 @@ class Video extends AdminBase
                 'type_id' => intval($param['type_id']),
                 // 'is_recommod' => intval($param['is_recommod']),
             ];
-
             // 这里获取的是当前数据，用作对比判断。
             $shortVideo = VideoModel::create()->get($param['vod_id']);
             if (!$shortVideo) {
