@@ -6,6 +6,7 @@ use App\Enum\Upload;
 use App\HttpController\Api\Admin\AdminBase;
 use App\Model\Admin\AdminLogsModel;
 use App\Model\Video\VideoNewModel;
+use App\Model\Video\VideoModel;
 use App\Model\Video\TypeModel;
 use App\Service\Oss\AwsOssService;
 use App\Service\Oss\LocalOssService;
@@ -28,8 +29,8 @@ class Video extends AdminBase
             $keyword = [];
             $page = (int)($param['page'] ?? 1);
             $pageSize = (int)($param['pageSize'] ?? SystemConfigKey::PAGE_SIZE);
-            isset($param['vodId']) && $keyword['vodId'] = $param['vodId'];
-            isset($param['vodName']) && $keyword['vodName'] = $param['vodName'];
+            isset($param['vod_id']) && $keyword['vod_id'] = $param['vod_id'];
+            isset($param['vod_name']) && $keyword['vod_name'] = $param['vod_name'];
             isset($param['vod_status']) && $keyword['vod_status'] = intval($param['vod_status']);
             $field = [
                 '*',
@@ -120,7 +121,7 @@ class Video extends AdminBase
                 // 'is_recommod' => intval($param['is_recommod']),
             ];
             // 这里获取的是当前数据，用作对比判断。
-            $shortVideo = VideoModel::create()->get($param['vod_id']);
+            $shortVideo = VideoNewModel::create()->get($param['vod_id']);
             if (!$shortVideo) {
                 throw new Exception('无效的视频id', Status::CODE_BAD_REQUEST);
             }
@@ -142,7 +143,7 @@ class Video extends AdminBase
             //             break;
             //     }
             // }
-            $result = VideoModel::create()->update($data,["vod_id"=>intval($param['vod_id'])]);
+            $result = VideoNewModel::create()->update($data,["vod_id"=>intval($param['vod_id'])]);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
