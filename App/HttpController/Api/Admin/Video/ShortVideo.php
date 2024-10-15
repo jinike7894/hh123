@@ -84,7 +84,7 @@ class ShortVideo extends AdminBase
                 ->get([
                     'vodId' => $param['vodId'],
                     // 'status' => [ShortVideoModel::STATE_DELETED, '>'],
-                    "status"=>1,
+            
                 ]);
 
         } catch (Throwable $e) {
