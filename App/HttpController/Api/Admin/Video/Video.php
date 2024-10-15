@@ -32,21 +32,24 @@ class Video extends AdminBase
             $field = [
                 '*',
             ];
-
             $sortType = $param['type_id'] ?? '';
-
             $data = VideoModel::create()
                 ->where(["vod_status"=>1])
                 ->order("vod_id","desc")
                 ->getAll($page, $keyword, $pageSize, $field);
-
+            if($data["list"]){
+                foreach($data["list"] as $k=>$v){
+                    $data["list"][$k]=$this->convertKeysToCamelCase($v);
+                }
+            }
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
 
         return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
     }
-    public function shortVideoDetail()
+    //获取视频详情
+    public function VideoDetail()
     {
         $param = $this->request()->getRequestParam();
 
@@ -54,7 +57,7 @@ class Video extends AdminBase
             $article = VideoModel::create()
                 ->get([
                     'vodId' => $param['vodId'],
-                    'status' => [VideoModel::STATE_DELETED, '>'],
+                    // 'status' => [VideoModel::STATE_DELETED, '>'],
                 ]);
 
         } catch (Throwable $e) {
@@ -69,15 +72,15 @@ class Video extends AdminBase
 
         try {
             $data = [
-                'vodName' => trim($param['vodName']),
-                'fileType' => trim($param['fileType']),
-                'vodPic' => trim($param['vodPic']),
-                'vodPlayUrl' => trim($param['vodPlayUrl']),
-                'likeCount' => intval($param['likeCount']),
-                'sort' => intval($param['sort']),
-                'status' => intval($param['status']),
-                'shortTag' => intval($param['shortTag']),
-                'is_recommod' => intval($param['is_recommod']),
+                'vodName' => trim($param['vodName']), //名称
+                'fileType' => trim($param['fileType']), //url:远程图片awsS3:s3类型
+                'vodPic' => trim($param['vodPic']), //封面
+                'vodPlayUrl' => trim($param['vodPlayUrl']),  //播放地址
+                'likeCount' => intval($param['likeCount']),  //点赞量
+                'sort' => intval($param['sort']), //排序
+                'status' => intval($param['status']), //是否开启
+                'type_id' => intval($param['type_id']),//分类id
+                'is_recommod' => intval($param['is_recommod']),//是否推荐
             ];
 
             /* 处理图片路径 begin */
@@ -112,7 +115,7 @@ class Video extends AdminBase
                 'sort' => intval($param['sort']),
                 'status' => intval($param['status']),
                 'shortTag' => intval($param['shortTag']),
-                'is_recommod' => intval($param['is_recommod']),
+                // 'is_recommod' => intval($param['is_recommod']),
             ];
 
             // 这里获取的是当前数据，用作对比判断。

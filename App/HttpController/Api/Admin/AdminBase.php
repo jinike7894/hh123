@@ -268,4 +268,22 @@ class AdminBase extends ApiBase
             }
         });
     }
+     //变更参数
+     function convertKeysToCamelCase($array) {
+        $newArray = [];
+    
+        foreach ($array as $key => $value) {
+            // 将字段名中的下划线替换为空格
+            $key = str_replace('_', ' ', $key);
+            // 使每个单词的首字母大写
+            $key = ucwords($key);
+            // 去掉空格，形成驼峰命名法
+            $key = lcfirst(str_replace(' ', '', $key));
+            
+            // 将新键和原值添加到新数组中
+            $newArray[$key] = $value;
+        }
+    
+        return $newArray;
+    }
 }

@@ -162,4 +162,5 @@ class BaseController extends AnnotationController
         // 最终生成的token
         return $jwtObject->__toString();
     }
+   
 }
