@@ -36,7 +36,6 @@ class Video extends AdminBase
             ];
             $sortType = $param['type_id'] ?? '';
             $data = VideoModel::create()
-                ->where(["vod_status"=>1])
                 ->order("vod_id","desc")
                 ->getAll($page, $keyword, $pageSize, $field);
             if($data["list"]){
