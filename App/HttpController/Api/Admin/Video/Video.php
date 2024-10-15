@@ -106,7 +106,7 @@ class Video extends AdminBase
 
         try {
             $data = [
-                'vodName' => trim($param['vod_name']),
+                'vod_name' => trim($param['vod_name']),
                 'fileType' => trim($param['file_type']),
                 'vodPic' => trim($param['vod_pic']),
                 'vodPlayUrl' => trim($param['vod_play_url']),
