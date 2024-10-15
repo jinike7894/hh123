@@ -7,6 +7,7 @@ use App\Enum\Upload;
 use App\HttpController\Api\Admin\AdminBase;
 use App\Model\Admin\AdminLogsModel;
 use App\Model\Video\ShortVideoModel;
+use App\Model\Video\ShortVideoDyModel;
 use App\Service\Oss\AwsOssService;
 use App\Service\Oss\LocalOssService;
 use App\Service\Video\ShortVideoService;
@@ -29,37 +30,37 @@ use Throwable;
 
 class ShortVideoDy extends AdminBase
 {
-    public function List()
+    public function list()
     {
         $param = $this->request()->getRequestParam();
         try {
+            $model=ShortVideoDyModel::create();
             $keyword = [];
             $page = (int)($param['page'] ?? 1);
             $pageSize = (int)($param['pageSize'] ?? SystemConfigKey::PAGE_SIZE);
-
-            isset($param['vodId']) && $keyword['vodId'] = $param['vodId'];
-            isset($param['vodName']) && $keyword['vodName'] = $param['vodName'];
-            isset($param['status']) && $keyword['status'] = intval($param['status']);
-
+            if(isset($param['vodId'])){
+                $model->where(["vodId"=>$param['vodId']]);
+            }
+            if(isset($param['vodName'])){
+                $model->where(["vodName"=> ['%' . $param['vodName'] . '%', 'LIKE']]);
+            }
+            if(isset($param['status'])){
+                $model->where(["status"=>$param['status']]);
+            }
             $field = [
-                'vodId',
-                'vodName',
-                'vodPic',
-                'vodPlayUrl',
-                'fileType',
-                'realLikeCount',
-                'sort',
-                'status',
-                'createTime',
-                'updateTime',
+                '*',
             ];
 
             $sortType = $param['sortType'] ?? '';
 
-            $data = ShortVideoModel::create()
+            $data = $model
                 ->setOrderType($sortType)
                 ->getAll($page, $keyword, $pageSize, $field);
-
+            $shortTagId=[];
+            foreach($data["list"] as $k=>$v){
+                $shortTagId[]=$v->shortTag;
+            }
+            
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
@@ -71,10 +72,9 @@ class ShortVideoDy extends AdminBase
         $param = $this->request()->getRequestParam();
 
         try {
-            $article = ShortVideoModel::create()
+            $article = ShortVideoDyModel::create()
                 ->get([
                     'vodId' => $param['vodId'],
-                    'status' => [ShortVideoModel::STATE_DELETED, '>'],
                 ]);
 
         } catch (Throwable $e) {
@@ -93,7 +93,7 @@ class ShortVideoDy extends AdminBase
                 'fileType' => trim($param['fileType']),
                 'vodPic' => trim($param['vodPic']),
                 'vodPlayUrl' => trim($param['vodPlayUrl']),
-                'likeCount' => intval($param['likeCount']),
+                'click' => intval($param['click']),
                 'sort' => intval($param['sort']),
                 'status' => intval($param['status']),
                 'shortTag' => intval($param['shortTag']),
@@ -101,11 +101,11 @@ class ShortVideoDy extends AdminBase
                 "fake_uid"=>trim($param['fake_uid']),
             ];
 
-            /* 处理图片路径 begin */
-            $this->verifyAdParamStep2($data, $param);
-            /* 处理图片路径 end */
+            // /* 处理图片路径 begin */
+            // $this->verifyAdParamStep2($data, $param);
+            // /* 处理图片路径 end */
 
-            $result = ShortVideoService::getInstance()->addShortVideo($data);
+            $result = ShortVideoDyModel::create($data)->save();
 
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());

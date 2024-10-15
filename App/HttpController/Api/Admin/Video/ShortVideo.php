@@ -67,6 +67,18 @@ class ShortVideo extends AdminBase
             $data = $model
                 ->setOrderType($sortType)
                 ->getAll($page, $keyword, $pageSize, $field);
+            $shortTagId=[];
+            foreach($data["list"] as $k=>$v){
+                $shortTagId[]=$v->shortTag;
+            }
+            $res=ShortVideoTagModel::create()->where("id",$shortTagId,"in")->all();
+            foreach($data["list"] as $ktag=>$vtag){
+                foreach($res as $kk=>$vk){
+                    if($vtag->short_id==$vk["id"]){
+                        $data["list"][$ktag]->short_id=$vk["name"];
+                    }
+                }
+            }
 
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
@@ -266,15 +278,12 @@ class ShortVideo extends AdminBase
     //获取标签
     public function getTag(){
         $param = $this->request()->getRequestParam();
-
         try {
-
             $result = ShortVideoTagModel::create()->where(["is_del"=>0])->all();
 
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
-
         return $this->writeJson(
             Status::CODE_OK,
             $result,
