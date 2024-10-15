@@ -137,7 +137,7 @@ class ShortVideo extends AdminBase
 
         try {
             $data = [
-                'vodId' => intval($param['vodId']),
+               
                 'vodName' => trim($param['vodName']),
                 'fileType' => trim($param['fileType']),
                 'vodPic' => trim($param['vodPic']),
@@ -155,25 +155,25 @@ class ShortVideo extends AdminBase
                 throw new Exception('无效的视频id', Status::CODE_BAD_REQUEST);
             }
 
-            /* 处理图片路径 begin */
-            if ($shortVideo['fileType'] != $param['fileType'] || $shortVideo['vodPic'] != $param['vodPic']) {
-                $this->verifyAdParamStep2($data, $param);
-            }
+            // /* 处理图片路径 begin */
+            // if ($shortVideo['fileType'] != $param['fileType'] || $shortVideo['vodPic'] != $param['vodPic']) {
+            //     $this->verifyAdParamStep2($data, $param);
+            // }
             /* 处理图片路径 end */
 
-            $result = ShortVideoService::getInstance()->editShortVideo($data);
+            $result = ShortVideoModel::create()->update([ 'vodId' => intval($param['vodId'])],$data);
 
             // 最后要删除之前的老图片（如果有修改图片的话）
-            if ($shortVideo['fileType'] != $param['fileType'] || $shortVideo['vodPic'] != $param['vodPic']) {
-                switch ($shortVideo['fileType']) {
-                    case ShortVideoModel::FILE_TYPE_UP:
-                        LocalOssService::getInstance()->deleteObject($shortVideo['vodPic']);
-                        break;
-                    case ShortVideoModel::FILE_TYPE_AWS_S3:
-                        AwsOssService::getInstance()->deleteObject($shortVideo['vodPic']);
-                        break;
-                }
-            }
+            // if ($shortVideo['fileType'] != $param['fileType'] || $shortVideo['vodPic'] != $param['vodPic']) {
+            //     switch ($shortVideo['fileType']) {
+            //         case ShortVideoModel::FILE_TYPE_UP:
+            //             LocalOssService::getInstance()->deleteObject($shortVideo['vodPic']);
+            //             break;
+            //         case ShortVideoModel::FILE_TYPE_AWS_S3:
+            //             AwsOssService::getInstance()->deleteObject($shortVideo['vodPic']);
+            //             break;
+            //     }
+            // }
 
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());

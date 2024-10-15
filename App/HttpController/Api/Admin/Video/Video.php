@@ -111,7 +111,7 @@ class Video extends AdminBase
                 'fileType' => trim($param['file_type']),
                 'vod_pic' => trim($param['vod_pic']),
                 'vod_pic_thumb' => trim($param['vod_pic']),
-                'vodPlayUrl' => trim($param['vod_play_url']),
+                'vod_play_url' => trim($param['vod_play_url']),
                 'click' => intval($param['click']),
                 'vod_up' => intval($param['vod_up']),
                 'vod_status' => intval($param['vod_status']),
