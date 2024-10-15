@@ -26,9 +26,19 @@ class Video extends AdminBase
         $param = $this->request()->getRequestParam();
 
         try {
+            $model=VideoNewModel::create();
             $keyword = [];
             $page = (int)($param['page'] ?? 1);
             $pageSize = (int)($param['pageSize'] ?? SystemConfigKey::PAGE_SIZE);
+            if(isset($param['vod_id'])){
+                $model->where(["vod_id"=>$param['vod_id']]);
+            }
+            if(isset($param['vod_name'])){
+                $model->where(["vod_name"=> ['%' . $param['vod_name'] . '%', 'LIKE']]);
+            }
+            if(isset($param['vod_status'])){
+                $model->where(["vod_status"=>$param['vod_status']]);
+            }
             isset($param['vod_id']) && $keyword['vod_id'] = $param['vod_id'];
             isset($param['vod_name']) && $keyword['vod_name'] = $param['vod_name'];
             isset($param['vod_status']) && $keyword['vod_status'] = intval($param['vod_status']);
