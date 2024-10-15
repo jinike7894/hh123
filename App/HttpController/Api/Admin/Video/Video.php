@@ -37,11 +37,11 @@ class Video extends AdminBase
                 ->where(["vod_status"=>1])
                 ->order("vod_id","desc")
                 ->getAll($page, $keyword, $pageSize, $field);
-            if($data["list"]){
-                foreach($data["list"] as $k=>$v){
-                    $data["list"][$k]=$this->convertKeysToCamelCase($v);
-                }
-            }
+            // if($data["list"]){
+            //     // foreach($data["list"] as $k=>$v){
+            //     //     // $data["list"][$k]=$this->convertKeysToCamelCase($v);
+            //     // }
+            // }
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
