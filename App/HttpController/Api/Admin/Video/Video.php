@@ -74,6 +74,7 @@ class Video extends AdminBase
         try {
             $data = [
                 'vod_name' => trim($param['vod_name']), //名称
+                'vod_content' => trim($param['vod_name']), //名称
                 'file_type' => trim($param['file_type']), //url:远程图片awsS3:s3类型
                 'vod_pic' => trim($param['vod_pic']), //封面4
                 'vod_pic_thumb' => trim($param['vod_pic']), //封面
