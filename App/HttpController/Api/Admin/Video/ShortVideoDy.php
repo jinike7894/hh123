@@ -8,6 +8,7 @@ use App\HttpController\Api\Admin\AdminBase;
 use App\Model\Admin\AdminLogsModel;
 use App\Model\Video\ShortVideoModel;
 use App\Model\Video\ShortVideoDyModel;
+use App\Model\Video\ShortVideoDyUserModel;
 use App\Service\Oss\AwsOssService;
 use App\Service\Oss\LocalOssService;
 use App\Service\Video\ShortVideoService;
@@ -60,7 +61,7 @@ class ShortVideoDy extends AdminBase
             foreach($data["list"] as $k=>$v){
                 $shortTagId[]=$v->shortTag;
             }
-            
+
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
@@ -96,7 +97,6 @@ class ShortVideoDy extends AdminBase
                 'click' => intval($param['click']),
                 'sort' => intval($param['sort']),
                 'status' => intval($param['status']),
-                'shortTag' => intval($param['shortTag']),
                 'is_recommod' => intval($param['is_recommod']),
                 "fake_uid"=>trim($param['fake_uid']),
             ];
@@ -125,15 +125,13 @@ class ShortVideoDy extends AdminBase
 
         try {
             $data = [
-                'vodId' => intval($param['vodId']),
                 'vodName' => trim($param['vodName']),
                 'fileType' => trim($param['fileType']),
                 'vodPic' => trim($param['vodPic']),
                 'vodPlayUrl' => trim($param['vodPlayUrl']),
-                'likeCount' => intval($param['likeCount']),
+                'click' => intval($param['click']),
                 'sort' => intval($param['sort']),
                 'status' => intval($param['status']),
-                'shortTag' => intval($param['shortTag']),
                 'is_recommod' => intval($param['is_recommod']),
                 "fake_uid"=>trim($param['fake_uid']),
             ];
@@ -143,26 +141,26 @@ class ShortVideoDy extends AdminBase
             if (!$shortVideo) {
                 throw new Exception('无效的视频id', Status::CODE_BAD_REQUEST);
             }
-
+            $result = ShortVideoDyModel::create()->update($data,['vodId' => intval($param['vodId'])]);
             /* 处理图片路径 begin */
-            if ($shortVideo['fileType'] != $param['fileType'] || $shortVideo['vodPic'] != $param['vodPic']) {
-                $this->verifyAdParamStep2($data, $param);
-            }
-            /* 处理图片路径 end */
+            // if ($shortVideo['fileType'] != $param['fileType'] || $shortVideo['vodPic'] != $param['vodPic']) {
+            //     $this->verifyAdParamStep2($data, $param);
+            // }
+            // /* 处理图片路径 end */
 
-            $result = ShortVideoService::getInstance()->editShortVideo($data);
+            // $result = ShortVideoService::getInstance()->editShortVideo($data);
 
-            // 最后要删除之前的老图片（如果有修改图片的话）
-            if ($shortVideo['fileType'] != $param['fileType'] || $shortVideo['vodPic'] != $param['vodPic']) {
-                switch ($shortVideo['fileType']) {
-                    case ShortVideoModel::FILE_TYPE_UP:
-                        LocalOssService::getInstance()->deleteObject($shortVideo['vodPic']);
-                        break;
-                    case ShortVideoModel::FILE_TYPE_AWS_S3:
-                        AwsOssService::getInstance()->deleteObject($shortVideo['vodPic']);
-                        break;
-                }
-            }
+            // // 最后要删除之前的老图片（如果有修改图片的话）
+            // if ($shortVideo['fileType'] != $param['fileType'] || $shortVideo['vodPic'] != $param['vodPic']) {
+            //     switch ($shortVideo['fileType']) {
+            //         case ShortVideoModel::FILE_TYPE_UP:
+            //             LocalOssService::getInstance()->deleteObject($shortVideo['vodPic']);
+            //             break;
+            //         case ShortVideoModel::FILE_TYPE_AWS_S3:
+            //             AwsOssService::getInstance()->deleteObject($shortVideo['vodPic']);
+            //             break;
+            //     }
+            // }
 
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
@@ -182,11 +180,10 @@ class ShortVideoDy extends AdminBase
 
         try {
             $data = [
-                'vodId' => $param['vodId'],
                 'status' => intval($param['status']),
             ];
 
-            $result = ShortVideoService::getInstance()->editShortVideo($data);
+            $result = ShortVideoDyModel::create()->update($data,["vodId"=>$param['vodId']]);
 
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
@@ -208,7 +205,7 @@ class ShortVideoDy extends AdminBase
             $data = [   
                 'is_recommod' => intval($param['is_recommod']),
             ];
-            $result = ShortVideoModel::create()->update($data,['vodId' => $param['vodId']]);
+            $result = ShortVideoDyModel::create()->update($data,['vodId' => $param['vodId']]);
 
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
@@ -223,68 +220,85 @@ class ShortVideoDy extends AdminBase
         );
 
     }
-    public function delete()
-    {
+    //获取博主
+    public function faskUid(){
         $param = $this->request()->getRequestParam();
-
         try {
-            $data = [];
-            $data['vodId'] = $param['vodId'];
-            $data['status'] = ShortVideoModel::STATE_DELETED;
-
-            $result = ShortVideoService::getInstance()->editShortVideo($data);
-
+            $model=ShortVideoDyUserModel::create();
+  
+            $field = [
+                '*'
+            ];
+            $data = $model
+                ->where(["is_del"=>0])
+                ->all();
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
-
-        return $this->writeJson(
-            Status::CODE_OK,
-            $result,
-            Status::getReasonPhrase(Status::CODE_OK),
-            AdminLogsModel::TYPE_DELETE,
-            json_encode($param, JSON_UNESCAPED_UNICODE)
-        );
+        return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
     }
-    private function verifyAdParamStep2(&$data, $param)
-    {
-        // 2023-10-26 因为图片可以留空，则需要判断一下。
-        if($param['vodPic']){
-            switch ($param['fileType']) {
-                case ShortVideoModel::FILE_TYPE_UP:
-                    // 如果是上传的文件需要将临时文件转到广告目录
-                    $data['vodPic'] = Func::moveTempFile($param['vodPic'], Upload::TYPE_VIDEO);
-                    break;
-                case ShortVideoModel::FILE_TYPE_AWS_S3:
-                    // 亚马逊S3也是使用的相对路径，不需要处理本地图片。
-                case ShortVideoModel::FILE_TYPE_URL:
-                    $data['vodPic'] = $param['vodPic'];
-                    break;
-            }
-        }
-    }
-    public function generateCover()
-    {
-        $param = $this->request()->getRequestParam();
+    // public function delete()
+    // {
+    //     $param = $this->request()->getRequestParam();
 
-        try {
-            // 这里获取的是当前数据，用作对比判断。
-            $shortVideo = ShortVideoModel::create()->get($param['vodId']);
+    //     try {
+    //         $data = [];
+    //         $data['vodId'] = $param['vodId'];
+    //         $data['status'] = ShortVideoModel::STATE_DELETED;
 
-            if (!$shortVideo) {
-                throw new Exception('无效的视频id', Status::CODE_BAD_REQUEST);
-            }
+    //         $result = ShortVideoService::getInstance()->editShortVideo($data);
 
-            $result = ShortVideoService::getInstance()->generateCover($shortVideo);
-        } catch (Throwable $e) {
-            return $this->writeJson($e->getCode(), [], $e->getMessage());
-        }
-        return $this->writeJson(
-            Status::CODE_OK,
-            $result,
-            Status::getReasonPhrase(Status::CODE_OK),
-            AdminLogsModel::TYPE_UPDATE,
-            json_encode($param, JSON_UNESCAPED_UNICODE)
-        );
-    }
+    //     } catch (Throwable $e) {
+    //         return $this->writeJson($e->getCode(), [], $e->getMessage());
+    //     }
+
+    //     return $this->writeJson(
+    //         Status::CODE_OK,
+    //         $result,
+    //         Status::getReasonPhrase(Status::CODE_OK),
+    //         AdminLogsModel::TYPE_DELETE,
+    //         json_encode($param, JSON_UNESCAPED_UNICODE)
+    //     );
+    // }
+    // private function verifyAdParamStep2(&$data, $param)
+    // {
+    //     // 2023-10-26 因为图片可以留空，则需要判断一下。
+    //     if($param['vodPic']){
+    //         switch ($param['fileType']) {
+    //             case ShortVideoModel::FILE_TYPE_UP:
+    //                 // 如果是上传的文件需要将临时文件转到广告目录
+    //                 $data['vodPic'] = Func::moveTempFile($param['vodPic'], Upload::TYPE_VIDEO);
+    //                 break;
+    //             case ShortVideoModel::FILE_TYPE_AWS_S3:
+    //                 // 亚马逊S3也是使用的相对路径，不需要处理本地图片。
+    //             case ShortVideoModel::FILE_TYPE_URL:
+    //                 $data['vodPic'] = $param['vodPic'];
+    //                 break;
+    //         }
+    //     }
+    // }
+    // public function generateCover()
+    // {
+    //     $param = $this->request()->getRequestParam();
+
+    //     try {
+    //         // 这里获取的是当前数据，用作对比判断。
+    //         $shortVideo = ShortVideoModel::create()->get($param['vodId']);
+
+    //         if (!$shortVideo) {
+    //             throw new Exception('无效的视频id', Status::CODE_BAD_REQUEST);
+    //         }
+
+    //         $result = ShortVideoService::getInstance()->generateCover($shortVideo);
+    //     } catch (Throwable $e) {
+    //         return $this->writeJson($e->getCode(), [], $e->getMessage());
+    //     }
+    //     return $this->writeJson(
+    //         Status::CODE_OK,
+    //         $result,
+    //         Status::getReasonPhrase(Status::CODE_OK),
+    //         AdminLogsModel::TYPE_UPDATE,
+    //         json_encode($param, JSON_UNESCAPED_UNICODE)
+    //     );
+    // }
 }
