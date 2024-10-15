@@ -28,15 +28,16 @@ class Video extends AdminBase
             $pageSize = (int)($param['pageSize'] ?? SystemConfigKey::PAGE_SIZE);
             isset($param['vodId']) && $keyword['vodId'] = $param['vodId'];
             isset($param['vodName']) && $keyword['vodName'] = $param['vodName'];
-            isset($param['status']) && $keyword['status'] = intval($param['status']);
+            isset($param['vod_status']) && $keyword['vod_status'] = intval($param['status']);
             $field = [
                 '*',
             ];
 
-            $sortType = $param['sortType'] ?? '';
+            $sortType = $param['type_id'] ?? '';
 
             $data = VideoModel::create()
-                ->setOrderType($sortType)
+                ->where(["vod_status"=>1])
+                ->order("vod_id","desc")
                 ->getAll($page, $keyword, $pageSize, $field);
 
         } catch (Throwable $e) {
