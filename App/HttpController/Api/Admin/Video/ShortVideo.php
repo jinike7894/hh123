@@ -176,7 +176,7 @@ class ShortVideo extends AdminBase
             // }
             /* 处理图片路径 end */
 
-            $result = ShortVideoModel::create()->update([ 'vodId' => intval($param['vodId'])],$data);
+            $result = ShortVideoModel::create()->update($data,['vodId' => intval($param['vodId'])],);
 
             // 最后要删除之前的老图片（如果有修改图片的话）
             // if ($shortVideo['fileType'] != $param['fileType'] || $shortVideo['vodPic'] != $param['vodPic']) {
