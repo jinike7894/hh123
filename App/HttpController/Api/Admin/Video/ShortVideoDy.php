@@ -133,7 +133,7 @@ class ShortVideoDy extends AdminBase
                 'sort' => intval($param['sort']),
                 'status' => intval($param['status']),
                 'is_recommod' => intval($param['is_recommod']),
-                "fake_uid"=>trim($param['fake_uid']),
+                "fake_uid"=>intval($param['fake_uid']),
             ];
 
             // 这里获取的是当前数据，用作对比判断。
