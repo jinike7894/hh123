@@ -74,7 +74,7 @@ class ShortVideo extends AdminBase
             $res=ShortVideoTagModel::create()->where("id",$shortTagId,"in")->all();
             foreach($data["list"] as $ktag=>$vtag){
                 foreach($res as $kk=>$vk){
-                    if($vtag->short_id==$vk["id"]){
+                    if($vtag->shortTag==$vk["id"]){
                         $data["list"][$ktag]->short_id=$vk["name"];
                     }
                 }
