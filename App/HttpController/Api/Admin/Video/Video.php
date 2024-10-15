@@ -76,8 +76,9 @@ class Video extends AdminBase
             $data = [
                 'vod_name' => trim($param['vod_name']), //名称
                 'fileType' => trim($param['file_type']), //url:远程图片awsS3:s3类型
-                'vodPic' => trim($param['vod_pic']), //封面
-                'vodPlayUrl' => trim($param['vod_play_url']),  //播放地址
+                'vod_pic' => trim($param['vod_pic']), //封面4
+                'vod_pic_thumb' => trim($param['vod_pic']), //封面
+                'vod_play_url' => trim($param['vod_play_url']),  //播放地址
                 'click' => intval($param['click']),  //点赞量
                 'vod_up' => intval($param['vod_up']), //排序
                 'vod_status' => intval($param['vod_status']), //是否开启
@@ -108,7 +109,8 @@ class Video extends AdminBase
             $data = [
                 'vod_name' => trim($param['vod_name']),
                 'fileType' => trim($param['file_type']),
-                'vodPic' => trim($param['vod_pic']),
+                'vod_pic' => trim($param['vod_pic']),
+                'vod_pic_thumb' => trim($param['vod_pic']),
                 'vodPlayUrl' => trim($param['vod_play_url']),
                 'click' => intval($param['click']),
                 'vod_up' => intval($param['vod_up']),
