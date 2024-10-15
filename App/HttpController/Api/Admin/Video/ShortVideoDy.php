@@ -29,10 +29,9 @@ use Throwable;
 
 class ShortVideoDy extends AdminBase
 {
-    public function shortVideoList()
+    public function List()
     {
         $param = $this->request()->getRequestParam();
-
         try {
             $keyword = [];
             $page = (int)($param['page'] ?? 1);
@@ -67,7 +66,7 @@ class ShortVideoDy extends AdminBase
 
         return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
     }
-    public function shortVideoDetail()
+    public function VideoDetail()
     {
         $param = $this->request()->getRequestParam();
 

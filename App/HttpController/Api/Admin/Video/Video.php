@@ -138,7 +138,7 @@ class Video extends AdminBase
             //             break;
             //     }
             // }
-            $result = VideoModel::create()->update($data,["vodId"=>intval($param['vodId'])]);
+            $result = VideoModel::create()->update($data,["vod_id"=>intval($param['vod_id'])]);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }

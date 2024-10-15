@@ -35,20 +35,8 @@ use Throwable;
  */
 class ShortVideo extends AdminBase
 {
-    /**
-     * 短视频列表
-     * @Api(name="短视频列表",path="/Api/Admin/Video/ShortVideo/shortVideoList")
-     * @ApiDescription("短视频列表")
-     * @Method(allow=["GET", "POST"])
-     * @Param(name="page", alias="页码", type="int", defaultValue="1", min="1", integer="", description="当前页数")
-     * @Param(name="pageSize", alias="每页显示条数", type="int", defaultValue="20", min="1", max="100", integer="", description="每页显示条数")
-     * @Param(name="vodId", alias="短视频id", type="int", optional="", min="1", description="短视频id")
-     * @Param(name="vodName", alias="视频名", type="string", optional="", mbLengthMin="1", description="视频名")
-     * @Param(name="sortType", alias="排序类型", type="string", optional="", inArray=["vodId_DESC", "vodId_ASC", "sort_ASC", "sort_DESC"], description="1.id倒叙（vodId_DESC）2.id正叙（vodId_ASC）3.sort正叙（sort_ASC） 4.sort倒叙（sort_DESC）")
-     * @Param(name="status", alias="状态", type="int", optional="", inArray=[1, 0], description="状态")
-     * @ApiSuccess({"code":200,"result":{"total":1,"list":[{"vodId":1,"vodName":"测试1","vodPic":"/Public/test/1.png","vodPlayUrl":"/Public/test/1.m3u8","fileType":"up","likeCount":0,"sort":0,"status":1,"createTime":"2023-10-23 19:36:19","updateTime":"2023-10-23 19:36:21"}],"options":[]},"systemTimestamp":1698061158,"systemDateTime":"2023-10-23 19:39:18","msg":"OK"})
-     */
-    public function shortVideoList()
+    //列表
+    public function list()
     {
         $param = $this->request()->getRequestParam();
 
@@ -56,11 +44,9 @@ class ShortVideo extends AdminBase
             $keyword = [];
             $page = (int)($param['page'] ?? 1);
             $pageSize = (int)($param['pageSize'] ?? SystemConfigKey::PAGE_SIZE);
-
             isset($param['vodId']) && $keyword['vodId'] = $param['vodId'];
             isset($param['vodName']) && $keyword['vodName'] = $param['vodName'];
             isset($param['status']) && $keyword['status'] = intval($param['status']);
-
             $field = [
                 'vodId',
                 'vodName',
@@ -87,15 +73,8 @@ class ShortVideo extends AdminBase
         return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
     }
 
-    /**
-     * 短视频详情
-     * @Api(name="短视频详情",path="/Api/Admin/Video/ShortVideo/shortVideoDetail")
-     * @ApiDescription("短视频详情")
-     * @Method(allow=["GET", "POST"])
-     * @Param(name="vodId", alias="短视频id", type="int", required="", min="1", description="短视频id")
-     * @ApiSuccess({"code":200,"result":{"vodId":1,"vodName":"测试1","vodPic":"/Public/test/1.png","vodPlayUrl":"/Public/test/1.m3u8","fileType":"up","likeCount":0,"sort":0,"status":1,"createTime":"2023-10-23 19:36:19","updateTime":"2023-10-23 19:36:21"},"systemTimestamp":1698061225,"systemDateTime":"2023-10-23 19:40:25","msg":"OK"})
-     */
-    public function shortVideoDetail()
+    //详情
+    public function VideoDetail()
     {
         $param = $this->request()->getRequestParam();
 
@@ -103,7 +82,8 @@ class ShortVideo extends AdminBase
             $article = ShortVideoModel::create()
                 ->get([
                     'vodId' => $param['vodId'],
-                    'status' => [ShortVideoModel::STATE_DELETED, '>'],
+                    // 'status' => [ShortVideoModel::STATE_DELETED, '>'],
+                    "status"=>1,
                 ]);
 
         } catch (Throwable $e) {
@@ -113,20 +93,7 @@ class ShortVideo extends AdminBase
         return $this->writeJson(Status::CODE_OK, $article, Status::getReasonPhrase(Status::CODE_OK));
     }
 
-    /**
-     * 短视频添加
-     * @Api(name="短视频添加",path="/Api/Admin/Video/ShortVideo/add")
-     * @ApiDescription("短视频添加")
-     * @Method(allow=["POST"])
-     * @Param(name="vodName", alias="视频名", type="string", required="", mbLengthMin="1", mbLengthMax="50", description="视频名")
-     * @Param(name="fileType", alias="上传图片类型", type="string", required="", inArray=["up", "url", "awsS3"], description="上传图片类型(up本地上传,url网络地址,awsS3亚马逊s3)")
-     * @Param(name="vodPic", alias="封面图", type="string", required="", mbLengthMin="0", description="封面图")
-     * @Param(name="vodPlayUrl", alias="播放地址", type="string", required="", mbLengthMin="1", description="播放地址")
-     * @Param(name="likeCount", alias="点赞数", type="int", required="", min="0", description="虚假点赞数")
-     * @Param(name="sort", alias="排序", type="int", required="", min="0", max="65535", description="排序")
-     * @Param(name="status", alias="状态", type="int", required="", inArray=[1, 0], description="状态")
-     * @ApiSuccess({"code":200,"result":true,"systemTimestamp":1692698884,"systemDateTime":"2023-08-22 18:08:04","msg":"OK"})
-     */
+   //添加
     public function add()
     {
         $param = $this->request()->getRequestParam();
@@ -145,10 +112,10 @@ class ShortVideo extends AdminBase
             ];
 
             /* 处理图片路径 begin */
-            $this->verifyAdParamStep2($data, $param);
+            // $this->verifyAdParamStep2($data, $param);
             /* 处理图片路径 end */
 
-            $result = ShortVideoService::getInstance()->addShortVideo($data);
+            $result = ShortVideoModel::create($data)->save();
 
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
@@ -163,21 +130,7 @@ class ShortVideo extends AdminBase
         );
     }
 
-    /**
-     * 短视频编辑
-     * @Api(name="短视频编辑",path="/Api/Admin/Video/ShortVideo/edit")
-     * @ApiDescription("短视频编辑")
-     * @Method(allow=["POST"])
-     * @Param(name="vodId", alias="短视频id", type="int", required="", min="1", description="短视频id")
-     * @Param(name="vodName", alias="视频名", type="string", required="", mbLengthMin="1", mbLengthMax="50", description="视频名")
-     * @Param(name="fileType", alias="上传图片类型", type="string", required="", inArray=["up", "url", "awsS3"], description="上传图片类型(up本地上传,url网络地址,awsS3亚马逊s3)")
-     * @Param(name="vodPic", alias="封面图", type="string", required="", mbLengthMin="0", description="封面图")
-     * @Param(name="vodPlayUrl", alias="播放地址", type="string", required="", mbLengthMin="1", description="播放地址")
-     * @Param(name="likeCount", alias="点赞数", type="int", required="", min="0", max="65535", description="虚假点赞数")
-     * @Param(name="sort", alias="排序", type="int", required="", min="0", max="65535", description="排序")
-     * @Param(name="status", alias="状态", type="int", required="", inArray=[1, 0], description="状态")
-     * @ApiSuccess({"code":200,"result":true,"systemTimestamp":1692699050,"systemDateTime":"2023-08-22 18:10:50","msg":"OK"})
-     */
+ 
     public function edit()
     {
         $param = $this->request()->getRequestParam();
