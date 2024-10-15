@@ -41,28 +41,29 @@ class ShortVideo extends AdminBase
         $param = $this->request()->getRequestParam();
 
         try {
+            $model=ShortVideoModel::create();
             $keyword = [];
             $page = (int)($param['page'] ?? 1);
             $pageSize = (int)($param['pageSize'] ?? SystemConfigKey::PAGE_SIZE);
-            isset($param['vodId']) && $keyword['vodId'] = $param['vodId'];
-            isset($param['vodName']) && $keyword['vodName'] = $param['vodName'];
-            isset($param['status']) && $keyword['status'] = intval($param['status']);
+
+
+            if(isset($param['vodId'])){
+                $model->where(["vodId"=>$param['vodId']]);
+            }
+            if(isset($param['vodName'])){
+                $model->where(["vodName"=> ['%' . $param['vodName'] . '%', 'LIKE']]);
+            }
+            if(isset($param['status'])){
+                $model->where(["status"=>$param['status']]);
+            }
+
             $field = [
-                'vodId',
-                'vodName',
-                'vodPic',
-                'vodPlayUrl',
-                'fileType',
-                'realLikeCount',
-                'sort',
-                'status',
-                'createTime',
-                'updateTime',
+                '*',
             ];
 
             $sortType = $param['sortType'] ?? '';
 
-            $data = ShortVideoModel::create()
+            $data = $model
                 ->setOrderType($sortType)
                 ->getAll($page, $keyword, $pageSize, $field);
 
