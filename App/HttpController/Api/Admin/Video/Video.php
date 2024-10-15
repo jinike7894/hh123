@@ -5,7 +5,7 @@ use App\Enum\ConfigKey\SystemConfigKey;
 use App\Enum\Upload;
 use App\HttpController\Api\Admin\AdminBase;
 use App\Model\Admin\AdminLogsModel;
-use App\Model\Video\VideoModel;
+use App\Model\Video\VideoNewModel;
 use App\Model\Video\TypeModel;
 use App\Service\Oss\AwsOssService;
 use App\Service\Oss\LocalOssService;
@@ -30,14 +30,12 @@ class Video extends AdminBase
             $pageSize = (int)($param['pageSize'] ?? SystemConfigKey::PAGE_SIZE);
             isset($param['vodId']) && $keyword['vodId'] = $param['vodId'];
             isset($param['vodName']) && $keyword['vodName'] = $param['vodName'];
-            isset($param['vod_status']) && $keyword['vod_status'] = intval($param['status']);
-
-            return $this->writeJson(Status::CODE_OK, $keyword, Status::getReasonPhrase(Status::CODE_OK));
+            isset($param['vod_status']) && $keyword['vod_status'] = intval($param['vod_status']);
             $field = [
                 '*',
             ];
             $sortType = $param['type_id'] ?? '';
-            $data = VideoModel::create()
+            $data = VideoNewModel::create()
                 ->order("vod_id","desc")
                 ->getAll($page, $keyword, $pageSize, $field);
             if($data["list"]){
