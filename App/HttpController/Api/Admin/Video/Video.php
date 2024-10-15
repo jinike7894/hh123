@@ -161,7 +161,7 @@ class Video extends AdminBase
                 'vod_status' => intval($param['vod_status']),
             ];
 
-            $result = VideoModel::create()->update($data,["vod_id"=>$param['vod_id']]);
+            $result = VideoNewModel::create()->update($data,["vod_id"=>$param['vod_id']]);
 
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
