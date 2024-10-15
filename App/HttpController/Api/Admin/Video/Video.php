@@ -58,7 +58,7 @@ class Video extends AdminBase
         try {
             $article = VideoModel::create()
                 ->get([
-                    'vodId' => $param['vod_id'],
+                    'vod_id' => $param['vod_id'],
                     // 'status' => [VideoModel::STATE_DELETED, '>'],
                 ]);
 
