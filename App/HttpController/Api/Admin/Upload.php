@@ -61,6 +61,7 @@ class Upload extends AdminBase
             }
             $param['url']=$urlString.$param['url'];
         }
+        return $this->writeJson(Status::CODE_OK, $param['url'], '地址');
         $fileData=file_get_contents($param['url']);
        
         // $result = AwsOssService::getInstance()->uploadFile($this->request(), $param['type']);
