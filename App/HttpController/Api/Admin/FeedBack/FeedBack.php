@@ -51,7 +51,6 @@ class FeedBack extends AdminBase
                         $data['list'][$k]->create_at=date("Y-m-d H:i:s",$v->create_at);
                     }
                   }
-            
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }

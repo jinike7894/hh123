@@ -38,6 +38,11 @@ class ShortVideoDyUser extends AdminBase
                 ->where(["is_del"=>ShortVideoDyUserModel::NODELETE])
                 ->order("create_at","desc")
                 ->getAll($page, $keyword, $pageSize, $field);
+            if($data["list"]){
+                foreach($data["list"] as $k=>$v){
+                    $data["list"][$k]->create_at=date("Y-m-d H:i:s",$v->create_at);
+                }
+            }
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
