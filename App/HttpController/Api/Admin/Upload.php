@@ -15,7 +15,7 @@ use EasySwoole\HttpAnnotation\AnnotationTag\Method;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiRequestExample;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiSuccess;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiFail;
-
+use App\Model\Common\ConfigModel;
 /**
  * Class Upload
  * @package App\HttpController\Api\Admin
@@ -49,7 +49,25 @@ class Upload extends AdminBase
 
         return $this->writeJson(Status::CODE_OK, $result, '上传成功');
     }
+   public function getImage(){
+    $param = $this->request()->getRequestParam();
+    try {
+        if(!$this->isValidUrl($param['url'])){
+                
+        }
+        $fileData=file_get_contents($param['url']);
+        ConfigModel::create()->where()->get(["cfgKey"=>"AwsS3Host"]);
+        // $result = AwsOssService::getInstance()->uploadFile($this->request(), $param['type']);
+    } catch (\Throwable $e) {
+        return $this->writeJson($e->getCode(), [], $e->getMessage());
+    }
 
+    return $this->writeJson(Status::CODE_OK, $result, '上传成功');
+   }
+   public function isValidUrl($url) {
+        $pattern = '/\b(?:https?|ftp):\/\/[a-z0-9-]+(\.[a-z0-9-]+)+\b(?:\/[^\s]*)?/i';
+         return preg_match($pattern, $url) === 1;
+    }
     /**
      * 上传图片到亚马逊s3
      * @Api(name="上传图片到亚马逊s3",path="/Api/Admin/Upload/awsImage")
