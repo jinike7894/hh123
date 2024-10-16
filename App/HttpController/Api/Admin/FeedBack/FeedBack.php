@@ -34,17 +34,19 @@ class FeedBack extends AdminBase
             $page = (int)($param['page'] ?? 1);
             $pageSize = (int)($param['pageSize'] ?? SystemConfigKey::PAGE_SIZE);
             $field = [
-                'id',
-                'uid',
-                'type',
-                'content',
-                'contact',
-                'create_at',
+                'feed.id',
+                'feed.uid',
+                'feed.type',
+                'feed.content',
+                'feed.contact',
+                'feed.create_at',
+                "user.userName"
             ];
             
-            $data = FeedBackModel::create()
-                ->order("create_at"," desc")
-                ->getAll($page, $keyword, $pageSize, $field);
+            $data = FeedBackModel::create()->alias('feed')
+                  ->join('user user', 'user.userId = feed.uid', 'LEFT')
+                  ->order("feed.reate_at"," desc")
+                  ->getAll($page, $keyword, $pageSize, $field);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }

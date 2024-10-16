@@ -83,7 +83,6 @@ class CustomerService extends AdminBase
                 'name' => trim($param['name']),
                 'use_type' => trim($param['use_type']),
                 'url' => trim($param['url']),
-                'name' => trim($param['name']),
                 'update_at' =>time(),
             ];
 

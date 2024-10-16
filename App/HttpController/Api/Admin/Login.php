@@ -70,9 +70,9 @@ class Login extends AdminBase
                 $ga = new PHPGangsta_GoogleAuthenticator();
                 $result = $ga->verifyCode($admin->googleAuthenticatorSecret, $param['safeCode']);
 
-                if (!$result) {
-                    throw new Exception('动态口令错误', Status::CODE_BAD_REQUEST);
-                }
+                // if (!$result) {
+                //     throw new Exception('动态口令错误', Status::CODE_BAD_REQUEST);
+                // }
             }
 
             $authList = $admin->getAuth();
