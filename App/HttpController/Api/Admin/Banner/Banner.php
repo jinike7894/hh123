@@ -67,7 +67,7 @@ class Banner extends AdminBase
             $data = [
                 'img_src' => trim($param['img_src']),
                 'url' => trim($param['url']),
-                'is_internal' => trim($param['is_internal']),
+                'is_internal' => intval($param['is_internal']),
                 'name' => trim($param['name']),
                 'sort' => trim($param['sort']),
                 'status' => trim($param['status']),
