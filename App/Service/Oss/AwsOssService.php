@@ -113,18 +113,18 @@ class AwsOssService
         if (!in_array($mediaType, ['png', 'jpg', 'gif', 'jpeg', 'webp', 'm3u8'])) {
             throw new Exception('文件类型不正确！类型：' . $mediaType, Status::CODE_BAD_REQUEST);
         }
-        if($uploadFile->getSize()>10*1024*1024){
-            throw new Exception('上传图片最大不能超过10m', Status::CODE_BAD_REQUEST);
+        if($uploadFile->getSize()>100*1024*1024){
+            throw new Exception('上传图片最大不能超过100m', Status::CODE_BAD_REQUEST);
         }
         $path = Upload::getImageDatePath($type);
         // 如果要防止图片被抓的话，这里可以改为其他后缀。
         //$fileName = Func::CreateGuid() . '.' . $mediaType;
-        $fileName = Func::CreateGuid() . '.' . 'xyz';
+        $fileName = Func::CreateGuid() . '.' . 'jpg';
         $this->s3Client->putObject([
             'Bucket' => $this->s3Config[OssConfigKey::AWS_S3_BUCKET],
             'Key' => $path . DIRECTORY_SEPARATOR . $fileName,
             //'Key' => $fileName,
-            'Body' => mt_rand(100, 999) . $uploadFile->getStream(), // 原生使用这个 fopen('/path/to/image.jpg', 'r'),
+            'Body' => base64_encode($uploadFile->getStream()), // 原生使用这个 fopen('/path/to/image.jpg', 'r'),
             'ContentType' => $uploadFile->getClientMediaType(), // 必须要加这个才能以图片返回。（否则是下载文件）
         ]);
 

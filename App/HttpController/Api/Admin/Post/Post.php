@@ -1,6 +1,4 @@
-
 <?php
-
 namespace App\HttpController\Api\Admin\Post;
 
 use App\Enum\ConfigKey\SystemConfigKey;
@@ -34,6 +32,7 @@ class Post extends AdminBase
                 'update_at',
             ];
             $data = PostModel::create()
+                ->where(["type"=>$param['type']])
                 ->where(["is_del"=>PostModel::NO_DELETE])
                 ->order("create_at","desc")
                 ->getAll($page, $keyword, $pageSize, $field);

@@ -47,6 +47,12 @@ class Banner extends AdminBase
                 ->where(["is_del"=>BannerModel::STATE_No])
                 ->order("sort"," desc")
                 ->getAll($page, $keyword, $pageSize, $field);
+            if($data["list"]){
+                 foreach($data["list"] as $k=>$v){
+                    $data["list"][$k]->create_time=$v->create_time;
+                 }
+
+            }
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
