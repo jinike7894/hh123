@@ -44,7 +44,7 @@ class FeedBack extends AdminBase
             
             $data = FeedBackModel::create()->alias('feed')
                   ->join('user user', 'user.userId = feed.uid', 'LEFT')
-                  ->order("feed.reate_at"," desc")
+                  ->order("feed.create_at"," desc")
                   ->getAll($page, $keyword, $pageSize, $field);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
