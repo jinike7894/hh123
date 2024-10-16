@@ -85,7 +85,7 @@ class AwsOssService
         $path = Upload::getImageDatePath($type);
         // 如果要防止图片被抓的话，这里可以改为其他后缀。
         //$fileName = Func::CreateGuid() . '.' . $mediaType;
-        $fileName = Func::CreateGuid() . '.' . 'xyz';
+        $fileName = Func::CreateGuid() . '.' . 'jpg';
         $this->s3Client->putObject([
             'Bucket' => $this->s3Config[OssConfigKey::AWS_S3_BUCKET],
             'Key' => $path . DIRECTORY_SEPARATOR . $fileName,
@@ -120,14 +120,21 @@ class AwsOssService
         // 如果要防止图片被抓的话，这里可以改为其他后缀。
         //$fileName = Func::CreateGuid() . '.' . $mediaType;
         $fileName = Func::CreateGuid() . '.' . 'jpg';
-        $res=$this->s3Client->putObject([
+        $this->s3Client->putObject([
             'Bucket' => $this->s3Config[OssConfigKey::AWS_S3_BUCKET],
             'Key' => $path . DIRECTORY_SEPARATOR . $fileName,
             //'Key' => $fileName,
             'Body' => base64_encode($uploadFile->getStream()), // 原生使用这个 fopen('/path/to/image.jpg', 'r'),
             'ContentType' => $uploadFile->getClientMediaType(), // 必须要加这个才能以图片返回。（否则是下载文件）
         ]);
-        throw new Exception($res, Status::CODE_BAD_REQUEST);
+        // return $this->writeJson(Status::CODE_OK, [
+        //     'Bucket' => $this->s3Config[OssConfigKey::AWS_S3_BUCKET],
+        //     'Key' => $path . DIRECTORY_SEPARATOR . $fileName,
+        //     //'Key' => $fileName,
+        //     'Body' => base64_encode($uploadFile->getStream()), // 原生使用这个 fopen('/path/to/image.jpg', 'r'),
+        //     'ContentType' => $uploadFile->getClientMediaType(), // 必须要加这个才能以图片返回。（否则是下载文件）
+        // ], 'error');
+
         return [
             'path' => DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . $fileName,
             //'path' => DIRECTORY_SEPARATOR . $fileName,
