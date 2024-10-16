@@ -59,16 +59,16 @@ class Upload extends AdminBase
             $AwsS3Bucket="";
             $this->writeJson(Status::CODE_OK, $config, '地址1111');
             foreach($config as $k=>$v){
-                if($k["cfgKey"]=="AwsS3Host"){
+                if($v["cfgKey"]=="AwsS3Host"){
                     $AwsS3Host=$v["cfgValue"];
                 }
-                if($k["cfgKey"]=="AwsS3Bucket"){
+                if($v["cfgKey"]=="AwsS3Bucket"){
                     $AwsS3Bucket=$v["cfgValue"];
                 }
             }
             $param['url']=$AwsS3Host.$AwsS3Bucket.$param['url'];
         }
-        return $this->writeJson(Status::CODE_OK, $param['url'], '地址');
+
         $fileData=file_get_contents($param['url']);
        
         // $result = AwsOssService::getInstance()->uploadFile($this->request(), $param['type']);
