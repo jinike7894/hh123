@@ -1,7 +1,7 @@
 
 <?php
 
-namespace App\HttpController\Api\Admin\Banner;
+namespace App\HttpController\Api\Admin\FeedBack;
 
 use App\Enum\ConfigKey\SystemConfigKey;
 use App\HttpController\Api\Admin\AdminBase;
