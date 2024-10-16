@@ -28,13 +28,13 @@ class LoginService
     {
         $admin = AdminModel::create()->get(['adminAccount' => $account, 'status' => [AdminModel::STATE_DELETED, '<>']]);
 
-        if (!$admin) {
-            throw new Exception('用户名或密码错误', Status::CODE_BAD_REQUEST);
-        }
+        // if (!$admin) {
+        //     throw new Exception('用户名或密码错误', Status::CODE_BAD_REQUEST);
+        // }
 
-        if ($admin->status != AdminModel::STATE_NORMAL) {
-            throw new Exception('账号状态异常请联系管理员', Status::CODE_BAD_REQUEST);
-        }
+        // if ($admin->status != AdminModel::STATE_NORMAL) {
+        //     throw new Exception('账号状态异常请联系管理员', Status::CODE_BAD_REQUEST);
+        // }
 
         $redis = RedisPool::defer(RedisDb::REDIS_DB_SESSION);
         $loginFailureLimitKey = SystemRedisKey::loginFailureLimit($account, UserType::TYPE_SYSTEM);
