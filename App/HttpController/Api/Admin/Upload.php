@@ -54,8 +54,12 @@ class Upload extends AdminBase
     $param = $this->request()->getRequestParam();
     try {
         if(!$this->isValidUrl($param['url'])){
-            $config=ConfigModel::create()->where()->get(["cfgKey"=>"AwsS3Host"]);
-            $param['url']=$config["cfgValue"].$param['url'];
+            $config=ConfigModel::create()->get("cfgKey",["AwsS3Host","AwsS3Bucket"],"in");
+            $urlString="";
+            foreach($config as $k=>$v){
+                $urlString.=$v["cfgValue"];
+            }
+            $param['url']=$urlString.$param['url'];
         }
         $fileData=file_get_contents($param['url']);
        
