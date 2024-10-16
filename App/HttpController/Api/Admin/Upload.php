@@ -55,7 +55,6 @@ class Upload extends AdminBase
     try {
         if(!$this->isValidUrl($param['url'])){
             $config=ConfigModel::create()->where("cfgKey",["AwsS3Host","AwsS3Bucket"],"in")->all();
-            return $this->writeJson(Status::CODE_OK, $config, '地址');
             $urlString="";
             foreach($config as $k=>$v){
                 $urlString.=$v["cfgValue"];
