@@ -58,10 +58,10 @@ class Upload extends AdminBase
             $AwsS3Host="";
             $AwsS3Bucket="";
             foreach($config as $k=>$v){
-                if($k=="AwsS3Host"){
+                if($k["cfgKey"]=="AwsS3Host"){
                     $AwsS3Host=$v["cfgValue"];
                 }
-                if($k=="AwsS3Bucket"){
+                if($k["cfgKey"]=="AwsS3Bucket"){
                     $AwsS3Bucket=$v["cfgValue"];
                 }
             }
