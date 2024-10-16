@@ -67,7 +67,7 @@ class Upload extends AdminBase
             }
             $param['url']=$AwsS3Host.$AwsS3Bucket.$param['url'];
         }
-
+        $this->writeJson(Status::CODE_OK, $param['url'], '上传成功');
         $fileData=file_get_contents($param['url']);
        
         // $result = AwsOssService::getInstance()->uploadFile($this->request(), $param['type']);
