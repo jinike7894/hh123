@@ -28,16 +28,17 @@ class CustomerService extends AdminBase
                 ->where(["is_del"=>CustomerServiceModel::NO_DELETE])
                 ->order("create_at","desc")
                 ->all();
-            foreach($result["list"] as $k=>$v){
+            
+            foreach($result as $k=>$v){
                     switch($v["use_type"]){
                         case 1:
-                            $result["list"][$k]["use_type"]="广告合作";
+                            $result[$k]["use_type"]="广告合作";
                             break;
                        case 2:
-                            $result["list"][$k]["use_type"]="商务合作";
+                            $result[$k]["use_type"]="商务合作";
                             break;
                         case 3:
-                            $result["list"][$k]["use_type"]="客服";
+                            $result[$k]["use_type"]="客服";
                             break;
                     }
             }
