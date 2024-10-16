@@ -57,6 +57,7 @@ class Upload extends AdminBase
             $config=ConfigModel::create()->where("cfgKey",["AwsS3Host","AwsS3Bucket"],"in")->all();
             $AwsS3Host="";
             $AwsS3Bucket="";
+            $this->writeJson(Status::CODE_OK, $config, '地址1111');
             foreach($config as $k=>$v){
                 if($k["cfgKey"]=="AwsS3Host"){
                     $AwsS3Host=$v["cfgValue"];
