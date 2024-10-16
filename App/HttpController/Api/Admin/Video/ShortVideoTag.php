@@ -53,6 +53,23 @@ class ShortVideoTag extends AdminBase
         }
         return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
     }
+    public function add(){
+        $param = $this->request()->getRequestParam();
+        try {
+            $data = [
+                'name' => intval($param['name']),
+                'img_src' => trim($param['img_src']),
+                'sort' => trim($param['sort']),
+                'update_at' => time(),
+                "create_at"=>time(),
+            ];
+            $data = ShortVideoTagModel::create($data)
+                ->save();
+        } catch (Throwable $e) {
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
+        return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
+    }
     //猎奇短视频tag编辑
     public function edit(){
         $param = $this->request()->getRequestParam();

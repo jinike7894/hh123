@@ -16,7 +16,7 @@ use Throwable;
 
 class ShortVideoDyUser extends AdminBase
 {
-    public function userList()
+    public function list()
     {
         $param = $this->request()->getRequestParam();
         try {
@@ -94,7 +94,6 @@ class ShortVideoDyUser extends AdminBase
             $data = [
                 'username' => intval($param['username']),
                 'img_src' => trim($param['img_src']),
-                'fileType' => trim($param['fileType']),
                 'is_del' => intval($param['is_del']),
                 'update_at' => time(),
             ];
