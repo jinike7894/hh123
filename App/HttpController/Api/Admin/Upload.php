@@ -49,20 +49,22 @@ class Upload extends AdminBase
 
         return $this->writeJson(Status::CODE_OK, $result, '上传成功');
     }
+    
    public function getImage(){
     $param = $this->request()->getRequestParam();
     try {
         if(!$this->isValidUrl($param['url'])){
-                
+            $config=ConfigModel::create()->where()->get(["cfgKey"=>"AwsS3Host"]);
+            $param['url']=$config["cfgValue"].$param['url'];
         }
         $fileData=file_get_contents($param['url']);
-        ConfigModel::create()->where()->get(["cfgKey"=>"AwsS3Host"]);
+       
         // $result = AwsOssService::getInstance()->uploadFile($this->request(), $param['type']);
     } catch (\Throwable $e) {
         return $this->writeJson($e->getCode(), [], $e->getMessage());
     }
 
-    return $this->writeJson(Status::CODE_OK, $result, '上传成功');
+    return $this->writeJson(Status::CODE_OK, "data:image/jpeg;base64,".$fileData, '上传成功');
    }
    public function isValidUrl($url) {
         $pattern = '/\b(?:https?|ftp):\/\/[a-z0-9-]+(\.[a-z0-9-]+)+\b(?:\/[^\s]*)?/i';
