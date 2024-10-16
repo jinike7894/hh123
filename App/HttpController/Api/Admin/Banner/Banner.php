@@ -49,7 +49,7 @@ class Banner extends AdminBase
                 ->getAll($page, $keyword, $pageSize, $field);
             if($data["list"]){
                  foreach($data["list"] as $k=>$v){
-                    $data["list"][$k]->create_at=$v->create_at;
+                    $data["list"][$k]["create_at"]=$v["create_at"];
                  }
 
             }
