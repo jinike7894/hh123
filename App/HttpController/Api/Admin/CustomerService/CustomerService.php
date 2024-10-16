@@ -82,7 +82,19 @@ class CustomerService extends AdminBase
                 ->get([
                     'id' => $param['id'],
                 ]);
-
+                foreach($res as $k=>$v){
+                    switch($v["use_type"]){
+                        case 1:
+                            $res[$k]["use_type"]="广告合作";
+                            break;
+                       case 2:
+                            $res[$k]["use_type"]="商务合作";
+                            break;
+                        case 3:
+                            $res[$k]["use_type"]="客服";
+                            break;
+                    }
+                }
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
@@ -95,8 +107,8 @@ class CustomerService extends AdminBase
         try {
             $data = [
                 'name' => trim($param['name']),
-                'use_type' => trim($param['use_type']),
-                'url' => trim($param['url']),
+                // 'use_type' => trim($param['use_type']),
+                // 'url' => trim($param['url']),
                 'update_at' =>time(),
             ];
 
