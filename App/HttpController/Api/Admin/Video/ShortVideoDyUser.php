@@ -10,6 +10,7 @@ use App\Service\Oss\LocalOssService;
 use App\Service\Video\ShortVideoService;
 use App\Utility\Func;
 use EasySwoole\Http\Message\Status;
+use App\HttpController\Api\Admin\Upload as uploadNew;
 use Exception;
 use Throwable;
 
@@ -54,16 +55,17 @@ class ShortVideoDyUser extends AdminBase
         $param = $this->request()->getRequestParam();
 
         try {
-            $article = ShortVideoDyUserModel::create()
+            $video = ShortVideoDyUserModel::create()
                 ->get([
                     'id' => $param['id']
                 ]);
-
+            $imgData=new uploadNew();
+            $video["img_src"]=$imgData->getUrlImage($video["img_src"]);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
 
-        return $this->writeJson(Status::CODE_OK, $article, Status::getReasonPhrase(Status::CODE_OK));
+        return $this->writeJson(Status::CODE_OK, $video, Status::getReasonPhrase(Status::CODE_OK));
     }
     //添加
     public function add()
