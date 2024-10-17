@@ -61,7 +61,7 @@ class ShortVideoTag extends AdminBase
         $param = $this->request()->getRequestParam();
         try {
             $data = [
-                'name' => intval($param['name']),
+                'name' => trim($param['name']),
                 'img_src' => trim($param['img_src']),
                 'sort' => trim($param['sort']),
                 'update_at' => time(),
