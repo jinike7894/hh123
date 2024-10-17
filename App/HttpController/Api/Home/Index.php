@@ -70,7 +70,9 @@ class Index extends ApiBase
             }
 
             $result = PageService::getInstance()->getViewData($page, $dataVersion);
-
+             //查询aws的桶
+             $AwsS3Bucket=ConfigModel::create()->where(["cfgKey"=>"AwsS3Bucket"])->get();
+             $result["config"]["AwsS3Bucket"]=$AwsS3Bucket["cfgValue"];
             // 因为要求用纯静态html，所以pv数据无法实时显示。除非单独用其他接口调用，但那样就本末倒置了。所以现在不再返回统计数据。
             // $statistic = PageViewService::getInstance()->getStatistic($page->pageId);
 
