@@ -101,7 +101,7 @@ class ShortVideo extends AdminBase
             
                 ]);
             $imgData=new uploadNew();
-            $video["vod_pic"]=$imgData->getUrlImage($video["vod_pic"]);
+            $video["vodPic"]=$imgData->getUrlImage($video["vodPic"]);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
