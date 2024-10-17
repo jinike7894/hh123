@@ -11,7 +11,7 @@ use App\Model\Video\TypeModel;
 use App\Service\Oss\AwsOssService;
 use App\Service\Oss\LocalOssService;
 use App\Service\Video\ShortVideoService;
-
+use App\HttpController\Api\Admin\Upload as uploadNew;
 use App\Utility\Func;
 use EasySwoole\Http\Message\Status;
 use Exception;
@@ -67,17 +67,18 @@ class Video extends AdminBase
         $param = $this->request()->getRequestParam();
 
         try {
-            $article = VideoModel::create()
+            $video = VideoModel::create()
                 ->get([
                     'vod_id' => $param['vod_id'],
                     // 'status' => [VideoModel::STATE_DELETED, '>'],
                 ]);
-
+            $imgData=new uploadNew();
+            $video["img_show"]=$imgData->getUrlImage($video["vod_pic"]);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
 
-        return $this->writeJson(Status::CODE_OK, $article, Status::getReasonPhrase(Status::CODE_OK));
+        return $this->writeJson(Status::CODE_OK, $video, Status::getReasonPhrase(Status::CODE_OK));
     }
     public function add()
     {
