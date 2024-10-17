@@ -24,6 +24,7 @@ use EasySwoole\HttpAnnotation\AnnotationTag\ApiRequestExample;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiSuccess;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiFail;
 use EasySwoole\Utility\File;
+use App\HttpController\Api\Admin\Upload as uploadNew;
 use Exception;
 use Throwable;
 
@@ -93,18 +94,19 @@ class ShortVideo extends AdminBase
         $param = $this->request()->getRequestParam();
 
         try {
-            $article = ShortVideoModel::create()
+            $video = ShortVideoModel::create()
                 ->get([
                     'vodId' => $param['vodId'],
                     // 'status' => [ShortVideoModel::STATE_DELETED, '>'],
             
                 ]);
-
+            $imgData=new uploadNew();
+            $video["vod_pic"]=$imgData->getUrlImage($video["vod_pic"]);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
 
-        return $this->writeJson(Status::CODE_OK, $article, Status::getReasonPhrase(Status::CODE_OK));
+        return $this->writeJson(Status::CODE_OK, $video, Status::getReasonPhrase(Status::CODE_OK));
     }
 
    //添加
