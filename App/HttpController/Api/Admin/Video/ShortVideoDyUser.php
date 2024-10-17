@@ -60,7 +60,7 @@ class ShortVideoDyUser extends AdminBase
                     'id' => $param['id']
                 ]);
             $imgData=new uploadNew();
-            $video["img_src"]=$imgData->getUrlImage($video["img_src"]);
+            $video["img_show"]=$imgData->getUrlImage($video["img_src"]);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }

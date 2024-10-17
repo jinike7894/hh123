@@ -79,7 +79,7 @@ class ShortVideoDy extends AdminBase
                     'vodId' => $param['vodId'],
                 ]);
             $imgData=new uploadNew();
-            $video["vodPic"]=$imgData->getUrlImage($video["vodPic"]);
+            $video["img_show"]=$imgData->getUrlImage($video["vodPic"]);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
