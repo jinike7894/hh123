@@ -100,8 +100,10 @@ class ShortVideo extends AdminBase
                     // 'status' => [ShortVideoModel::STATE_DELETED, '>'],
             
                 ]);
+                  
             $imgData=new uploadNew();
             $video["vodPic"]=$imgData->getUrlImage($video["vodPic"]);
+            return $this->writeJson(Status::CODE_OK, $imgData->getUrlImage($video["vodPic"]), Status::getReasonPhrase(Status::CODE_OK));  
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
