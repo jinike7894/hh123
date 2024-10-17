@@ -24,6 +24,7 @@ use EasySwoole\HttpAnnotation\AnnotationTag\Method;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiRequestExample;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiSuccess;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiFail;
+use App\HttpController\Api\Admin\Upload as uploadNew;
 use Exception;
 use Throwable;
 
@@ -145,7 +146,8 @@ class Ad extends AdminBase
             $data = $ad->hidden(['createTime', 'updateTime'])->toRawArray();
             $data['adGroup'] = $ad->adGroup;
             $data['extension'] = json_decode($data['extension'], true);
-
+            $imgData=new uploadNew();
+            $data["img_show"]=$imgData->getUrlImage($data["imageUrl"]);   
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
