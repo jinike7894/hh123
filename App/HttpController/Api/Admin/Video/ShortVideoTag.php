@@ -55,7 +55,7 @@ class ShortVideoTag extends AdminBase
                 ->get(["is_del"=>ShortVideoTagModel::NODELETE,"id"=>$param["id"]]);
                 $data["fileType"]="up";
                 $imgData=new uploadNew();
-                $data["img_show"]=$imgData->getUrlImage($data["vod_pic"]);
+                $data["img_show"]=$imgData->getUrlImage($data["img_src"]);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
