@@ -276,7 +276,7 @@ class AdService
      */
     public function recordClickV2($param)
     {
-        TaskManager::getInstance()->async(function () use ($param) {
+        // TaskManager::getInstance()->async(function () use ($param) {
             try {
                 /**
                  * @var PageModel $page
@@ -350,7 +350,7 @@ class AdService
             }
 
             return true;
-        });
+        // });
     }
 
     public function getStatisticTemporaryIpBit($date, $pageId, $adId, $ipLong)
