@@ -100,7 +100,7 @@ class ShortVideoDyUser extends AdminBase
 
         try {
             $data = [
-                'username' => intval($param['username']),
+                'username' => trim($param['username']),
                 'img_src' => trim($param['img_src']),
                 'is_del' => intval($param['is_del']),
                 'update_at' => time(),
