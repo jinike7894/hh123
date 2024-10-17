@@ -113,7 +113,7 @@ class Banner extends AdminBase
 
         try {
             $data = [
-                'img_src' => intval($param['img_src']),
+                'img_src' => trim($param['img_src']),
                 'url' => trim($param['url']),
                 'is_internal' => trim($param['is_internal']),
                 'name' => trim($param['name']),
