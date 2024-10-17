@@ -100,6 +100,7 @@ class Banner extends AdminBase
                     'id' => $param['id'],
                 ]);
                 $imgData=new uploadNew();
+                $video["fileType"]="up";
                 $video["img_show"]=$imgData->getUrlImage($res["img_src"]);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
