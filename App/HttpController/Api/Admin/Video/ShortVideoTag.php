@@ -6,6 +6,7 @@ use App\HttpController\Api\Admin\AdminBase;
 use EasySwoole\Http\Message\Status;
 use App\Model\Video\ShortVideoTagModel;
 use App\Model\Admin\AdminLogsModel;
+use App\HttpController\Api\Admin\Upload as uploadNew;
 use Throwable;
 
 
@@ -52,6 +53,9 @@ class ShortVideoTag extends AdminBase
             ];
             $data = ShortVideoTagModel::create()
                 ->get(["is_del"=>ShortVideoTagModel::NODELETE,"id"=>$param["id"]]);
+                $data["fileType"]="up";
+                $imgData=new uploadNew();
+                $data["img_show"]=$imgData->getUrlImage($data["vod_pic"]);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
