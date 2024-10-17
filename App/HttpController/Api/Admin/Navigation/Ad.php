@@ -328,7 +328,7 @@ class Ad extends AdminBase
                 // 如果是上传的文件需要将临时文件转到广告目录
                 $imgUrlArr = explode('.',$param['imageUrl']);
                 $imgUrl = $imgUrlArr[0];
-                $data['imageUrl'] = $imgUrl . '.xyz';
+                $data['imageUrl'] = $imgUrl . '.jpg';
                 $data['imageUrl2'] = $param['imageUrl'];
                 //$data['imageUrl'] = Func::moveTempFile($param['imageUrl'], Upload::TYPE_AD);
                 break;

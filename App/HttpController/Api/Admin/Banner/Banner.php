@@ -18,6 +18,7 @@ use EasySwoole\HttpAnnotation\AnnotationTag\Method;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiRequestExample;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiSuccess;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiFail;
+use App\HttpController\Api\Admin\Upload as uploadNew;
 use Exception;
 use Throwable;
 
@@ -98,7 +99,8 @@ class Banner extends AdminBase
                 ->get([
                     'id' => $param['id'],
                 ]);
-
+                $imgData=new uploadNew();
+                $video["img_show"]=$imgData->getUrlImage($res["img_src"]);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
