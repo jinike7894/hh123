@@ -212,6 +212,12 @@ class ShortVideo extends UserBase
                 ->where(["is_del"=>ShortVideoTagModel::NODELETE])
                 ->order("sort","desc")
                 ->getAll($page, $keyword, $pageSize, $field);
+                if($data["list"]){
+                    foreach($data["list"] as $k=>$v){
+                    $data["list"][$k]->num=$k%6;
+                    }
+                }
+           
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
