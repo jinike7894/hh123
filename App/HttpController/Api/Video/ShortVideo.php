@@ -62,12 +62,13 @@ class ShortVideo extends UserBase
             $model=ShortVideoModel::create();
             //tag
             if(isset($param['shortTag']) && $param['shortTag']) {
+                
                 $model->where(["shortTag"=> $param['shortTag']]);
             }
             //推荐or最新
             if(isset($param['sortType']) && $param['sortType']) {
                 switch($param['sortType']){
-                    case 1:
+                    case 0:
                         //推荐
                         $model->where(["is_recommod"=> 1]);
                         break;
