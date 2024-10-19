@@ -78,7 +78,7 @@ class ShortVideo extends AdminBase
                     if($vtag->shortTag==$vk["id"]){
                         $data["list"][$ktag]->short_id=$vk["name"];
                         $imgData=new uploadNew();
-                        $data["list"][$ktag]->vodPic=$imgData->getUrlImage($vk["vodPic"]);
+                        $data["list"][$ktag]->vodPic=$imgData->getUrlImage($vtag["vodPic"]);
                     }
                 }
             }
