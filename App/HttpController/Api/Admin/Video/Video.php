@@ -53,7 +53,7 @@ class Video extends AdminBase
                 foreach($data["list"] as $k=>$v){
                     $data["list"][$k]->vod_time_add=date("Y-m-d H:i:s",$v->vod_time_add);
                     $imgData=new uploadNew();
-                    $data["list"][$k]->vod_pic=$imgData->getUrlImage($data["vod_pic"]);
+                    $data["list"][$k]->vod_pic=$imgData->getUrlImage($data["vod_pic_thumb"]);
                 }
             }
         } catch (Throwable $e) {
