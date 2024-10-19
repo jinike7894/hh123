@@ -51,6 +51,8 @@ class Banner extends AdminBase
             if($data["list"]){
                  foreach($data["list"] as $k=>$v){
                     $data["list"][$k]->create_at=date("Y-m-d H:i:s",$v->create_at);
+                    $imgData=new uploadNew();
+                    $data["list"][$k]->img_src=$imgData->getUrlImage($v["img_src"]);
                  }
 
             }

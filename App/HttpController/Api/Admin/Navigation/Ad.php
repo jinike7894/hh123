@@ -115,7 +115,14 @@ class Ad extends AdminBase
             $data = $ad->getAdAll($page, $keyword, $pageSize, $field);
             $data['list'] = AdGroupModel::create()->appendGroupInfo($data['list']);
             $data['list'] = MerchantModel::create()->appendInfo($data['list'], ['merchantName'], 'merchantId', 'merchantId');
-
+          if($data['list']){
+            foreach($data['list'] as $k=>$v){
+                $imgData=new uploadNew();
+               
+                $data['list'][$k]->imageUrl=$imgData->getUrlImage($v["imageUrl"]);
+            }
+          }
+            
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
