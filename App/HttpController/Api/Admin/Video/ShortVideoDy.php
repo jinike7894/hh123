@@ -52,15 +52,15 @@ class ShortVideoDy extends AdminBase
             $field = [
                 '*',
             ];
-
             $sortType = $param['sortType'] ?? '';
-
             $data = $model
                 ->setOrderType($sortType)
                 ->getAll($page, $keyword, $pageSize, $field);
             $shortTagId=[];
             foreach($data["list"] as $k=>$v){
                 $shortTagId[]=$v->shortTag;
+                $imgData=new uploadNew();
+                $data["list"][$k]->vodPic=$imgData->getUrlImage($v["vodPic"]);
             }
 
         } catch (Throwable $e) {

@@ -59,7 +59,7 @@ class ShortVideoDy extends UserBase
             //推荐or最新
             if(isset($param['sortType']) && $param['sortType']) {
                 switch($param['sortType']){
-                    case 1:
+                    case 0:
                         //推荐
                         $model->where(["video.is_recommod"=> 1]);
                         break;
