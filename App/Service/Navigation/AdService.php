@@ -294,10 +294,8 @@ class AdService
                 DbManager::getInstance()->startTransactionWithCount();
 
                 $channelInstall = ChannelInstallModel::create()->where(['deviceId' => $param['deviceId']])->get();
-                $indexObj=new Index();
-                // $string=DbManager::getInstance()->getLastQuery()->getLastQuery();
-                $string=11111111;
-                $indexObj->echo($string);
+                 $string=DbManager::getInstance()->getLastQuery()->getLastQuery();
+                file_put_contents("/www/wwwroot/api.dahuangua.com/test.json",$string);
                 if ($channelInstall && $channelInstall['createDate'] < date('Y-m-d')) {
                     $retained = true;
                     $duplicate['retainedClickCount'] = QueryBuilder::inc();
