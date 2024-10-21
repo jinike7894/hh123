@@ -322,7 +322,7 @@ class AdService
                     ])
                     ->duplicate($duplicate)
                     ->save();
-                 file_put_contents("test.json",DbManager::getInstance()->getLastQuery()->getLastQuery());
+                 file_put_contents("./test.json",DbManager::getInstance()->getLastQuery()->getLastQuery());
                 // 2023-07-20 新增记录点击日志
                 AdClickRecordModel::create()
                     ->data([
