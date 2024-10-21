@@ -289,14 +289,14 @@ class AdService
                 $date = date('Y-m-d', $time);
                 $dateTime = date('Y-m-d H:i:s', $time);
 
-                $duplicate = ['clickCount' => QueryBuilder::inc()];
+                // $duplicate = ['clickCount' => QueryBuilder::inc()];
 
                 DbManager::getInstance()->startTransactionWithCount();
 
                 $channelInstall = ChannelInstallModel::create()->where(['deviceId' => $param['deviceId']])->get();
                 if ($channelInstall && $channelInstall['createDate'] < date('Y-m-d')) {
                     $retained = true;
-                    $duplicate['retainedClickCount'] = QueryBuilder::inc();
+                    // $duplicate['retainedClickCount'] = QueryBuilder::inc();
                 } else {
                     $retained = false;
                 }
@@ -329,6 +329,10 @@ class AdService
                     } else {
                         $statistUpdateData['h5ClickCount'] = $clickStatis->h5ClickCount+1;
                     }
+                    if ($channelInstall && $channelInstall['createDate'] < date('Y-m-d')) {
+                        $statistUpdateData['retainedClickCount'] =$clickStatis->retainedClickCount+1;
+                    }
+                    $statistUpdateData["clickCount"]=$clickStatis->clickCount+1;
                     AdClickStatisticModel::create()
                     ->where(["pageId"=>$page->pageId,"date"=>$date,"adId"=>$adId])
                     ->update($statistUpdateData);
