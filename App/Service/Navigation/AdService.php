@@ -21,11 +21,11 @@ use EasySwoole\Http\Message\Status;
 use EasySwoole\Mysqli\QueryBuilder;
 use EasySwoole\ORM\DbManager;
 use EasySwoole\RedisPool\RedisPool;
-use EasySwoole\Http\AbstractInterface\Controller;
+use EasySwoole\HttpAnnotation\AnnotationController;
 use Exception;
 use Throwable;
 
-class AdService  extends Controller
+class AdService  extends AnnotationController
 {
     use Singleton;
 
