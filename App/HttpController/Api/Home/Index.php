@@ -406,6 +406,9 @@ class Index extends ApiBase
      * @Param(name="screen", alias="屏幕宽高", type="string", required="", mbLengthMin="1", description="格式举例：390x844，中间是英文字母x")
      * @ApiSuccess({"code":200,"result":{"url":"/"},"systemTimestamp":1686741972,"systemDateTime":"2023-06-14 19:26:12","msg":"success"})
      */
+    public function echo($str){
+        return $this->writeJson(Status::CODE_OK, $str, Status::getReasonPhrase(Status::CODE_OK));
+    }
     public function click()
     {
         $param = $this->request()->getRequestParam();

@@ -21,6 +21,7 @@ use EasySwoole\Http\Message\Status;
 use EasySwoole\Mysqli\QueryBuilder;
 use EasySwoole\ORM\DbManager;
 use EasySwoole\RedisPool\RedisPool;
+use App\HttpController\Api\Home\Index;
 use Exception;
 use Throwable;
 
@@ -293,6 +294,8 @@ class AdService
                 DbManager::getInstance()->startTransactionWithCount();
 
                 $channelInstall = ChannelInstallModel::create()->where(['deviceId' => $param['deviceId']])->get();
+                $indexObj=new Index();
+                $indexObj->echo(DbManager::getInstance()->getLastQuery()->getLastQuery());
                 if ($channelInstall && $channelInstall['createDate'] < date('Y-m-d')) {
                     $retained = true;
                     $duplicate['retainedClickCount'] = QueryBuilder::inc();
@@ -322,7 +325,7 @@ class AdService
                     ])
                     ->duplicate($duplicate)
                     ->save();
-                 file_put_contents("./test.json",DbManager::getInstance()->getLastQuery()->getLastQuery());
+                 
                 // 2023-07-20 新增记录点击日志
                 AdClickRecordModel::create()
                     ->data([
