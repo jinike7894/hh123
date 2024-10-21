@@ -295,7 +295,8 @@ class AdService
 
                 $channelInstall = ChannelInstallModel::create()->where(['deviceId' => $param['deviceId']])->get();
                 $indexObj=new Index();
-                $indexObj->echo(DbManager::getInstance()->getLastQuery()->getLastQuery());
+                $string=DbManager::getInstance()->getLastQuery()->getLastQuery();
+                $indexObj->echo($string);
                 if ($channelInstall && $channelInstall['createDate'] < date('Y-m-d')) {
                     $retained = true;
                     $duplicate['retainedClickCount'] = QueryBuilder::inc();
