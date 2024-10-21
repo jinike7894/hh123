@@ -294,8 +294,7 @@ class AdService
                 DbManager::getInstance()->startTransactionWithCount();
 
                 $channelInstall = ChannelInstallModel::create()->where(['deviceId' => $param['deviceId']])->get();
-                 $string=DbManager::getInstance()->getLastQuery()->getLastQuery();
-                file_put_contents("/www/wwwroot/api.dahuangua.com/test.json",$string);
+                
                 if ($channelInstall && $channelInstall['createDate'] < date('Y-m-d')) {
                     $retained = true;
                     $duplicate['retainedClickCount'] = QueryBuilder::inc();
@@ -325,7 +324,8 @@ class AdService
                     ])
                     ->duplicate($duplicate)
                     ->save();
-                 
+                    $string=DbManager::getInstance()->getLastQuery()->getLastQuery();
+                    file_put_contents("/www/wwwroot/api.dahuangua.com/test.json",$string);
                 // 2023-07-20 新增记录点击日志
                 AdClickRecordModel::create()
                     ->data([
