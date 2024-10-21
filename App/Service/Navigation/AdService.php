@@ -294,7 +294,6 @@ class AdService
                 DbManager::getInstance()->startTransactionWithCount();
 
                 $channelInstall = ChannelInstallModel::create()->where(['deviceId' => $param['deviceId']])->get();
-                
                 if ($channelInstall && $channelInstall['createDate'] < date('Y-m-d')) {
                     $retained = true;
                     $duplicate['retainedClickCount'] = QueryBuilder::inc();
@@ -304,14 +303,13 @@ class AdService
                 // 2023-11-15 增加标记是app点击还是h5点击，判断方法就是看设备id是不是在安装列表中
                 if ($channelInstall && in_array($channelInstall['source'], ChannelInstallModel::SOURCE_APP_LIST)) {
                     $appClick = true;
-                    $duplicate['appClickCount'] = QueryBuilder::inc();
                 } else {
                     $appClick = false;
-                    $duplicate['h5ClickCount'] = QueryBuilder::inc();
                 }
-
-                AdClickStatisticModel::create()
-                    ->data([
+                $clickStatis=AdClickStatisticModel::create()->Where(["pageId"=>$page->pageId,"date"=>$date,"adId"=>$adId])->lockForUpdate()->get();
+                if (!$clickStatis) {
+                    //添加
+                    $data=[
                         'pageId' => $page->pageId,
                         'date' => $date,
                         'adId' => $adId,
@@ -321,14 +319,46 @@ class AdService
                         'h5ClickCount' => $appClick ? 0 : 1,
                         'appClickCount' => $appClick ? 1 : 0,
                         'totalCost' => 0,
-                    ])
-                    ->duplicate($duplicate)
-                    ->save();
-                    $string=DbManager::getInstance()->getLastQuery()->getLastQuery();
-                    file_put_contents("/www/wwwroot/api.dahuangua.com/test.json",$string);
+                    ];
+                    AdClickStatisticModel::create($data)->save();
+                }else{
+                    //更新
+                    $statistUpdateData=[];
+                    if ($channelInstall && in_array($channelInstall['source'], ChannelInstallModel::SOURCE_APP_LIST)) {
+                        $statistUpdateData['appClickCount'] = $clickStatis->appClickCount+1;
+                    } else {
+                        $statistUpdateData['h5ClickCount'] = $clickStatis->h5ClickCount+1;
+                    }
+                    AdClickStatisticModel::create()
+                    ->where(["pageId"=>$page->pageId,"date"=>$date,"adId"=>$adId])
+                    ->update($statistUpdateData);
+                }
+                // AdClickStatisticModel::create()
+                //     ->data([
+                //         'pageId' => $page->pageId,
+                //         'date' => $date,
+                //         'adId' => $adId,
+                //         'clickCount' => 1,
+                //         'clickIpCount' => 1,
+                //         'retainedClickCount' => $retained ? 1 : 0,
+                //         'h5ClickCount' => $appClick ? 0 : 1,
+                //         'appClickCount' => $appClick ? 1 : 0,
+                //         'totalCost' => 0,
+                //     ])
+                //     ->duplicate($duplicate)
+                //     ->save();
                 // 2023-07-20 新增记录点击日志
-                AdClickRecordModel::create()
-                    ->data([
+                $clickRecord=AdClickRecordModel::create()->Where([
+                    "pageId"=>$page->pageId,
+                    "date"=>$date,
+                    "adId"=>$adId,
+                    "deviceId"=>$param['deviceId'],
+                    "ipLong"=>$ipLong,
+                    "screen"=>$param['screen']['width'] . 'x' . $param['screen']['height'],
+                ])->lockForUpdate()->get();
+                if(!$clickRecord){
+                    //添加
+                    AdClickRecordModel::create([
                         'pageId' => $page->pageId,
                         'date' => $date,
                         'deviceId' => $param['deviceId'],
@@ -339,12 +369,36 @@ class AdService
                         'clickCount' => 1,
                         'firstTime' => $dateTime,
                         'latestTime' => $dateTime,
-                    ])
-                    ->duplicate([
-                        'clickCount' => QueryBuilder::inc(),
-                        'latestTime' => $dateTime,
-                    ])
-                    ->save();
+                    ])->save();
+                }else{
+                    //更新
+                    AdClickRecordModel::create()->Where([
+                        "pageId"=>$page->pageId,
+                        "date"=>$date,
+                        "adId"=>$adId,
+                        "deviceId"=>$param['deviceId'],
+                        "ipLong"=>$ipLong,
+                        "screen"=>$param['screen']['width'] . 'x' . $param['screen']['height'],
+                    ])->update(["clickCount"=>$clickRecord->clickCount+1,"latestTime"=>$dateTime]);
+                }
+                // AdClickRecordModel::create()
+                //     ->data([
+                //         'pageId' => $page->pageId,
+                //         'date' => $date,
+                //         'deviceId' => $param['deviceId'],
+                //         'ipLong' => $ipLong,
+                //         'screen' => $param['screen']['width'] . 'x' . $param['screen']['height'],
+                //         'adId' => $adId,
+                //         'ip' => $param['ip'],
+                //         'clickCount' => 1,
+                //         'firstTime' => $dateTime,
+                //         'latestTime' => $dateTime,
+                //     ])
+                //     ->duplicate([
+                //         'clickCount' => QueryBuilder::inc(),
+                //         'latestTime' => $dateTime,
+                //     ])
+                //     ->save();
 
                 DbManager::getInstance()->commitWithCount();
             } catch (Throwable  $e) {
