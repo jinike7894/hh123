@@ -21,11 +21,10 @@ use EasySwoole\Http\Message\Status;
 use EasySwoole\Mysqli\QueryBuilder;
 use EasySwoole\ORM\DbManager;
 use EasySwoole\RedisPool\RedisPool;
-use EasySwoole\HttpAnnotation\AnnotationController;
 use Exception;
 use Throwable;
 
-class AdService  extends AnnotationController
+class AdService  
 {
     use Singleton;
 
@@ -323,7 +322,7 @@ class AdService  extends AnnotationController
                     ])
                     ->duplicate($duplicate)
                     ->save();
-                $this->response()->write(DbManager::getInstance()->getLastQuery()->getLastQuery());
+                 file_put_contents("test.json",DbManager::getInstance()->getLastQuery()->getLastQuery());
                 // 2023-07-20 新增记录点击日志
                 AdClickRecordModel::create()
                     ->data([
