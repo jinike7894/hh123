@@ -12,6 +12,7 @@ use EasySwoole\Component\Singleton;
 use EasySwoole\EasySwoole\Task\TaskManager;
 use EasySwoole\Mysqli\QueryBuilder;
 use EasySwoole\RedisPool\RedisPool;
+use EasySwoole\ORM\DbManager;
 use Exception;
 use Throwable;
 
@@ -69,7 +70,7 @@ class PageViewService
      */
     public function recordView($param)
     {
-        TaskManager::getInstance()->async(function () use ($param) {
+        // TaskManager::getInstance()->async(function () use ($param) {
             try {
                 /**
                  * @var PageModel $page
@@ -95,11 +96,36 @@ class PageViewService
 
                     $this->setStatisticTemporaryIpHash($date, $pageId, $ipLong, 1);
                 }
-
-                PageStatisticModel::create()
-                    ->data(['pageId' => $pageId, 'date' => $date, 'pv' => 1, 'ip' => 1, 'reducedIp' => $ipState])
-                    ->duplicate($duplicate)
-                    ->save();
+                try {
+                    DbManager::getInstance()->startTransactionWithCount();
+                    $pageStatic=PageStatisticModel::create()->where(["pageId"=>$pageId,'date' => $date])->lockForUpdate()->get();
+                    if($pageStatic){
+                        //更新
+                        $updatePage=[
+                            "pv"=>$pageStatic->pv+1,
+                        ];
+                        if (!$isCounted) {
+                            $updatePage["ip"]=$pageStatic->ip+1;
+                            if ($ipState) {
+                                $updatePage['reducedIp'] = $pageStatic->reducedIp+1;
+                            }
+        
+                        }
+                        PageStatisticModel::create()->update($updatePage,["pageId"=>$pageId,'date' => $date]);
+                    }else{
+                        //添加
+                        PageStatisticModel::create(['pageId' => $pageId, 'date' => $date, 'pv' => 1, 'ip' => 1, 'reducedIp' => $ipState])->save();
+                    }
+                    DbManager::getInstance()->commitWithCount();
+                } catch (Throwable  $e) {
+                    DbManager::getInstance()->rollbackWithCount();
+                    throw new Exception($e->getMessage(), $e->getCode());
+                }
+               
+                // PageStatisticModel::create()
+                //     ->data(['pageId' => $pageId, 'date' => $date, 'pv' => 1, 'ip' => 1, 'reducedIp' => $ipState])
+                //     ->duplicate($duplicate)
+                //     ->save();
 
                 // 写了数据库后要更新缓存
                 $redis = RedisPool::defer();
@@ -116,7 +142,7 @@ class PageViewService
                 //file_put_contents('take-error.log',date('Y-m-d H:i:s',time()).'-recordView-'.json_encode($param).'-error:'.$e->getMessage()."\r\n",FILE_APPEND);
                 throw new Exception($e->getMessage(), $e->getCode());
             }
-        });
+        // });
     }
 
     /**
