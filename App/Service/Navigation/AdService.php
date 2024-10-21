@@ -21,10 +21,11 @@ use EasySwoole\Http\Message\Status;
 use EasySwoole\Mysqli\QueryBuilder;
 use EasySwoole\ORM\DbManager;
 use EasySwoole\RedisPool\RedisPool;
+use EasySwoole\Http\AbstractInterface\Controller;
 use Exception;
 use Throwable;
 
-class AdService
+class AdService  extends Controller
 {
     use Singleton;
 
@@ -322,7 +323,7 @@ class AdService
                     ])
                     ->duplicate($duplicate)
                     ->save();
-
+                $this->response()->write(DbManager::getInstance()->getLastQuery()->getLastQuery());
                 // 2023-07-20 新增记录点击日志
                 AdClickRecordModel::create()
                     ->data([
