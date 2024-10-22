@@ -9,6 +9,7 @@ use App\Model\Navigation\AdModel;
 use App\Model\Navigation\AdGroupRelationModel;
 use App\Model\Navigation\PageModel;
 use App\Model\Live\LiveTongChengModel;
+use App\Model\Live\LiveNewModel;
 use App\Model\Navigation\PageTemplateModel;
 use App\RedisKey\Navigation\TemplateKey;
 use App\Service\Merchant\AutoChannelService;
@@ -156,6 +157,29 @@ class Index extends ApiBase
             ->all();
             //存入缓存
             $redis->set("Ad:jiaoyou",$res,60*5);
+        } catch (Throwable $e) {
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
+
+        return $this->writeJson(Status::CODE_OK, $res, Status::getReasonPhrase(Status::CODE_OK));
+    }
+    //获取直播
+    public function  liveAd(){
+        try {
+            $redis = RedisPool::defer(RedisDb::REDIS_DB_STATISTIC);
+            $AdFontData=$redis->get("Ad:live");
+            if($AdFontData){
+                return $this->writeJson(Status::CODE_OK, $AdFontData, Status::getReasonPhrase(Status::CODE_OK));
+            }
+            //查询直播广告
+            $adGroupRelationModel=AdGroupRelationModel::create()->alias('relation');
+            $res=$adGroupRelationModel
+            ->join(LiveNewModel::create()->getTableName() . ' AS live', 'live.adId = relation.adId', 'LEFT')
+            ->where(["relation.adGroupId"=>79,"live.status"=>1])
+            ->order("live.sort","desc")
+            ->all();
+            //存入缓存
+            $redis->set("Ad:live",$res,60*5);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
