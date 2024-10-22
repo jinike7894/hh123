@@ -31,6 +31,7 @@ use EasySwoole\HttpAnnotation\AnnotationTag\Param;
 use EasySwoole\RedisPool\RedisPool;
 use App\Service\Oss\AwsOssService;
 use App\Enum\RedisDb;
+use EasySwoole\ORM\DbManager;
 use Exception;
 use Throwable;
 
@@ -106,7 +107,7 @@ class Index extends ApiBase
             ->where(["relation.adGroupId"=>76,"ad.status"=>1])
             ->order("relation.sort","desc")
             ->all();
-            return $this->writeJson(Status::CODE_OK, "ok", Status::getReasonPhrase(Status::CODE_OK));
+            return $this->writeJson(Status::CODE_OK,DbManager::getInstance()->getLastQuery()->getLastQuery(), Status::getReasonPhrase(Status::CODE_OK));
             $result = PageService::getInstance()->getViewData($page, $dataVersion);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
