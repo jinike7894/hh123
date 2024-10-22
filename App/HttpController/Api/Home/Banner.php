@@ -29,7 +29,9 @@ use EasySwoole\HttpAnnotation\AnnotationTag\ApiRequestExample;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiSuccess;
 use EasySwoole\HttpAnnotation\AnnotationTag\Method;
 use EasySwoole\HttpAnnotation\AnnotationTag\Param;
+use App\Model\Navigation\AdGroupRelationModel;
 use EasySwoole\RedisPool\RedisPool;
+use App\Enum\RedisDb;
 use Exception;
 use Throwable;
 
@@ -37,35 +39,56 @@ use Throwable;
 class Banner extends ApiBase
 {
     //前台获取轮播图
-    public function list()
-    {
-        $param = $this->request()->getRequestParam();
+    // public function list()
+    // {
+    //     $param = $this->request()->getRequestParam();
+    //     try {
+    //         $keyword = [];
+    //         $page = (int)($param['page'] ?? 1);
+    //         $pageSize = (int)($param['pageSize'] ?? SystemConfigKey::PAGE_SIZE);
+    //         $field = [
+    //             'id',
+    //             'img_src',
+    //             'url',
+    //             'is_internal',
+    //             'name',
+    //             'sort',
+    //             'create_at',
+    //             'update_at',
+    //             'status',
+    //         ];
+    //         $result = BannerModel::create()
+    //             ->where(["status"=>1])
+    //             ->where(["is_del"=>BannerModel::STATE_No])
+    //             ->order("sort","desc")
+    //             ->getAll($page, $keyword, $pageSize, $field);
+    //     } catch (Throwable $e) {
+    //         return $this->writeJson($e->getCode(), [], $e->getMessage());
+    //     }
+
+    //     return $this->writeJson(Status::CODE_OK, $result, Status::getReasonPhrase(Status::CODE_OK));
+    // }
+    public function list(){
         try {
-            $keyword = [];
-            $page = (int)($param['page'] ?? 1);
-            $pageSize = (int)($param['pageSize'] ?? SystemConfigKey::PAGE_SIZE);
-            $field = [
-                'id',
-                'img_src',
-                'url',
-                'is_internal',
-                'name',
-                'sort',
-                'create_at',
-                'update_at',
-                'status',
-            ];
-            $result = BannerModel::create()
-                ->where(["status"=>1])
-                ->where(["is_del"=>BannerModel::STATE_No])
-                ->order("sort","desc")
-                ->getAll($page, $keyword, $pageSize, $field);
+            $redis = RedisPool::defer(RedisDb::REDIS_DB_STATISTIC);
+            $AdFontData=$redis->get("Ad:Banner");
+            if($AdFontData){
+                return $this->writeJson(Status::CODE_OK, $AdFontData, Status::getReasonPhrase(Status::CODE_OK));
+            }
+            //查询文字广告内容
+            $adGroupRelationModel=AdGroupRelationModel::create()->alias('relation');
+            $res=$adGroupRelationModel
+            ->join(BannerModel::create()->getTableName() . ' AS banner', 'banner.adId = relation.adId', 'LEFT')
+            ->where(["relation.adGroupId"=>81,"banner.is_del"=>0,"banner.status"=>1])
+            ->order("banner.sort","desc")
+            ->all();
+            //存入缓存
+            $redis->set("Ad:Banner",$res,60*5);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
 
-        return $this->writeJson(Status::CODE_OK, $result, Status::getReasonPhrase(Status::CODE_OK));
+        return $this->writeJson(Status::CODE_OK, $res, Status::getReasonPhrase(Status::CODE_OK));
     }
-
    
 }
