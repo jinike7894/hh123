@@ -8,6 +8,7 @@ use App\Model\Common\ConfigModel;
 use App\Model\Navigation\AdModel;
 use App\Model\Navigation\AdGroupRelationModel;
 use App\Model\Navigation\PageModel;
+use App\Model\Live\liveTongChengModel;
 use App\Model\Navigation\PageTemplateModel;
 use App\RedisKey\Navigation\TemplateKey;
 use App\Service\Merchant\AutoChannelService;
@@ -132,6 +133,29 @@ class Index extends ApiBase
             ->all();
             //存入缓存
             $redis->set("Ad:Money",$res,60*5);
+        } catch (Throwable $e) {
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
+
+        return $this->writeJson(Status::CODE_OK, $res, Status::getReasonPhrase(Status::CODE_OK));
+    }
+     //同城交友
+     public function jiaoyouAd(){
+        try {
+            $redis = RedisPool::defer(RedisDb::REDIS_DB_STATISTIC);
+            $AdFontData=$redis->get("Ad:jiaoyou");
+            if($AdFontData){
+                return $this->writeJson(Status::CODE_OK, $AdFontData, Status::getReasonPhrase(Status::CODE_OK));
+            }
+            //查询同城交友广告
+            $adGroupRelationModel=AdGroupRelationModel::create()->alias('relation');
+            $res=$adGroupRelationModel
+            ->join(liveTongChengModel::create()->getTableName() . ' AS tongcheng', 'tongcheng.adId = relation.adId', 'LEFT')
+            ->where(["relation.adGroupId"=>78,"tongcheng.status"=>1])
+            ->order("tongcheng.sort","desc")
+            ->all();
+            //存入缓存
+            $redis->set("Ad:jiaoyou",$res,60*5);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
