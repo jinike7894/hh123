@@ -25,7 +25,7 @@ use App\Model\Prostitute\ProstituteModel;
 class LiveTongChengModel extends BaseModel implements CommonStatusInterface
 {
     protected $tableName = 'live_tongcheng';
-    protected $primaryKey = 'liveId';
+    protected $primaryKey = 'id';
     protected $autoTimeStamp = 'datetime';
     protected $createTime = 'createTime';
     protected $updateTime = 'updateTime';
