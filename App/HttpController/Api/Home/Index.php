@@ -8,7 +8,7 @@ use App\Model\Common\ConfigModel;
 use App\Model\Navigation\AdModel;
 use App\Model\Navigation\AdGroupRelationModel;
 use App\Model\Navigation\PageModel;
-use App\Model\Live\liveTongChengModel;
+use App\Model\Live\LiveTongChengModel;
 use App\Model\Navigation\PageTemplateModel;
 use App\RedisKey\Navigation\TemplateKey;
 use App\Service\Merchant\AutoChannelService;
