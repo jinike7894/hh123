@@ -55,16 +55,10 @@ class Live extends UserBase
             $keyword['status'] = LiveModel::STATE_NORMAL;
 
             $field = [
-                'liveId',
-                'liveTitle',
-                'fileType',
-                'liveCover',
-                'liveViewers',
-                'streamerNickname',
+               "*"
             ];
 
             $sortType = $param['sortType'] ?? 'liveId_DESC';
-
             $data = LiveModel::create()
                 ->setOrderType($sortType)
                 ->getAll($page, $keyword, $pageSize, $field);
