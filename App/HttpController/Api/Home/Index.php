@@ -6,6 +6,7 @@ use App\Enum\ConfigKey\AppConfigKey;
 use App\HttpController\Api\ApiBase;
 use App\Model\Common\ConfigModel;
 use App\Model\Navigation\AdModel;
+use App\Model\Navigation\AdGroupRelationModel;
 use App\Model\Navigation\PageModel;
 use App\Model\Navigation\PageTemplateModel;
 use App\RedisKey\Navigation\TemplateKey;
@@ -29,6 +30,7 @@ use EasySwoole\HttpAnnotation\AnnotationTag\Method;
 use EasySwoole\HttpAnnotation\AnnotationTag\Param;
 use EasySwoole\RedisPool\RedisPool;
 use App\Service\Oss\AwsOssService;
+use App\Enum\RedisDb;
 use Exception;
 use Throwable;
 
@@ -89,7 +91,41 @@ class Index extends ApiBase
 
         return $this->writeJson(Status::CODE_OK, $result, Status::getReasonPhrase(Status::CODE_OK));
     }
+    //文字广告
+    public function fontAd(){
+        try {
+            $page = null;
+            if (isset($param['pageName']) && $param['pageName']) {
+                $page = PageModel::create()->getByCache($param['pageName']);
+            }
+            $dataVersion = (int)($param['dataVersion'] ?? 1);
+            if (!$page) {
+                $page = PageModel::create()->getByCache('index.html');
+            }
 
+            if (!$page) {
+                throw new Exception('无效的页面参数', Status::CODE_BAD_REQUEST);
+            }
+            $redis = RedisPool::defer(RedisDb::REDIS_DB_STATISTIC);
+            $AdFontData=$redis->hGetAll("Ad:Font");
+            if($AdFontData){
+                return $this->writeJson(Status::CODE_OK, $AdFontData, Status::getReasonPhrase(Status::CODE_OK));
+            }
+            //查询文字广告内容
+            $adGroupRelationModel=AdGroupRelationModel::create()->alias('relation');
+            $res=$adGroupRelationModel
+            ->join(AdModel::create()->getTableName() . ' AS ad', 'ad.adId = relation.adGroupId', 'LEFT')
+            ->where(["relation.adGroupId"=>76,"ad.status"=>1])
+            ->order("relation.sort","desc")
+            ->all();
+            var_dump($res);die;
+            $result = PageService::getInstance()->getViewData($page, $dataVersion);
+        } catch (Throwable $e) {
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
+
+        return $this->writeJson(Status::CODE_OK, $result, Status::getReasonPhrase(Status::CODE_OK));
+    }
     /**
      * 获取配置
      * @Api(name="获取配置",path="/Api/Home/Index/getConfig")
