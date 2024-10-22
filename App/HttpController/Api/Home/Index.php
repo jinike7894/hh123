@@ -115,6 +115,29 @@ class Index extends ApiBase
 
         return $this->writeJson(Status::CODE_OK, $res, Status::getReasonPhrase(Status::CODE_OK));
     }
+    //赚钱广告
+    public function moneyAd(){
+        try {
+            $redis = RedisPool::defer(RedisDb::REDIS_DB_STATISTIC);
+            $AdFontData=$redis->get("Ad:Money");
+            if($AdFontData){
+                return $this->writeJson(Status::CODE_OK, $AdFontData, Status::getReasonPhrase(Status::CODE_OK));
+            }
+            //查询文字广告内容
+            $adGroupRelationModel=AdGroupRelationModel::create()->alias('relation');
+            $res=$adGroupRelationModel
+            ->join(AdModel::create()->getTableName() . ' AS ad', 'ad.adId = relation.adId', 'LEFT')
+            ->where(["relation.adGroupId"=>77,"ad.status"=>1])
+            ->order("relation.sort","desc")
+            ->all();
+            //存入缓存
+            $redis->set("Ad:Money",$res,60*5);
+        } catch (Throwable $e) {
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
+
+        return $this->writeJson(Status::CODE_OK, $res, Status::getReasonPhrase(Status::CODE_OK));
+    }
     /**
      * 获取配置
      * @Api(name="获取配置",path="/Api/Home/Index/getConfig")
