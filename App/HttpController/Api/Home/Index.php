@@ -94,6 +94,7 @@ class Index extends ApiBase
     //文字广告
     public function fontAd(){
         try {
+            return $this->writeJson(Status::CODE_OK, ["msg"=>"ok"], Status::getReasonPhrase(Status::CODE_OK));
             $redis = RedisPool::defer(RedisDb::REDIS_DB_STATISTIC);
             $AdFontData=$redis->hGetAll("Ad:Font");
             if($AdFontData){
