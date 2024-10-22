@@ -103,17 +103,16 @@ class Index extends ApiBase
             //查询文字广告内容
             $adGroupRelationModel=AdGroupRelationModel::create()->alias('relation');
             $res=$adGroupRelationModel
-            ->join(AdModel::create()->getTableName() . ' AS ad', 'ad.adId = relation.adGroupId', 'LEFT')
+            ->join(AdModel::create()->getTableName() . ' AS ad', 'ad.adId = relation.adId', 'LEFT')
             ->where(["relation.adGroupId"=>76,"ad.status"=>1])
             ->order("relation.sort","desc")
             ->all();
-            return $this->writeJson(Status::CODE_OK,DbManager::getInstance()->getLastQuery()->getLastQuery(), Status::getReasonPhrase(Status::CODE_OK));
-            $result = PageService::getInstance()->getViewData($page, $dataVersion);
+          
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
 
-        return $this->writeJson(Status::CODE_OK, $result, Status::getReasonPhrase(Status::CODE_OK));
+        return $this->writeJson(Status::CODE_OK, $res, Status::getReasonPhrase(Status::CODE_OK));
     }
     /**
      * 获取配置
