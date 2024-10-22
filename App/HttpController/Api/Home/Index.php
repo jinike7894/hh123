@@ -96,7 +96,7 @@ class Index extends ApiBase
     public function fontAd(){
         try {
             $redis = RedisPool::defer(RedisDb::REDIS_DB_STATISTIC);
-            $AdFontData=$redis->hGetAll("Ad:Font");
+            $AdFontData=$redis->get("Ad:Font");
             if($AdFontData){
                 return $this->writeJson(Status::CODE_OK, $AdFontData, Status::getReasonPhrase(Status::CODE_OK));
             }
@@ -107,7 +107,8 @@ class Index extends ApiBase
             ->where(["relation.adGroupId"=>76,"ad.status"=>1])
             ->order("relation.sort","desc")
             ->all();
-          
+            //存入缓存
+            $redis->set("Ad:Font",$res,60*5);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
