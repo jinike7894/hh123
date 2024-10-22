@@ -106,6 +106,7 @@ class Index extends ApiBase
             ->where(["relation.adGroupId"=>76,"ad.status"=>1])
             ->order("relation.sort","desc")
             ->all();
+            return $this->writeJson(Status::CODE_OK, $res, Status::getReasonPhrase(Status::CODE_OK));
             var_dump($res);die;
             $result = PageService::getInstance()->getViewData($page, $dataVersion);
         } catch (Throwable $e) {
