@@ -94,18 +94,6 @@ class Index extends ApiBase
     //文字广告
     public function fontAd(){
         try {
-            $page = null;
-            if (isset($param['pageName']) && $param['pageName']) {
-                $page = PageModel::create()->getByCache($param['pageName']);
-            }
-            $dataVersion = (int)($param['dataVersion'] ?? 1);
-            if (!$page) {
-                $page = PageModel::create()->getByCache('index.html');
-            }
-
-            if (!$page) {
-                throw new Exception('无效的页面参数', Status::CODE_BAD_REQUEST);
-            }
             $redis = RedisPool::defer(RedisDb::REDIS_DB_STATISTIC);
             $AdFontData=$redis->hGetAll("Ad:Font");
             if($AdFontData){
