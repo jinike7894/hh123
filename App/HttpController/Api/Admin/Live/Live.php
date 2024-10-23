@@ -71,7 +71,7 @@ class Live extends AdminBase
         try {
             $vipGoods = LiveNewModel::create()
                 ->get([
-                    'liveId' => $param['liveId'],
+                    'id' => $param['id'],
                     'status' => [LiveNewModel::STATE_DELETED, '>'],
                 ]);
 
