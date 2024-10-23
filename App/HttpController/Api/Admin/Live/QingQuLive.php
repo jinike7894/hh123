@@ -99,6 +99,7 @@ class QingQuLive extends AdminBase
     {
         $param = $this->request()->getRequestParam();
         try {
+            
             $data = [
                'name' => trim($param['name']),
                 'fileType' => trim($param['fileType']),
