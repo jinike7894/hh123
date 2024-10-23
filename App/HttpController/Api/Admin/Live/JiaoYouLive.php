@@ -87,7 +87,7 @@ class JiaoYouLive extends AdminBase
         try {
             $adRes=LiveTongChengModel::create()->where(["adId"=>$param['adId'],"status"=>1])->get();
             if($adRes){
-                return $this->writeJson(Status::CODE_NOT_FOUND,'操作失败，广告已被其他绑定', Status::getReasonPhrase(Status::CODE_NOT_FOUND));
+                return $this->writeJson(Status::CODE_NOT_FOUND,[],'操作失败，广告已被其他绑定');
             }
             $data = [
                 'name' => trim($param['name']),
@@ -121,7 +121,7 @@ class JiaoYouLive extends AdminBase
         try {
             $adRes=LiveTongChengModel::create()->where(["adId"=>$param['adId'],"status"=>1])->get();
             if($adRes["id"]!=$param['id']){
-                return $this->writeJson(Status::CODE_NOT_FOUND,'操作失败，广告已被其他绑定', Status::getReasonPhrase(Status::CODE_NOT_FOUND));
+                return $this->writeJson(Status::CODE_NOT_FOUND,[],'操作失败，广告已被其他绑定');
             }
             $data = [
                'name' => trim($param['name']),
