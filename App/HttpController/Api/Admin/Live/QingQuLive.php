@@ -122,6 +122,7 @@ class QingQuLive extends AdminBase
                 'cover' => trim($param['cover']),
                 'viewer' => intval($param['viewer']),
                 'url' => trim($param['url']),
+                
                 'title' => trim($param['title']),
                 'price' => trim($param['price']),
                 'sort' => intval($param['sort']),
