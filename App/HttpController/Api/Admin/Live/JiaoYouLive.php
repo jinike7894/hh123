@@ -56,8 +56,6 @@ class JiaoYouLive extends AdminBase
 
         return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
     }
-
-
     public function info()
     {
         $param = $this->request()->getRequestParam();

@@ -173,7 +173,7 @@ class Live extends AdminBase
             $res=$adGroupRelationModel
             ->join(AdModel::create()->getTableName() . ' AS ad', 'ad.adId = relation.adId', 'LEFT')
             ->where(["relation.adGroupId"=>80,"qingqu.status"=>1])
-            ->order("qingqu.sort","desc")
+            ->order("relation.sort","desc")
             ->all();
 
         } catch (Throwable $e) {
