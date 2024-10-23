@@ -162,8 +162,8 @@ class JiaoYouLive extends AdminBase
             $adGroupRelationModel=AdGroupRelationModel::create()->alias('relation');
             $res=$adGroupRelationModel
             ->join(AdModel::create()->getTableName() . ' AS ad', 'ad.adId = relation.adId', 'LEFT')
-            ->where(["relation.adGroupId"=>78,"qingqu.status"=>1])
-            ->order("qingqu.sort","desc")
+            ->where(["relation.adGroupId"=>78,"ad.status"=>1])
+            ->order("relation.sort","desc")
             ->all();
 
         } catch (Throwable $e) {
