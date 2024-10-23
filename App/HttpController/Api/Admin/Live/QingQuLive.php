@@ -113,7 +113,7 @@ class QingQuLive extends AdminBase
         $param = $this->request()->getRequestParam();
         try {
             $adRes=LiveQingquModel::create()->where(["adId"=>$param['adId'],"status"=>1])->get();
-            if($adRes["id"]!=$param['id']){
+            if($adRes&&$adRes["id"]!=$param['id']){
                 return $this->writeJson(Status::CODE_NOT_FOUND,[],'操作失败，广告已被其他绑定');
             }
             $data = [
@@ -122,7 +122,7 @@ class QingQuLive extends AdminBase
                 'cover' => trim($param['cover']),
                 'viewer' => intval($param['viewer']),
                 'url' => trim($param['url']),
-                
+
                 'title' => trim($param['title']),
                 'price' => trim($param['price']),
                 'sort' => intval($param['sort']),
