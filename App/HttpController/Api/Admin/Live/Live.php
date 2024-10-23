@@ -78,7 +78,8 @@ class Live extends AdminBase
                     'id' => $param['id'],
                     'status' => [LiveNewModel::STATE_DELETED, '>'],
                 ]);
-
+           $imgData=new uploadNew();
+           $vipGoods["img_show"]=$imgData->getUrlImage($vipGoods["cover"]);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
