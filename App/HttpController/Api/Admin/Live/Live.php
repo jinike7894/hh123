@@ -93,7 +93,7 @@ class Live extends AdminBase
         try {
             $adRes=LiveNewModel::create()->where(["adId"=>$param['adId'],"status"=>1])->get();
             if($adRes){
-                throw new Exception('操作失败，广告已被其他绑定', Status::CODE_BAD_REQUEST);
+                return $this->writeJson(Status::CODE_NOT_FOUND,'操作失败，广告已被其他绑定', Status::getReasonPhrase(Status::CODE_NOT_FOUND));
             }
             $data = [
                 'name' => trim($param['name']),
@@ -125,7 +125,7 @@ class Live extends AdminBase
         $param = $this->request()->getRequestParam();
         $adRes=LiveNewModel::create()->where(["adId"=>$param['adId'],"status"=>1])->get();
         if($adRes["id"]!=$param['id']){
-            throw new Exception('操作失败，广告已被其他绑定', Status::CODE_BAD_REQUEST);
+            return $this->writeJson(Status::CODE_NOT_FOUND,'操作失败，广告已被其他绑定', Status::getReasonPhrase(Status::CODE_NOT_FOUND));
         }
         try {
             $data = [
