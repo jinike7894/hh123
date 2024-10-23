@@ -67,7 +67,10 @@ class Banner extends AdminBase
     public function add()
     {
         $param = $this->request()->getRequestParam();
-
+        $adRes=BannerModel::create()->where(["adId"=>$param['adId'],"status"=>1])->get();
+        if($adRes){
+            throw new Exception('操作失败，广告已被其他绑定', Status::CODE_BAD_REQUEST);
+        }
         try {
             $data = [
                 'img_src' => trim($param['img_src']),
@@ -114,7 +117,10 @@ class Banner extends AdminBase
     public function edit()
     {
         $param = $this->request()->getRequestParam();
-
+        $adRes=BannerModel::create()->where(["adId"=>$param['adId'],"status"=>1])->get();
+            if($adRes["id"]!=$param['id']){
+                throw new Exception('操作失败，广告已被其他绑定', Status::CODE_BAD_REQUEST);
+            }
         try {
             $data = [
                 'img_src' => trim($param['img_src']),

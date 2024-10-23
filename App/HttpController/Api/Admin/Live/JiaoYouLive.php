@@ -84,6 +84,10 @@ class JiaoYouLive extends AdminBase
     {
         $param = $this->request()->getRequestParam();
         try {
+            $adRes=LiveTongChengModel::create()->where(["adId"=>$param['adId'],"status"=>1])->get();
+            if($adRes){
+                throw new Exception('操作失败，广告已被其他绑定', Status::CODE_BAD_REQUEST);
+            }
             $data = [
                 'name' => trim($param['name']),
                 'fileType' => trim($param['fileType']),
@@ -114,6 +118,10 @@ class JiaoYouLive extends AdminBase
     {
         $param = $this->request()->getRequestParam();
         try {
+            $adRes=LiveTongChengModel::create()->where(["adId"=>$param['adId'],"status"=>1])->get();
+            if($adRes["id"]!=$param['id']){
+                throw new Exception('操作失败，广告已被其他绑定', Status::CODE_BAD_REQUEST);
+            }
             $data = [
                'name' => trim($param['name']),
                 'fileType' => trim($param['fileType']),
