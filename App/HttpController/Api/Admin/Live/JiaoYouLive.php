@@ -21,6 +21,7 @@ use EasySwoole\HttpAnnotation\AnnotationTag\Method;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiRequestExample;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiSuccess;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiFail;
+use App\HttpController\Api\Admin\Upload as uploadNew;
 use Exception;
 use Throwable;
 
@@ -50,6 +51,12 @@ class JiaoYouLive extends AdminBase
             $data = LiveTongChengModel::create()
                 ->order("sort","desc")
                 ->getAll($page, $keyword, $pageSize, $field);
+                if($data["list"]){
+                    foreach($data["list"] as $k=>$v){
+                        $imgData=new uploadNew();
+                        $data["list"][$k]->cover=$imgData->getUrlImage($v["cover"]);
+                    }
+                }
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
