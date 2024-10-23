@@ -89,6 +89,7 @@ class JiaoYouLive extends AdminBase
                 'project' => trim($param['project']),
                 'feature' => trim($param['feature']),
                 'adId' => intval($param['adId']),
+                'distance' => trim($param['distance']),
             ];
             $result = LiveTongChengModel::create($data)->save();
         } catch (Throwable $e) {
@@ -118,6 +119,7 @@ class JiaoYouLive extends AdminBase
                 'project' => trim($param['project']),
                 'feature' => trim($param['feature']),
                 'adId' => intval($param['adId']),
+                'distance' => trim($param['distance']),
             ];
 
             $result = LiveTongChengModel::create()->update($data,["id"=>$param['id']]);
