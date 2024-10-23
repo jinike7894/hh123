@@ -43,7 +43,7 @@ class Live extends AdminBase
             $page = (int)($param['page'] ?? 1);
             $pageSize = (int)($param['pageSize'] ?? SystemConfigKey::PAGE_SIZE);
 
-            isset($param['liveId']) && $keyword['liveId'] = intval($param['liveId']);
+            isset($param['id']) && $keyword['id'] = intval($param['id']);
             isset($param['status']) && $keyword['status'] = trim($param['status']);
 
             $field = [
@@ -53,7 +53,7 @@ class Live extends AdminBase
             $sortType = $param['sortType'] ?? '';
 
             $data = LiveNewModel::create()
-                ->setOrderType($sortType)
+                ->order("sort","desc")
                 ->getAll($page, $keyword, $pageSize, $field);
 
         } catch (Throwable $e) {
@@ -182,7 +182,7 @@ class Live extends AdminBase
 
         return $this->writeJson(
             Status::CODE_OK,
-            $result,
+            $res,
             Status::getReasonPhrase(Status::CODE_OK),
             AdminLogsModel::TYPE_UPDATE,
             json_encode($param, JSON_UNESCAPED_UNICODE)
