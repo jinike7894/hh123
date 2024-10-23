@@ -118,7 +118,7 @@ class Ad extends AdminBase
           if($data['list']){
             foreach($data['list'] as $k=>$v){
                 $imgData=new uploadNew();
-               
+                return $this->writeJson(Status::CODE_OK, $v["imageUrl"], Status::getReasonPhrase(Status::CODE_OK));
                 $data['list'][$k]->imageUrl=$imgData->getUrlImage($v["imageUrl"]);
             }
           }
