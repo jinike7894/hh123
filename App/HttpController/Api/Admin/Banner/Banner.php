@@ -8,6 +8,8 @@ use App\Model\Admin\AdminLogsModel;
 use App\Model\Live\LiveModel;
 use App\Model\Banner\BannerModel;
 use EasySwoole\Http\Message\Status;
+use App\Model\Navigation\AdGroupRelationModel;
+use App\Model\Navigation\AdModel;
 use EasySwoole\HttpAnnotation\AnnotationTag\Param;
 use EasySwoole\HttpAnnotation\AnnotationTag\Api;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiDescription;
@@ -182,6 +184,28 @@ class Banner extends AdminBase
             $result,
             Status::getReasonPhrase(Status::CODE_OK),
             AdminLogsModel::TYPE_DELETE,
+            json_encode($param, JSON_UNESCAPED_UNICODE)
+        );
+    }
+    public function getAd(){
+        $param = $this->request()->getRequestParam();
+        try {
+            $adGroupRelationModel=AdGroupRelationModel::create()->alias('relation');
+            $res=$adGroupRelationModel
+            ->join(AdModel::create()->getTableName() . ' AS ad', 'ad.adId = relation.adId', 'LEFT')
+            ->where(["relation.adGroupId"=>81,"ad.status"=>1])
+            ->order("relation.sort","desc")
+            ->all();
+
+        } catch (Throwable $e) {
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
+
+        return $this->writeJson(
+            Status::CODE_OK,
+            $res,
+            Status::getReasonPhrase(Status::CODE_OK),
+            AdminLogsModel::TYPE_UPDATE,
             json_encode($param, JSON_UNESCAPED_UNICODE)
         );
     }
