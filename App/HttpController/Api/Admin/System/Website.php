@@ -149,15 +149,15 @@ class Website extends AdminBase
             // 这里有个特殊的判断，如果favicon之前有数据，则要判断是否有图需要删除。
             $favicon = ConfigModel::create()->getConfigValue(WebsiteConfigKey::FAVICON);
             if (isset($param['Favicon']) && $param['Favicon'] != $favicon) {
-                if ($favicon) {
-                    LocalOssService::getInstance()->deleteObject($favicon);
-                }
+                // if ($favicon) {
+                //     LocalOssService::getInstance()->deleteObject($favicon);
+                // }
 
-                // 并且将临时文件转移到other目录
-                // 这里判断是因为可能是清除图片的操作，虽然有key，但是值为空，仅删除旧图片。所以在有值的时候才会转移。
-                if ($data['Favicon']) {
-                    $data['Favicon'] = Func::moveTempFile($data['Favicon'], Upload::TYPE_OTHER);
-                }
+                // // 并且将临时文件转移到other目录
+                // // 这里判断是因为可能是清除图片的操作，虽然有key，但是值为空，仅删除旧图片。所以在有值的时候才会转移。
+                // if ($data['Favicon']) {
+                //     $data['Favicon'] = Func::moveTempFile($data['Favicon'], Upload::TYPE_OTHER);
+                // }
             }
 
             $result = ConfigModel::create()->setConfig($data);
