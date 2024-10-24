@@ -519,8 +519,9 @@ class Channel extends AdminBase
                 ->join(AdClickStatisticModel::create()->getTableName() . ' AS acs', 'acs.pageId = ps.pageId AND acs.date = ps.date', 'LEFT')
                 ->where($pageWhere)
                 ->group('date, pageId')
-                ->indexBy('dateKey');
-               return $this->writeJson(Status::CODE_OK, $apsList , Status::getReasonPhrase(Status::CODE_OK));
+                ->getAll($page, $keyword, $pageSize, $field);
+                // ->indexBy('dateKey');
+               return $this->writeJson(Status::CODE_OK, DbManager::getInstance()->getLastQuery()->getLastQuery() , Status::getReasonPhrase(Status::CODE_OK));
             $paymentDataGroup = UserVipOrderModel::create()->getGroupSum($clickKeyword, 'pageId');
             $paymentUserGroup = UserVipOrderModel::create()->getGroupUserCount($clickKeyword, 'pageId');
             $appPaymentDataGroup = UserVipOrderModel::create()->getGroupSum($keyword, 'channelId');
