@@ -490,54 +490,54 @@ class Channel extends AdminBase
             $data = ChannelInstallStatisticModel::create()
                 ->setOrderType($sortType)
                 ->getAll($page, $keyword, $pageSize, $field);
-            if($page==1){
-                $nowTime=$keyword['dateEnd']; 
-                $adClickStatucModel=adClickStatisticModel::create();
-                if(isset($param['dateStart'])){
-                    // $adClickStatucModel->where("date",$param['dateStart'],">=");
-                    // $adClickStatucModel->where("date",$param['dateEnd'],"<=");
-                }else{
-                    $adClickStatucModel->where(["date"=>date("Y-m-d")]);
-                }
-                $adClickRes=$adClickStatucModel->group("date, pageId")->getAll(1, $keyword, 100000, ["*"]);
-                if($adClickRes){
-                    foreach($adClickRes["list"] as $kad=>$vad){
-                        $adkey=$vad->pageId."_".$vad->date;
-                        $keyarr=[];
-                        foreach($data["list"] as $kd=>$vd){
-                            $keyarr[]=$vd->channelId."_".$vd->date;
-                        }
-                        if (!in_array($adkey, $keyarr)) {
+            // if($page==1){
+            //     $nowTime=$keyword['dateEnd']; 
+            //     $adClickStatucModel=adClickStatisticModel::create();
+            //     if(isset($param['dateStart'])){
+            //         // $adClickStatucModel->where("date",$param['dateStart'],">=");
+            //         // $adClickStatucModel->where("date",$param['dateEnd'],"<=");
+            //     }else{
+            //         $adClickStatucModel->where(["date"=>date("Y-m-d")]);
+            //     }
+            //     $adClickRes=$adClickStatucModel->group("date, pageId")->getAll(1, $keyword, 100000, ["*"]);
+            //     if($adClickRes){
+            //         foreach($adClickRes["list"] as $kad=>$vad){
+            //             $adkey=$vad->pageId."_".$vad->date;
+            //             $keyarr=[];
+            //             foreach($data["list"] as $kd=>$vd){
+            //                 $keyarr[]=$vd->channelId."_".$vd->date;
+            //             }
+            //             if (!in_array($adkey, $keyarr)) {
                            
-                            $newArray=[
-                                "date"=>$vad->date,
-                                "channelId"=>$vad->pageId,
-                                "installAndroid"=>0,
-                                "realInstallAndroid"=>0,
-                                "activeAndroid"=>0,
-                                "realActiveAndroid"=>0,
-                                "installIOS"=>0,
-                                "realInstallIOS"=>0,
-                                "activeIOS"=>0,
-                                "realActiveIOS"=>0,
-                                "installIOSBookmark"=>0,
-                                "realInstallIOSBookmark"=>0,
-                                "activeIOSBookmark"=>0,
-                                "realActiveIOSBookmark"=>0,
-                                "installTotal"=>0,
-                                "realInstallTotal"=>0,
-                                "activeTotal"=>0,
-                                "realActiveTotal"=>0,
-                            ];
+            //                 $newArray=[
+            //                     "date"=>$vad->date,
+            //                     "channelId"=>$vad->pageId,
+            //                     "installAndroid"=>0,
+            //                     "realInstallAndroid"=>0,
+            //                     "activeAndroid"=>0,
+            //                     "realActiveAndroid"=>0,
+            //                     "installIOS"=>0,
+            //                     "realInstallIOS"=>0,
+            //                     "activeIOS"=>0,
+            //                     "realActiveIOS"=>0,
+            //                     "installIOSBookmark"=>0,
+            //                     "realInstallIOSBookmark"=>0,
+            //                     "activeIOSBookmark"=>0,
+            //                     "realActiveIOSBookmark"=>0,
+            //                     "installTotal"=>0,
+            //                     "realInstallTotal"=>0,
+            //                     "activeTotal"=>0,
+            //                     "realActiveTotal"=>0,
+            //                 ];
                             
-                            array_unshift($data["list"], $newArray);
+            //                 array_unshift($data["list"], $newArray);
                            
-                        }
-                    }
-                }
+            //             }
+            //         }
+            //     }
                
                 
-            }
+            // }
            // return $this->writeJson(Status::CODE_OK,$data["list"], Status::getReasonPhrase(Status::CODE_OK));
             $data['list'] = ChannelModel::create()->appendInfo($data['list'], ['channelKey', 'merchantId'], 'channelId', 'channelId');
             $data['list'] = MerchantModel::create()->appendInfo($data['list'], ['merchantName'], 'merchantId', 'merchantId');
