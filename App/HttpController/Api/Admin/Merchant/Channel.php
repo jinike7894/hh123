@@ -529,8 +529,8 @@ class Channel extends AdminBase
                                 "activeTotal"=>0,
                                 "realActiveTotal"=>0,
                             ];
-                            
-                            array_unshift($data["list"], $newArray);
+                            $data["list"][]=(object)$newArray;
+                         
                            
                         }
                     }
