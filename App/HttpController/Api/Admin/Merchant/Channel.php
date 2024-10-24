@@ -481,11 +481,15 @@ class Channel extends AdminBase
                 ->getAll($page, $keyword, $pageSize, $field);
             if($page==1){
                 $nowTime=$keyword['dateEnd']; 
-                $adClickStatucRes=adClickStatisticModel::create()->getAll(1, $keyword, 100000, ["*"]);
-                if($adClickStatucRes){
-
+                $adClickStatucModel=adClickStatisticModel::create();
+                if(isset($param['dateStart'])){
+                    $adClickStatucModel->where("date",$param['dateStart'],">=");
+                    $adClickStatucModel->where("date",$param['dateEnd'],"<=");
+                }else{
+                    $adClickStatucModel->where(["date"=>date("Y-m-d")]);
                 }
-                return $this->writeJson(Status::CODE_OK, $keyword, Status::getReasonPhrase(Status::CODE_OK));
+                $adClickStatucModel->getAll(1, $keyword, 100000, ["*"]);
+                return $this->writeJson(Status::CODE_OK, DbManager::getInstance()->getLastQuery()->getLastQuery(), Status::getReasonPhrase(Status::CODE_OK));
             }
             $data['list'] = ChannelModel::create()->appendInfo($data['list'], ['channelKey', 'merchantId'], 'channelId', 'channelId');
             $data['list'] = MerchantModel::create()->appendInfo($data['list'], ['merchantName'], 'merchantId', 'merchantId');
