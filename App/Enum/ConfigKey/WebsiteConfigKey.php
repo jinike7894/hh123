@@ -38,9 +38,9 @@ class WebsiteConfigKey
         // self::GAME_NOTIFY,
         self::App_NOTIFY,
         // self::Recommend_Url,
-        self::Spare_Url,
-        self::E_Mail,
-        self::Permanent_Url,
+        // self::Spare_Url,
+        // self::E_Mail,
+        // self::Permanent_Url,
     ];
 
 }
