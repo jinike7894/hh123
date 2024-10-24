@@ -133,6 +133,8 @@ class Adult extends UserBase
                     'vod_play_from AS vodPlayFrom',
                     'vod_play_url AS vodPlayUrl',
                     'type_id AS typeId',
+                    'click AS click',
+                    'vod_time_add AS vod_time_add',
                 ])
                 ->where(['vod_status' => VideoModel::STATE_NORMAL])
                 ->get($param['vodId']);
