@@ -529,6 +529,7 @@ class Channel extends AdminBase
                                 "activeTotal"=>0,
                                 "realActiveTotal"=>0,
                             ];
+                            return $this->writeJson(Status::CODE_OK, ["msg"=>(object)$newArray], Status::getReasonPhrase(Status::CODE_OK));
                             array_unshift($data["list"], (object)$newArray);
                            
                         }
