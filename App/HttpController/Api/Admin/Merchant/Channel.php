@@ -508,7 +508,7 @@ class Channel extends AdminBase
             //                 $keyarr[]=$vd->channelId."_".$vd->date;
             //             }
             //             if (!in_array($adkey, $keyarr)) {
-                           
+            //                 $PageModel::create()->where(["pageId"=>$vad->pageId])->get();
             //                 $newArray=[
             //                     "date"=>$vad->date,
             //                     "channelId"=>$vad->pageId,
