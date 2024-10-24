@@ -20,6 +20,7 @@ use EasySwoole\HttpAnnotation\AnnotationTag\Method;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiRequestExample;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiSuccess;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiFail;
+use App\HttpController\Api\Admin\Upload as uploadNew;
 use EasySwoole\Utility\File;
 use Exception;
 use Throwable;
