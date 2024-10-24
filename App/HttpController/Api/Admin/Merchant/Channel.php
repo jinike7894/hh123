@@ -508,7 +508,7 @@ class Channel extends AdminBase
                             $keyarr[]=$vd->channelId."_".$vd->date;
                         }
                         if (!in_array($adkey, $keyarr)) {
-                            return $this->writeJson(Status::CODE_OK, ["msg"=>$adkey], Status::getReasonPhrase(Status::CODE_OK));
+                           
                             $newArray=[
                                 "date"=>$vad->date,
                                 "channelId"=>$vad->pageId,
@@ -529,7 +529,8 @@ class Channel extends AdminBase
                                 "activeTotal"=>0,
                                 "realActiveTotal"=>0,
                             ];
-                            array_unshift($adClickRes["list"], (object)$newArray);
+                            array_unshift($data["list"], (object)$newArray);
+                           
                         }
                     }
                 }
