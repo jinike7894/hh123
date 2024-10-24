@@ -499,7 +499,7 @@ class Channel extends AdminBase
                 }else{
                     $adClickStatucModel->where(["date"=>date("Y-m-d")]);
                 }
-                $adClickRes=$adClickStatucModel->getAll(1, $keyword, 100000, ["*"]);
+                $adClickRes=$adClickStatucModel->group("pageId")->getAll(1, $keyword, 100000, ["*"]);
                 if($adClickRes){
                     foreach($adClickRes["list"] as $kad=>$vad){
                         $adkey=$vad->pageId."_".$vad->date;
