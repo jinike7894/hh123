@@ -475,45 +475,32 @@ class Channel extends AdminBase
             ];
 
             $sortType = $param['sortType'] ?? '';
-            //获取安装数
-            $data = ChannelInstallStatisticModel::create()
-                ->setOrderType($sortType)
-                ->getAll($page, $keyword, $pageSize, $field);
-            $data['list'] = ChannelModel::create()->appendInfo($data['list'], ['channelKey', 'merchantId'], 'channelId', 'channelId');
-            $data['list'] = MerchantModel::create()->appendInfo($data['list'], ['merchantName'], 'merchantId', 'merchantId');
-
-            /* 2023-10-14 增加 页面对应的点击总数和 新增点击数/新增安装的比值（新增点击比） begin */
-            // 2023-11-13 增加了新增点击总数，留存点击总数，修改了新增点击比的算法。
-            // 补充pageId的目的是为了拿点击数
-            $data['list'] = PageModel::create()->appendInfo($data['list'], ['pageId'], 'channelKey', 'pageName');
-
+            
             $acs = AdClickStatisticModel::create();
             $where = $acs->parseKeywordToWhere($clickKeyword);
 
-            // 因为有分页，查询关联数据也要处理一下查询条件
-            $dateList = array_unique(array_column($data['list'], 'date'));
-            $dateList && $acs->where(['date' => [$dateList, 'IN']]);
+           
             // 查询分页条件内的日期的关联点击数据
-            $acsList = $acs
-                ->field([
-                    'pageId',
-                    'date',
-                    'CONCAT(date,\'_\',pageId) AS dateKey',
-                    'IFNULL(SUM(clickCount),0) AS clickCount',
-                    'IFNULL(SUM(h5ClickCount),0) AS h5ClickCount', // h5点击数
-                    'IFNULL(SUM(appClickCount),0) AS appClickCount', // app点击数
-                    'IFNULL(SUM(retainedClickCount),0) AS retainedClickCount',
-                    //'IFNULL(SUM(clickCount),0) - IFNULL(SUM(retainedClickCount),0) AS newClickCount',
-                    'IFNULL(SUM(appClickCount),0) - IFNULL(SUM(retainedClickCount),0) AS newAppClickCount',
-                ])
-                ->where($where)
-                ->group('date, pageId')
-                ->indexBy('dateKey');
+            // $acsList = $acs
+            //     ->field([
+            //         'pageId',
+            //         'date',
+            //         'CONCAT(date,\'_\',pageId) AS dateKey',
+            //         'IFNULL(SUM(clickCount),0) AS clickCount',
+            //         'IFNULL(SUM(h5ClickCount),0) AS h5ClickCount', // h5点击数
+            //         'IFNULL(SUM(appClickCount),0) AS appClickCount', // app点击数
+            //         'IFNULL(SUM(retainedClickCount),0) AS retainedClickCount',
+            //         //'IFNULL(SUM(clickCount),0) - IFNULL(SUM(retainedClickCount),0) AS newClickCount',
+            //         'IFNULL(SUM(appClickCount),0) - IFNULL(SUM(retainedClickCount),0) AS newAppClickCount',
+            //     ])
+            //     ->where($where)
+            //     ->group('date, pageId')
+            //     ->indexBy('dateKey');
 
             //改版 begin
             $aps = PageStatisticModel::create();
             $pageWhere = $aps->parseKeywordToWhere($psKeyword);
-            $dateList && $aps->where(['ps.date' => [$dateList, 'IN']]);
+            // $dateList && $aps->where(['ps.date' => [$dateList, 'IN']]);
             // 查询分页条件内的日期的关联点击数据
             $apsList = $aps
                 ->alias('ps')
@@ -533,12 +520,34 @@ class Channel extends AdminBase
                 ->where($pageWhere)
                 ->group('date, pageId')
                 ->indexBy('dateKey');
-                // $this->writeJson(Status::CODE_OK, DbManager::getInstance()->getLastQuery()->getLastQuery(), Status::getReasonPhrase(Status::CODE_OK));
+               return $this->writeJson(Status::CODE_OK, $apsList , Status::getReasonPhrase(Status::CODE_OK));
             $paymentDataGroup = UserVipOrderModel::create()->getGroupSum($clickKeyword, 'pageId');
             $paymentUserGroup = UserVipOrderModel::create()->getGroupUserCount($clickKeyword, 'pageId');
             $appPaymentDataGroup = UserVipOrderModel::create()->getGroupSum($keyword, 'channelId');
             $appPaymentUserGroup = UserVipOrderModel::create()->getGroupUserCount($keyword, 'channelId');
             //改版 end
+
+
+            //获取安装数
+            $data = ChannelInstallStatisticModel::create()
+                ->setOrderType($sortType)
+                ->getAll($page, $keyword, $pageSize, $field);
+            $data['list'] = ChannelModel::create()->appendInfo($data['list'], ['channelKey', 'merchantId'], 'channelId', 'channelId');
+            $data['list'] = MerchantModel::create()->appendInfo($data['list'], ['merchantName'], 'merchantId', 'merchantId');
+
+            /* 2023-10-14 增加 页面对应的点击总数和 新增点击数/新增安装的比值（新增点击比） begin */
+            // 2023-11-13 增加了新增点击总数，留存点击总数，修改了新增点击比的算法。
+            // 补充pageId的目的是为了拿点击数
+            $data['list'] = PageModel::create()->appendInfo($data['list'], ['pageId'], 'channelKey', 'pageName');
+            //获取安装数end
+
+            // 因为有分页，查询关联数据也要处理一下查询条件
+            $dateList = array_unique(array_column($data['list'], 'date'));
+            $dateList && $acs->where(['date' => [$dateList, 'IN']]);
+
+
+
+
             foreach ($data['list'] as $datum) {
                 // 留存人数是单独减出来的，表里没有。
                 $datum['retainedUserTotal'] = $datum['activeTotal'] - $datum['installTotal']; // 虚假留存
@@ -629,6 +638,215 @@ class Channel extends AdminBase
 
         return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
     }
+    // public function statisticListSystem()
+    // {
+    //     $param = $this->request()->getRequestParam();
+
+    //     try {
+    //         $keyword = [];
+    //         $clickKeyword = [];
+    //         $psKeyword = [];
+    //         $page = (int)($param['page'] ?? 1);
+    //         $pageSize = (int)($param['pageSize'] ?? SystemConfigKey::PAGE_SIZE);
+
+    //         $param['export'] = $param['export'] ?? 0;
+    //         if ($param['export']) {
+    //             ini_set('memory_limit', '1024M');
+    //             $pageSize = 300000;
+    //         }
+
+    //         if (isset($param['channelKey'])) {
+    //             $channel = ChannelModel::create()->where(['channelKey' => $param['channelKey']])->get();
+    //             if ($channel) {
+    //                 $keyword['channelId'] = $channel->channelId;
+
+    //                 $pageId = PageModel::create()->where(['pageName' => $param['channelKey']])->val('pageId');
+    //                 $pageId && $psKeyword['ps.pageId'] = $clickKeyword['pageId'] = $pageId;
+
+    //             } else {
+    //                 // 如果都不存在这个渠道key那么肯定是没有数据的，直接返回空。
+    //                 return $this->writeJson(Status::CODE_OK, [], Status::getReasonPhrase(Status::CODE_OK));
+    //             }
+    //         }
+    //         isset($param['dateStart']) && $psKeyword['ps.dateStart'] = $clickKeyword['dateStart'] = $keyword['dateStart'] = date('Y-m-d', strtotime($param['dateStart']));
+    //         isset($param['dateEnd']) && $psKeyword['ps.dateEnd'] = $clickKeyword['dateEnd'] = $keyword['dateEnd'] = date('Y-m-d', strtotime($param['dateEnd']));
+
+    //         $field = [
+    //             'date',
+    //             'channelId',
+    //             'installAndroid',
+    //             'realInstallAndroid',
+    //             'activeAndroid',
+    //             'realActiveAndroid',
+    //             'installIOS',
+    //             'realInstallIOS',
+    //             'activeIOS',
+    //             'realActiveIOS',
+    //             'installIOSBookmark',
+    //             'realInstallIOSBookmark',
+    //             'activeIOSBookmark',
+    //             'realActiveIOSBookmark',
+    //             'installTotal',
+    //             'realInstallTotal',
+    //             'activeTotal',
+    //             'realActiveTotal',
+    //         ];
+
+    //         $sortType = $param['sortType'] ?? '';
+    //         //获取安装数
+    //         $data = ChannelInstallStatisticModel::create()
+    //             ->setOrderType($sortType)
+    //             ->getAll($page, $keyword, $pageSize, $field);
+    //         $data['list'] = ChannelModel::create()->appendInfo($data['list'], ['channelKey', 'merchantId'], 'channelId', 'channelId');
+    //         $data['list'] = MerchantModel::create()->appendInfo($data['list'], ['merchantName'], 'merchantId', 'merchantId');
+
+    //         /* 2023-10-14 增加 页面对应的点击总数和 新增点击数/新增安装的比值（新增点击比） begin */
+    //         // 2023-11-13 增加了新增点击总数，留存点击总数，修改了新增点击比的算法。
+    //         // 补充pageId的目的是为了拿点击数
+    //         $data['list'] = PageModel::create()->appendInfo($data['list'], ['pageId'], 'channelKey', 'pageName');
+
+    //         $acs = AdClickStatisticModel::create();
+    //         $where = $acs->parseKeywordToWhere($clickKeyword);
+
+    //         // 因为有分页，查询关联数据也要处理一下查询条件
+    //         $dateList = array_unique(array_column($data['list'], 'date'));
+    //         $dateList && $acs->where(['date' => [$dateList, 'IN']]);
+    //         // 查询分页条件内的日期的关联点击数据
+    //         $acsList = $acs
+    //             ->field([
+    //                 'pageId',
+    //                 'date',
+    //                 'CONCAT(date,\'_\',pageId) AS dateKey',
+    //                 'IFNULL(SUM(clickCount),0) AS clickCount',
+    //                 'IFNULL(SUM(h5ClickCount),0) AS h5ClickCount', // h5点击数
+    //                 'IFNULL(SUM(appClickCount),0) AS appClickCount', // app点击数
+    //                 'IFNULL(SUM(retainedClickCount),0) AS retainedClickCount',
+    //                 //'IFNULL(SUM(clickCount),0) - IFNULL(SUM(retainedClickCount),0) AS newClickCount',
+    //                 'IFNULL(SUM(appClickCount),0) - IFNULL(SUM(retainedClickCount),0) AS newAppClickCount',
+    //             ])
+    //             ->where($where)
+    //             ->group('date, pageId')
+    //             ->indexBy('dateKey');
+
+    //         //改版 begin
+    //         $aps = PageStatisticModel::create();
+    //         $pageWhere = $aps->parseKeywordToWhere($psKeyword);
+    //         $dateList && $aps->where(['ps.date' => [$dateList, 'IN']]);
+    //         // 查询分页条件内的日期的关联点击数据
+    //         $apsList = $aps
+    //             ->alias('ps')
+    //             ->field([
+    //                 'ps.date as date',
+    //                 'ps.pageId as pageId',
+    //                 'CONCAT(ps.date,\'_\',ps.pageId) AS dateKey',
+    //                 'ps.ip',
+    //                 'ps.reducedIp',
+    //                 'p.ipCost as ipCost',
+    //                 'ps.reducedIp * p.ipCost AS cost',
+    //                 'IFNULL((ps.reducedIp * p.ipCost )/ SUM(acs.clickCount),0) AS clickCost', // 点击成本
+    //                 'IFNULL(SUM(acs.h5ClickCount)/ps.ip,0) AS h5ClickRate', // h5点击比
+    //             ])
+    //             ->join(PageModel::create()->getTableName() . ' AS p', 'p.pageId = ps.pageId', 'LEFT')
+    //             ->join(AdClickStatisticModel::create()->getTableName() . ' AS acs', 'acs.pageId = ps.pageId AND acs.date = ps.date', 'LEFT')
+    //             ->where($pageWhere)
+    //             ->group('date, pageId')
+    //             ->indexBy('dateKey');
+    //             // $this->writeJson(Status::CODE_OK, DbManager::getInstance()->getLastQuery()->getLastQuery(), Status::getReasonPhrase(Status::CODE_OK));
+    //         $paymentDataGroup = UserVipOrderModel::create()->getGroupSum($clickKeyword, 'pageId');
+    //         $paymentUserGroup = UserVipOrderModel::create()->getGroupUserCount($clickKeyword, 'pageId');
+    //         $appPaymentDataGroup = UserVipOrderModel::create()->getGroupSum($keyword, 'channelId');
+    //         $appPaymentUserGroup = UserVipOrderModel::create()->getGroupUserCount($keyword, 'channelId');
+    //         //改版 end
+    //         foreach ($data['list'] as $datum) {
+    //             // 留存人数是单独减出来的，表里没有。
+    //             $datum['retainedUserTotal'] = $datum['activeTotal'] - $datum['installTotal']; // 虚假留存
+    //             $datum['realRetainedUserTotal'] = $datum['realActiveTotal'] - $datum['realInstallTotal']; // 真实留存
+
+    //             // 2023-10-14 增加 页面对应的点击总数和 新增点击数/新增安装的比值（新增点击比）
+    //             $clickCountKey = $datum['date'] . '_' . $datum['pageId'];
+    //             $channelCountKey = $datum['date'] . '_' . $datum['channelId'];
+    //             $datum['ip'] = $apsList[$clickCountKey]['ip'] ?? 0;
+    //             $datum['reducedIp'] = $apsList[$clickCountKey]['reducedIp'] ?? 0;
+    //             $datum['ipCost'] = $apsList[$clickCountKey]['ipCost'] ?? 0;
+    //             $datum['cost'] = $apsList[$clickCountKey]['cost'] ?? 0;
+    //             $datum['clickCost'] = $apsList[$clickCountKey]['clickCost'] ?? 0;
+    //             $datum['h5ClickRate'] = $apsList[$clickCountKey]['h5ClickRate'] ?? 0;
+    //             $datum['paymentUserCount'] = $paymentUserGroup[$clickCountKey]['userCount'] ?? 0;
+    //             $datum['paymentOrderCount'] = $paymentDataGroup[$clickCountKey]['orderCount'] ?? 0;
+    //             $datum['paymentOrderAmount'] = $paymentDataGroup[$clickCountKey]['amount'] ?? 0;
+    //             $datum['appPaymentUserCount'] = $appPaymentUserGroup[$channelCountKey]['userCount'] ?? 0;
+    //             $datum['appPaymentOrderCount'] = $appPaymentDataGroup[$channelCountKey]['orderCount'] ?? 0;
+    //             $datum['appPaymentOrderAmount'] = $appPaymentDataGroup[$channelCountKey]['amount'] ?? 0;
+    //             $datum['clickCount'] = $acsList[$clickCountKey]['clickCount'] ?? 0;
+    //             $datum['h5ClickCount'] = $acsList[$clickCountKey]['h5ClickCount'] ?? 0;
+    //             $datum['appClickCount'] = $acsList[$clickCountKey]['appClickCount'] ?? 0;
+    //             $datum['retainedClickCount'] = $acsList[$clickCountKey]['retainedClickCount'] ?? 0;
+    //             //$datum['newClickCount'] = $acsList[$clickCountKey]['newClickCount'] ?? 0;
+    //             $datum['newAppClickCount'] = $acsList[$clickCountKey]['newAppClickCount'] ?? 0;
+    //             $datum['installNewAppClickRatio'] = $datum['realInstallTotal'] > 0 ? bcdiv($datum['newAppClickCount'], $datum['realInstallTotal'], 2) : 0;
+    //         }
+    //         // $this->writeJson(Status::CODE_OK, $data['list'], Status::getReasonPhrase(Status::CODE_OK));
+    //         if ($param['export']) {
+    //             if (!$data['list']) {
+    //                 throw new \Exception('没有需要下载的数据', Status::CODE_BAD_REQUEST);
+    //             }
+
+    //             if (isset($param['channelKey'])) {
+    //                 $fileName = $param['channelKey'] . '渠道对应的总统计数据.xlsx';
+    //             } else {
+    //                 $fileName = '渠道对应的总统计数据.xlsx';
+    //             }
+    //             $headers = [
+    //                 ['日期', 'date'],
+    //                 ['商户名', 'merchantName'],
+    //                 ['渠道Key', 'channelKey'],
+    //                 ['真实安卓安装', 'realInstallAndroid'],
+    //                 ['真实安卓活跃', 'realActiveAndroid'],
+    //                 ['真实ios书签安装', 'realInstallIOSBookmark'],
+    //                 ['真实ios书签活跃', 'realActiveIOSBookmark'],
+    //                 ['真实安装总数', 'realInstallTotal'],
+    //                 ['进站ip', 'ip'],
+    //                 ['扣量ip', 'reducedIp'],
+    //                 ['ip单价', 'ipCost'],
+    //                 ['投入成本', 'cost'],
+    //                 ['点击成本', 'clickCost'],
+    //                 ['总点击数', 'clickCount'],
+    //                 ['h5点击数', 'h5ClickCount'],
+    //                 ['h5点击比', 'h5ClickRate'],
+    //                 ['app点击数', 'appClickCount'],
+    //                 ['留存点击数', 'retainedClickCount'],
+    //                 ['app拉单', 'appPaymentOrderCount'],
+    //                 ['app成功数', 'appPaymentUserCount'],
+    //                 ['app成功金额', 'appPaymentOrderAmount'],
+    //                 ['h5拉单', 'paymentUserCount'],
+    //                 ['h5成功数', 'paymentOrderCount'],
+    //                 ['h5成功金额', 'paymentOrderAmount'],
+    //             ];
+    //             $this->downloadExcel($headers, $data['list'], $fileName);
+    //         }
+
+
+    //         $acsListSum = AdClickStatisticModel::create()->getSum($clickKeyword);
+
+    //         $data['sum'] = ChannelInstallStatisticModel::create()->getSum($keyword);
+
+    //         // 留存人数是单独减出来的，表里没有。
+    //         $data['sum']['realRetainedUserTotal'] = $data['sum']['realActiveTotal'] - $data['sum']['realInstallTotal'];
+    //         $data['sum']['clickCount'] = $acsListSum['clickCount'];
+    //         $data['sum']['h5ClickCount'] = $acsListSum['h5ClickCount'];
+    //         $data['sum']['appClickCount'] = $acsListSum['appClickCount'];
+    //         $data['sum']['retainedClickCount'] = $acsListSum['retainedClickCount'];
+    //         $data['sum']['newAppClickCount'] = $acsListSum['newAppClickCount'];
+    //         $data['sum']['installNewAppClickRatio'] = $data['sum']['realInstallTotal'] > 0 ? bcdiv($data['sum']['newAppClickCount'], $data['sum']['realInstallTotal'], 2) : 0;
+
+    //         /* 2023-10-14 增加 页面对应的点击总数和 新增点击数/新增安装的比值（新增点击比） end */
+
+    //     } catch (Throwable $e) {
+    //         return $this->writeJson($e->getCode(), [], $e->getMessage());
+    //     }
+
+    //     return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
+    // }
 
 
     /**
