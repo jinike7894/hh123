@@ -533,7 +533,7 @@ class Channel extends AdminBase
                 ->where($pageWhere)
                 ->group('date, pageId')
                 ->indexBy('dateKey');
-                return $this->writeJson(Status::CODE_OK, DbManager::getInstance()->getLastQuery()->getLastQuery(), Status::getReasonPhrase(Status::CODE_OK));
+                $this->writeJson(Status::CODE_OK, DbManager::getInstance()->getLastQuery()->getLastQuery(), Status::getReasonPhrase(Status::CODE_OK));
             $paymentDataGroup = UserVipOrderModel::create()->getGroupSum($clickKeyword, 'pageId');
             $paymentUserGroup = UserVipOrderModel::create()->getGroupUserCount($clickKeyword, 'pageId');
             $appPaymentDataGroup = UserVipOrderModel::create()->getGroupSum($keyword, 'channelId');
@@ -567,7 +567,7 @@ class Channel extends AdminBase
                 $datum['newAppClickCount'] = $acsList[$clickCountKey]['newAppClickCount'] ?? 0;
                 $datum['installNewAppClickRatio'] = $datum['realInstallTotal'] > 0 ? bcdiv($datum['newAppClickCount'], $datum['realInstallTotal'], 2) : 0;
             }
-
+            $this->writeJson(Status::CODE_OK, $data['list'], Status::getReasonPhrase(Status::CODE_OK));
             if ($param['export']) {
                 if (!$data['list']) {
                     throw new \Exception('没有需要下载的数据', Status::CODE_BAD_REQUEST);
