@@ -529,8 +529,8 @@ class Channel extends AdminBase
                                 "activeTotal"=>0,
                                 "realActiveTotal"=>0,
                             ];
-                            return $this->writeJson(Status::CODE_OK, ["msg"=>(object)$newArray], Status::getReasonPhrase(Status::CODE_OK));
-                            array_unshift($data["list"], (object)$newArray);
+                            
+                            array_unshift($data["list"], $newArray);
                            
                         }
                     }
@@ -538,6 +538,7 @@ class Channel extends AdminBase
                
                 
             }
+            return $this->writeJson(Status::CODE_OK,$data["list"], Status::getReasonPhrase(Status::CODE_OK));
             $data['list'] = ChannelModel::create()->appendInfo($data['list'], ['channelKey', 'merchantId'], 'channelId', 'channelId');
             $data['list'] = MerchantModel::create()->appendInfo($data['list'], ['merchantName'], 'merchantId', 'merchantId');
 
