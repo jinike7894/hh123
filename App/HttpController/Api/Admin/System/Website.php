@@ -47,7 +47,12 @@ class Website extends AdminBase
                 ->field(['cfgKey', 'cfgValue', 'title', 'description'])
                 ->where(['cfgKey' => [WebsiteConfigKey::ALL_KEY, 'IN']])
                 ->all();
-
+            foreach($result as $k=>$v){
+                if($v["cfgKey"]=="Favicon"){
+                    $imgData=new uploadNew();
+                    $v["img_show"]=$imgData->getUrlImage($v["cfgValue"]);
+                }
+            }
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
