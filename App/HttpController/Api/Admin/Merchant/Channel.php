@@ -433,7 +433,7 @@ class Channel extends AdminBase
             if(isset($param['dateStart']) xor isset($param['dateEnd'])){
                 return $this->writeJson(404, [], "日期选择错误");
             }
-            if(strtotime($param['dateEnd'])<=strtotime($param['dateStart'])){
+            if(strtotime($param['dateEnd'])<strtotime($param['dateStart'])){
                 return $this->writeJson(404, [], "日期选择错误");
             }
             if(!isset($param['dateStart'])){
