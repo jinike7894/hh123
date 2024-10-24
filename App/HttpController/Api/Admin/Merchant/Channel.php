@@ -483,8 +483,8 @@ class Channel extends AdminBase
                 $nowTime=$keyword['dateEnd']; 
                 $adClickStatucModel=adClickStatisticModel::create();
                 if(isset($param['dateStart'])){
-                    $adClickStatucModel->where("date",$param['dateStart'],">=");
-                    $adClickStatucModel->where("date",$param['dateEnd'],"<=");
+                    // $adClickStatucModel->where("date",$param['dateStart'],">=");
+                    // $adClickStatucModel->where("date",$param['dateEnd'],"<=");
                 }else{
                     $adClickStatucModel->where(["date"=>date("Y-m-d")]);
                 }
