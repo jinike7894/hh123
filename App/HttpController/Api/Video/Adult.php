@@ -81,7 +81,8 @@ class Adult extends UserBase
                 'vod_name AS vodName',
                 'vod_pic_thumb AS vodPic',
                 'vod_pic2 AS vodPic2',
-                'vod_play_url AS vodPlayUrl'
+                'vod_play_url AS vodPlayUrl',
+                'type_id as type_id'
             ];
 
             $redis = RedisPool::defer();
