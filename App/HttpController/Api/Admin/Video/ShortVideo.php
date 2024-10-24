@@ -58,6 +58,9 @@ class ShortVideo extends AdminBase
             if(isset($param['status'])){
                 $model->where(["status"=>$param['status']]);
             }
+            if(isset($param['shortTag'])){
+                $model->where(["shortTag"=>$param['shortTag']]);
+            }
 
             $field = [
                 '*',
