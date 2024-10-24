@@ -91,7 +91,7 @@ class Upload extends AdminBase
                     $AwsS3Bucket=$v["cfgValue"];
                 }
             }
-            $url=$AwsS3Host."/".$AwsS3Bucket.$url;
+            $url=$AwsS3Host."/".$url;
         }
         $fileData=file_get_contents($url);
     } catch (\Throwable $e) {
