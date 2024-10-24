@@ -474,7 +474,7 @@ class Channel extends AdminBase
             ];
 
             $sortType = $param['sortType'] ?? '';
-
+            //获取安装数
             $data = ChannelInstallStatisticModel::create()
                 ->setOrderType($sortType)
                 ->getAll($page, $keyword, $pageSize, $field);
@@ -532,7 +532,7 @@ class Channel extends AdminBase
                 ->where($pageWhere)
                 ->group('date, pageId')
                 ->indexBy('dateKey');
-
+                return $this->writeJson(Status::CODE_OK, $apsList, Status::getReasonPhrase(Status::CODE_OK));
             $paymentDataGroup = UserVipOrderModel::create()->getGroupSum($clickKeyword, 'pageId');
             $paymentUserGroup = UserVipOrderModel::create()->getGroupUserCount($clickKeyword, 'pageId');
             $appPaymentDataGroup = UserVipOrderModel::create()->getGroupSum($keyword, 'channelId');

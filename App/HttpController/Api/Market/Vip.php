@@ -112,16 +112,12 @@ class Vip extends UserBase
             if (empty($pageName) && empty($channelKey)) {
                 throw new Exception('未知的渠道参数', Status::CODE_BAD_REQUEST);
             }
-
             $ip = $this->clientRealIP();
-
             // 这个是测试用的
             if (Core::getInstance()->runMode() == 'dev' && isset($param['ip'])) {
                 $ip = $param['ip'];
             }
-
             RedisLock::timeLimitLock($this->jwt . __CLASS__ . '\\' . __FUNCTION__);
-
             $data = [
                 'userId' => $this->who['userId'],
                 'goodsId' => intval($param['goodsId']),
@@ -132,7 +128,6 @@ class Vip extends UserBase
             ];
 
             $result = VipOrderService::getInstance()->createVipOrder($data);
-
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }

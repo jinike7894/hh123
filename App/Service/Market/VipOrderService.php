@@ -50,7 +50,6 @@ class VipOrderService
             if ($user->status != UserModel::STATE_NORMAL) {
                 throw new Exception('账号异常', Status::CODE_BAD_REQUEST);
             }
-
             // 充值前必须绑定手机号成为正式用户
             /*if (empty($user->phoneNumber)) {
                 throw new Exception('请先绑定手机号', Status::CODE_BAD_REQUEST);
@@ -95,11 +94,9 @@ class VipOrderService
             $paymentChannel = PaymentChannelModel::create()
                 ->with(['platformRelation'])
                 ->get($data['paymentChannelId']);
-
             if (!$paymentChannel) {
                 throw new Exception('无效的支付渠道参数', Status::CODE_BAD_REQUEST);
             }
-
             $userVipOrder = UserVipOrderModel::create([
                 'userId' => $data['userId'],
                 'pageId' => $pageId,
@@ -111,7 +108,6 @@ class VipOrderService
                 'status' => UserVipOrderModel::STATE_WAITING_BUYERS_PAYMENT,
                 'createDate' => date('Y-m-d'),
             ]);
-
             $result = $userVipOrder->save();
             if (!$result) {
                 throw new Exception('创建订单记录失败', Status::CODE_INTERNAL_SERVER_ERROR);
@@ -127,7 +123,6 @@ class VipOrderService
                 'amount' => $userVipOrder->amount,
                 'ip' => $data['ip'],
             ]);
-
             $paymentResult['orderId'] = $userVipOrder->orderId;
             $paymentResult['orderNo'] = $userVipOrder->orderNo;
 
