@@ -538,7 +538,7 @@ class Channel extends AdminBase
                
                 
             }
-            return $this->writeJson(Status::CODE_OK,$data["list"], Status::getReasonPhrase(Status::CODE_OK));
+           // return $this->writeJson(Status::CODE_OK,$data["list"], Status::getReasonPhrase(Status::CODE_OK));
             $data['list'] = ChannelModel::create()->appendInfo($data['list'], ['channelKey', 'merchantId'], 'channelId', 'channelId');
             $data['list'] = MerchantModel::create()->appendInfo($data['list'], ['merchantName'], 'merchantId', 'merchantId');
 
