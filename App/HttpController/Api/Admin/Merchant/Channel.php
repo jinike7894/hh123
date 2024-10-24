@@ -430,7 +430,18 @@ class Channel extends AdminBase
             $psKeyword = [];
             $page = (int)($param['page'] ?? 1);
             $pageSize = (int)($param['pageSize'] ?? SystemConfigKey::PAGE_SIZE);
-
+            if(isset($param['dateStart']) xor isset($param['dateEnd'])){
+                return $this->writeJson(404, [], "日期选择错误");
+            }
+            if(strtotime($param['dateEnd'])<=strtotime($param['dateStart'])){
+                return $this->writeJson(404, [], "日期选择错误");
+            }
+            if(!isset($param['dateStart'])){
+                $param['dateStart']=date("Y-m-d");
+            }
+            if(!isset($param['dateEnd'])){
+                $param['dateEnd']=date("Y-m-d");
+            }
             $param['export'] = $param['export'] ?? 0;
             if ($param['export']) {
                 ini_set('memory_limit', '1024M');
