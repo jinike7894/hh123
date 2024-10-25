@@ -527,7 +527,7 @@ class Channel extends AdminBase
                                 foreach($adClickRes["list"] as $adck=>$adcv){
                                     foreach($channellRes as $channelk=>$channelv){
                                             if($adcv->c_pageName==$channelv["channelKey"]){
-                                                $adClickRes["list"][$adClickK]->c_channelId=$channelv["channelId"];
+                                                $adClickRes["list"][$adck]->c_channelId=$channelv["channelId"];
                                             }
                                     }
                                 }
