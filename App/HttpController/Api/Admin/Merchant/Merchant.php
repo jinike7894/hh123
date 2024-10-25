@@ -122,7 +122,23 @@ class Merchant extends AdminBase
 
         return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
     }
+    public function merchantLists()
+    {
+        try {
+            $data = MerchantModel::create()
+                ->field(['merchantId', 'merchantName'])
+                // ->where([
+                //     'status' => [MerchantModel::STATE_DELETED, '!='],
+                // ])
+                ->setDefaultOrder()
+                ->all();
 
+        } catch (Throwable $e) {
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
+
+        return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
+    }
     /**
      * 商户详情
      * @Api(name="商户详情",path="/Api/Admin/Merchant/Merchant/merchantDetail")
