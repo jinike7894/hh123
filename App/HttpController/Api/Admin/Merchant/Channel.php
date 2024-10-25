@@ -633,7 +633,7 @@ class Channel extends AdminBase
             //改版 end
             // $this->writeJson(Status::CODE_OK, $data['list'], Status::getReasonPhrase(Status::CODE_OK));
            
-            foreach ($data['list'] as $datum) {
+            foreach ($data['list'] as &$datum) {
                 // 留存人数是单独减出来的，表里没有。
                 $datum['retainedUserTotal'] = $datum['activeTotal'] - $datum['installTotal']; // 虚假留存
                 $datum['realRetainedUserTotal'] = $datum['realActiveTotal'] - $datum['realInstallTotal']; // 真实留存
