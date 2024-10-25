@@ -5,7 +5,6 @@ namespace App\Service\User;
 use App\Enum\RedisDb;
 use App\Model\User\UserGroupModel;
 use App\Model\User\UserInviteModel;
-use App\Model\User\UserModel;
 use App\RedisKey\User\UserKey;
 use App\Service\Merchant\ChannelService;
 use App\Service\Message\JSMSService;
