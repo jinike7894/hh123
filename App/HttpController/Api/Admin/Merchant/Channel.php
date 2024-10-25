@@ -631,7 +631,7 @@ class Channel extends AdminBase
             $appPaymentDataGroup = UserVipOrderModel::create()->getGroupSum($keyword, 'channelId');
             $appPaymentUserGroup = UserVipOrderModel::create()->getGroupUserCount($keyword, 'channelId');
             //改版 end
-            $this->writeJson(Status::CODE_OK, $data['list'], Status::getReasonPhrase(Status::CODE_OK));
+            // $this->writeJson(Status::CODE_OK, $data['list'], Status::getReasonPhrase(Status::CODE_OK));
            
             foreach ($data['list'] as $datum) {
                 // 留存人数是单独减出来的，表里没有。
@@ -654,7 +654,7 @@ class Channel extends AdminBase
                 $datum['appPaymentOrderCount'] = $appPaymentDataGroup[$channelCountKey]['orderCount'] ?? 0;
                 $datum['appPaymentOrderAmount'] = $appPaymentDataGroup[$channelCountKey]['amount'] ?? 0;
                 $datum['clickCount'] = $acsList[$clickCountKey]['clickCount'] ?? 0;
-                return $this->writeJson(Status::CODE_OK, $acsList[$clickCountKey]['clickCount'], Status::getReasonPhrase(Status::CODE_OK));
+                // return $this->writeJson(Status::CODE_OK, $acsList[$clickCountKey]['clickCount'], Status::getReasonPhrase(Status::CODE_OK));
                 $datum['h5ClickCount'] = $acsList[$clickCountKey]['h5ClickCount'] ?? 0;
                 $datum['appClickCount'] = $acsList[$clickCountKey]['appClickCount'] ?? 0;
                 $datum['retainedClickCount'] = $acsList[$clickCountKey]['retainedClickCount'] ?? 0;
