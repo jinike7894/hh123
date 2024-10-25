@@ -99,6 +99,7 @@ class PageViewService
                 try {
                     DbManager::getInstance()->startTransactionWithCount();
                     $pageStatic=PageStatisticModel::create()->where(["pageId"=>$pageId,'date' => $date])->lockForUpdate()->get();
+                    file_put_contents('test.json', json_encode($pageStatic)."\r\n",FILE_APPEND);
                     if($pageStatic){
                         //更新
                         $updatePage=[
