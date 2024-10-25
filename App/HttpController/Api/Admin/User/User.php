@@ -31,13 +31,20 @@ class User extends AdminBase
      public function list(){
           $param = $this->request()->getRequestParam();
         try {
+            $model=UserModel::create();
             $keyword = [];
             $page = (int)($param['page'] ?? 1);
             $pageSize = (int)($param['pageSize'] ?? 20);
+            if(isset($param["userName"])){
+                $model->where(["userName"=> ['%' . $param['userName'] . '%', 'LIKE']]);
+            }
+            if(isset($param["nickname"])){
+                $model->where(["nickname"=> ['%' . $param['nickname'] . '%', 'LIKE']]);
+            }
             $field = [
                 '*',
             ];
-            $data = UserModel::create()
+            $data = $model
                 ->order("userId","desc")
                 ->getAll($page, $keyword, $pageSize, $field);
         } catch (Throwable $e) {
@@ -46,4 +53,39 @@ class User extends AdminBase
 
         return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
      }
+     public function info(){
+        $param = $this->request()->getRequestParam();
+        try {
+            $model=UserModel::create();
+            $field = [
+                '*',
+            ];
+            $data = $model
+                ->where(["id"=>$param["id"]])
+                ->order("userId","desc")
+                ->get();
+        } catch (Throwable $e) {
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
+
+        return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
+     }
+     public function edit(){
+        $param = $this->request()->getRequestParam();
+      try {
+          $model=UserModel::create();
+          $data=[
+            "userGroupId"=>$param["userGroupId"],
+            "userGroupExpiryDate"=>$param["userGroupExpiryDate"],
+            "nickname"=>$param["nickname"],
+            "status"=>$param["status"],
+          ];
+          $data = $model
+              ->update($data,["id"=>$param["id"]]);
+      } catch (Throwable $e) {
+          return $this->writeJson($e->getCode(), [], $e->getMessage());
+      }
+
+      return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
+   }
 }
