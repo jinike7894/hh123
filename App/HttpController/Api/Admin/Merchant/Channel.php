@@ -534,7 +534,7 @@ class Channel extends AdminBase
                         }
                     }
 
-                    return $this->writeJson(Status::CODE_OK, $adClickRes["list"], Status::getReasonPhrase(Status::CODE_OK));
+                    // return $this->writeJson(Status::CODE_OK, $adClickRes["list"], Status::getReasonPhrase(Status::CODE_OK));
                     foreach($adClickRes["list"] as $kad=>$vad){
                         $adkey=$vad->c_channelId."_".$vad->date;
                         $keyarr=[];
