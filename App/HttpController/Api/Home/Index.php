@@ -344,13 +344,13 @@ class Index extends ApiBase
                 throw new Exception('无效的页面参数', Status::CODE_BAD_REQUEST);
             }
 
-            PageViewService::getInstance()->recordView([
+            $res=PageViewService::getInstance()->recordView([
                 'page' => $page,
                 'ip' => $this->clientRealIP(),
                 'date' => date('Y-m-d'),
                 'ipState' => $param['state'],
             ]);
-
+            return $this->writeJson(Status::CODE_OK, $res, Status::getReasonPhrase(Status::CODE_OK));
             $result = true;
 
         } catch (Throwable $e) {
