@@ -130,7 +130,7 @@ class Merchant extends AdminBase
                 // ->where([
                 //     'status' => [MerchantModel::STATE_DELETED, '!='],
                 // ])
-                ->setDefaultOrder()
+                ->order("merchantId","desc")
                 ->all();
 
         } catch (Throwable $e) {
