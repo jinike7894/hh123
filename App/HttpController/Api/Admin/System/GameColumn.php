@@ -13,6 +13,7 @@ use EasySwoole\HttpAnnotation\AnnotationTag\Method;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiRequestExample;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiSuccess;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiFail;
+use App\HttpController\Api\Admin\Upload as uploadNew;
 use Exception;
 use Throwable;
 
@@ -27,6 +28,8 @@ class GameColumn extends AdminBase
             $data = game::create()
                 ->where(["id"=>1])
                 ->get();
+                $imgData=new uploadNew();
+                $data["img_show"]=$imgData->getUrlImage($data["img"]);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
