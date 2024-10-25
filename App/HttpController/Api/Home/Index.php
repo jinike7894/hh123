@@ -12,6 +12,7 @@ use App\Model\Live\LiveTongChengModel;
 use App\Model\Live\LiveQingquModel;
 use App\Model\Live\LiveNewModel;
 use App\Model\Navigation\PageTemplateModel;
+use App\Model\GameColumn\GameColumn;
 use App\RedisKey\Navigation\TemplateKey;
 use App\Service\Merchant\AutoChannelService;
 use App\Service\Navigation\AdService;
@@ -204,6 +205,30 @@ class Index extends ApiBase
             ->all();
             //存入缓存
             $redis->set("Ad:qingqu",$res,60*5);
+        } catch (Throwable $e) {
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
+
+        return $this->writeJson(Status::CODE_OK, $res, Status::getReasonPhrase(Status::CODE_OK));
+    }
+    //获取游戏栏目
+    public function  gameColumn(){
+        try {
+            $redis = RedisPool::defer(RedisDb::REDIS_DB_STATISTIC);
+            $AdFontData=$redis->get("Ad:game_column");
+            if($AdFontData){
+                return $this->writeJson(Status::CODE_OK, $AdFontData, Status::getReasonPhrase(Status::CODE_OK));
+            }
+            //查询直播广告
+            $adGroupRelationModel=GameColumn::create();
+            $res=$adGroupRelationModel
+            // ->join(LiveQingquModel::create()->getTableName() . ' AS qingqu', 'qingqu.adId = relation.adId', 'LEFT')
+            // ->where(["relation.adGroupId"=>80,"qingqu.status"=>1])
+            // ->order("qingqu.sort","desc")
+            ->where(["id"=>1])
+            ->get();
+            //存入缓存
+            $redis->set("Ad:game_column",$res,60*5);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
