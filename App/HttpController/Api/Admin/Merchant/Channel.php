@@ -499,7 +499,11 @@ class Channel extends AdminBase
                 }else{
                     $adClickStatucModel->where(["date"=>date("Y-m-d")]);
                 }
-                $adClickRes=$adClickStatucModel->group("date, pageId")->getAll(1, $keyword, 100000, ["*"]);
+                if(isset($param['channelKey'])){
+                    $adClickStatucModel->where(["pageId"=>$pageId]);
+                }
+                $adClickRes=$adClickStatucModel->group("date, pageId")
+                ->getAll(1, $keyword, 100000, ["*"]);
                 if($adClickRes){
                     //通过pageid获取商户channelid
                     $pageDataForChannelData=[];
@@ -533,7 +537,13 @@ class Channel extends AdminBase
                                 }
                         }
                     }
-
+                    if(isset($param['channelKey'])){
+                        foreach($adClickRes["list"] as $kacd=>$vacd){
+                            if(){
+                                
+                            }
+                        }
+                    }
                     // return $this->writeJson(Status::CODE_OK, $adClickRes["list"], Status::getReasonPhrase(Status::CODE_OK));
                     foreach($adClickRes["list"] as $kad=>$vad){
                         $adkey=$vad->c_channelId."_".$vad->date;
