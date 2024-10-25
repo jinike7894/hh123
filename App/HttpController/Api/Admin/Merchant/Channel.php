@@ -543,7 +543,7 @@ class Channel extends AdminBase
                         if (!in_array($adkey, $keyarr)) {
                             $newArray=[
                                 "date"=>$vad->date,
-                                "channelId"=>$vad->pageId,
+                                "channelId"=>$vad->c_channelId,
                                 "installAndroid"=>0,
                                 "realInstallAndroid"=>0,
                                 "activeAndroid"=>0,
@@ -631,7 +631,7 @@ class Channel extends AdminBase
             $appPaymentDataGroup = UserVipOrderModel::create()->getGroupSum($keyword, 'channelId');
             $appPaymentUserGroup = UserVipOrderModel::create()->getGroupUserCount($keyword, 'channelId');
             //改版 end
-            return $this->writeJson(Status::CODE_OK, $data['list'], Status::getReasonPhrase(Status::CODE_OK));
+            // return $this->writeJson(Status::CODE_OK, $data['list'], Status::getReasonPhrase(Status::CODE_OK));
            
             foreach ($data['list'] as &$datum) {
                 // 留存人数是单独减出来的，表里没有。
