@@ -541,7 +541,6 @@ class Channel extends AdminBase
                             $keyarr[]=$vd->channelId."_".$vd->date;
                         }
                         if (!in_array($adkey, $keyarr)) {
-                           
                             $newArray=[
                                 "date"=>$vad->date,
                                 "channelId"=>$vad->pageId,
@@ -587,21 +586,21 @@ class Channel extends AdminBase
             $dateList = array_unique(array_column($data['list'], 'date'));
             $dateList && $acs->where(['date' => [$dateList, 'IN']]);
             // 查询分页条件内的日期的关联点击数据
-            // $acsList = $acs
-            //     ->field([
-            //         'pageId',
-            //         'date',
-            //         'CONCAT(date,\'_\',pageId) AS dateKey',
-            //         'IFNULL(SUM(clickCount),0) AS clickCount',
-            //         'IFNULL(SUM(h5ClickCount),0) AS h5ClickCount', // h5点击数
-            //         'IFNULL(SUM(appClickCount),0) AS appClickCount', // app点击数
-            //         'IFNULL(SUM(retainedClickCount),0) AS retainedClickCount',
-            //         //'IFNULL(SUM(clickCount),0) - IFNULL(SUM(retainedClickCount),0) AS newClickCount',
-            //         'IFNULL(SUM(appClickCount),0) - IFNULL(SUM(retainedClickCount),0) AS newAppClickCount',
-            //     ])
-            //     ->where($where)
-            //     ->group('date, pageId')
-            //     ->indexBy('dateKey');
+            $acsList = $acs
+                ->field([
+                    'pageId',
+                    'date',
+                    'CONCAT(date,\'_\',pageId) AS dateKey',
+                    'IFNULL(SUM(clickCount),0) AS clickCount',
+                    'IFNULL(SUM(h5ClickCount),0) AS h5ClickCount', // h5点击数
+                    'IFNULL(SUM(appClickCount),0) AS appClickCount', // app点击数
+                    'IFNULL(SUM(retainedClickCount),0) AS retainedClickCount',
+                    //'IFNULL(SUM(clickCount),0) - IFNULL(SUM(retainedClickCount),0) AS newClickCount',
+                    'IFNULL(SUM(appClickCount),0) - IFNULL(SUM(retainedClickCount),0) AS newAppClickCount',
+                ])
+                ->where($where)
+                ->group('date, pageId')
+                ->indexBy('dateKey');
 
             //改版 begin
             $aps = PageStatisticModel::create();
