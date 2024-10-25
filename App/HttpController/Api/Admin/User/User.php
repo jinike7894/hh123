@@ -81,7 +81,7 @@ class User extends AdminBase
             "status"=>$param["status"],
           ];
           $data = $model
-              ->update($data,["id"=>$param["id"]]);
+              ->update($data,["userId"=>$param["id"]]);
       } catch (Throwable $e) {
           return $this->writeJson($e->getCode(), [], $e->getMessage());
       }
