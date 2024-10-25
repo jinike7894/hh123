@@ -601,7 +601,7 @@ class Channel extends AdminBase
                 ->where($where)
                 ->group('date, pageId')
                 ->indexBy('dateKey');
-                return $this->writeJson(Status::CODE_OK, $acsList, Status::getReasonPhrase(Status::CODE_OK));
+                
             //改版 begin
             $aps = PageStatisticModel::create();
             $pageWhere = $aps->parseKeywordToWhere($psKeyword);
@@ -654,6 +654,7 @@ class Channel extends AdminBase
                 $datum['appPaymentOrderCount'] = $appPaymentDataGroup[$channelCountKey]['orderCount'] ?? 0;
                 $datum['appPaymentOrderAmount'] = $appPaymentDataGroup[$channelCountKey]['amount'] ?? 0;
                 $datum['clickCount'] = $acsList[$clickCountKey]['clickCount'] ?? 0;
+                return $this->writeJson(Status::CODE_OK, $clickCountKey, Status::getReasonPhrase(Status::CODE_OK));
                 $datum['h5ClickCount'] = $acsList[$clickCountKey]['h5ClickCount'] ?? 0;
                 $datum['appClickCount'] = $acsList[$clickCountKey]['appClickCount'] ?? 0;
                 $datum['retainedClickCount'] = $acsList[$clickCountKey]['retainedClickCount'] ?? 0;
