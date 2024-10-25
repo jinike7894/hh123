@@ -490,54 +490,86 @@ class Channel extends AdminBase
             $data = ChannelInstallStatisticModel::create()
                 ->setOrderType($sortType)
                 ->getAll($page, $keyword, $pageSize, $field);
-            // if($page==1){
-            //     $nowTime=$keyword['dateEnd']; 
-            //     $adClickStatucModel=adClickStatisticModel::create();
-            //     if(isset($param['dateStart'])){
-            //         // $adClickStatucModel->where("date",$param['dateStart'],">=");
-            //         // $adClickStatucModel->where("date",$param['dateEnd'],"<=");
-            //     }else{
-            //         $adClickStatucModel->where(["date"=>date("Y-m-d")]);
-            //     }
-            //     $adClickRes=$adClickStatucModel->group("date, pageId")->getAll(1, $keyword, 100000, ["*"]);
-            //     if($adClickRes){
-            //         foreach($adClickRes["list"] as $kad=>$vad){
-            //             $adkey=$vad->pageId."_".$vad->date;
-            //             $keyarr=[];
-            //             foreach($data["list"] as $kd=>$vd){
-            //                 $keyarr[]=$vd->channelId."_".$vd->date;
-            //             }
-            //             if (!in_array($adkey, $keyarr)) {
-            //                 $PageModel::create()->where(["pageId"=>$vad->pageId])->get();
-            //                 $newArray=[
-            //                     "date"=>$vad->date,
-            //                     "channelId"=>$vad->pageId,
-            //                     "installAndroid"=>0,
-            //                     "realInstallAndroid"=>0,
-            //                     "activeAndroid"=>0,
-            //                     "realActiveAndroid"=>0,
-            //                     "installIOS"=>0,
-            //                     "realInstallIOS"=>0,
-            //                     "activeIOS"=>0,
-            //                     "realActiveIOS"=>0,
-            //                     "installIOSBookmark"=>0,
-            //                     "realInstallIOSBookmark"=>0,
-            //                     "activeIOSBookmark"=>0,
-            //                     "realActiveIOSBookmark"=>0,
-            //                     "installTotal"=>0,
-            //                     "realInstallTotal"=>0,
-            //                     "activeTotal"=>0,
-            //                     "realActiveTotal"=>0,
-            //                 ];
-                            
-            //                 array_unshift($data["list"], $newArray);
+            if($page==1){
+                $nowTime=$keyword['dateEnd']; 
+                $adClickStatucModel=adClickStatisticModel::create();
+                if(isset($param['dateStart'])){
+                    // $adClickStatucModel->where("date",$param['dateStart'],">=");
+                    // $adClickStatucModel->where("date",$param['dateEnd'],"<=");
+                }else{
+                    $adClickStatucModel->where(["date"=>date("Y-m-d")]);
+                }
+                $adClickRes=$adClickStatucModel->group("date, pageId")->getAll(1, $keyword, 100000, ["*"]);
+                if($adClickRes){
+                    //通过pageid获取商户channelid
+                    $pageDataForChannelData=[];
+                    foreach($adClickRes["list"] as $adClickK=>$adClickV){
+                        $pageDataForChannelData[]=$adClickV->pageId;
+                        $adClickRes["list"][$adClickK]->c_channelId=0;
+                    }
+                    if(count($pageDataForChannelData)>0){
+                        $pageAllRes=PageModel::create()->where("pageId",$pageDataForChannelData,"in")->field("pageId,pageName")->all();
+                        //设置$adClickRes 得pageName
+                        foreach($adClickRes["list"] as $adck=>$adcv){
+                            foreach($pageAllRes as $pageAllResk=>$pageAllResv){
+                                    if($adcv->pageId==$pageAllResv["pageId"]){
+                                        $adClickRes["list"][$adck]->c_pageName=$pageAllResv["pageName"];
+                                    }
+                            }
+                        }
+                        $pageKeyForChannelData=[];
+                        foreach($pageAllRes as $pageAllk=>$pageAllv){
+                            $pageKeyForChannelData[]=$pageAllv["pageName"];
+                        }
+                        $channellRes=ChannelModel::create()->where("channelKey",$pageKeyForChannelData,"in")->field("channelKey,channelId")->all();
+                        if(count($channellRes)>0){
+                                foreach($adClickRes["list"] as $adck=>$adcv){
+                                    foreach($channellRes as $channelk=>$channelv){
+                                            if($adcv->c_pageName==$channelv["channelKey"]){
+                                                $adClickRes["list"][$adClickK]->c_channelId=$channelv["channelId"];
+                                            }
+                                    }
+                                }
+                        }
+                    }
+                    return $this->writeJson(Status::CODE_OK,$adClickRes["list"], Status::getReasonPhrase(Status::CODE_OK));
+                    foreach($adClickRes["list"] as $kad=>$vad){
+                        $adkey=$vad->pageId."_".$vad->date;
+                        $keyarr=[];
+                        foreach($data["list"] as $kd=>$vd){
+                            $keyarr[]=$vd->channelId."_".$vd->date;
+                        }
+                        if (!in_array($adkey, $keyarr)) {
                            
-            //             }
-            //         }
-            //     }
+                            $newArray=[
+                                "date"=>$vad->date,
+                                "channelId"=>$vad->pageId,
+                                "installAndroid"=>0,
+                                "realInstallAndroid"=>0,
+                                "activeAndroid"=>0,
+                                "realActiveAndroid"=>0,
+                                "installIOS"=>0,
+                                "realInstallIOS"=>0,
+                                "activeIOS"=>0,
+                                "realActiveIOS"=>0,
+                                "installIOSBookmark"=>0,
+                                "realInstallIOSBookmark"=>0,
+                                "activeIOSBookmark"=>0,
+                                "realActiveIOSBookmark"=>0,
+                                "installTotal"=>0,
+                                "realInstallTotal"=>0,
+                                "activeTotal"=>0,
+                                "realActiveTotal"=>0,
+                            ];
+                            
+                            array_unshift($data["list"], $newArray);
+                           
+                        }
+                    }
+                }
                
                 
-            // }
+            }
            // return $this->writeJson(Status::CODE_OK,$data["list"], Status::getReasonPhrase(Status::CODE_OK));
             $data['list'] = ChannelModel::create()->appendInfo($data['list'], ['channelKey', 'merchantId'], 'channelId', 'channelId');
             $data['list'] = MerchantModel::create()->appendInfo($data['list'], ['merchantName'], 'merchantId', 'merchantId');
