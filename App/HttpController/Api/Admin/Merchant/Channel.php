@@ -522,7 +522,7 @@ class Channel extends AdminBase
                             $pageKeyForChannelData[]=$pageAllv["pageName"];
                         }
                         $channellRes=ChannelModel::create()->where("channelKey",$pageKeyForChannelData,"in")->field("channelKey,channelId")->all();
-                        return $this->writeJson(Status::CODE_OK, DbManager::getInstance()->getLastQuery()->getLastQuery(), Status::getReasonPhrase(Status::CODE_OK));
+                        
                         if(count($channellRes)>0){
                                 foreach($adClickRes["list"] as $adck=>$adcv){
                                     foreach($channellRes as $channelk=>$channelv){
@@ -533,7 +533,8 @@ class Channel extends AdminBase
                                 }
                         }
                     }
-                    // return $this->writeJson(Status::CODE_OK, $adClickRes["list"], Status::getReasonPhrase(Status::CODE_OK));
+
+                    return $this->writeJson(Status::CODE_OK, $adClickRes["list"], Status::getReasonPhrase(Status::CODE_OK));
                     foreach($adClickRes["list"] as $kad=>$vad){
                         $adkey=$vad->c_channelId."_".$vad->date;
                         $keyarr=[];
