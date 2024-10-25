@@ -625,13 +625,14 @@ class Channel extends AdminBase
                 ->where($pageWhere)
                 ->group('date, pageId')
                 ->indexBy('dateKey');
-                // $this->writeJson(Status::CODE_OK, DbManager::getInstance()->getLastQuery()->getLastQuery(), Status::getReasonPhrase(Status::CODE_OK));
+           
             $paymentDataGroup = UserVipOrderModel::create()->getGroupSum($clickKeyword, 'pageId');
             $paymentUserGroup = UserVipOrderModel::create()->getGroupUserCount($clickKeyword, 'pageId');
             $appPaymentDataGroup = UserVipOrderModel::create()->getGroupSum($keyword, 'channelId');
             $appPaymentUserGroup = UserVipOrderModel::create()->getGroupUserCount($keyword, 'channelId');
             //改版 end
-
+            $this->writeJson(Status::CODE_OK, $appPaymentDataGroup, Status::getReasonPhrase(Status::CODE_OK));
+            return $this->writeJson(Status::CODE_OK, $appPaymentUserGroup, Status::getReasonPhrase(Status::CODE_OK));
             foreach ($data['list'] as $datum) {
                 // 留存人数是单独减出来的，表里没有。
                 $datum['retainedUserTotal'] = $datum['activeTotal'] - $datum['installTotal']; // 虚假留存
