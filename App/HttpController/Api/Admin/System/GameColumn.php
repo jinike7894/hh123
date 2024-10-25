@@ -1,5 +1,5 @@
 <?php
-namespace App\HttpController\Api\Admin\User;
+namespace App\HttpController\Api\Admin\System;
 use App\Model\GameColumn\GameColumn as game;
 use App\HttpController\Api\Admin\AdminBase;
 use EasySwoole\Http\Message\Status;
