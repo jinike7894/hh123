@@ -61,7 +61,7 @@ class User extends AdminBase
                 '*',
             ];
             $data = $model
-                ->where(["id"=>$param["id"]])
+                ->where(["userId"=>$param["id"]])
                 ->order("userId","desc")
                 ->get();
         } catch (Throwable $e) {
