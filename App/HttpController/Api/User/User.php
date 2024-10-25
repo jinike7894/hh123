@@ -139,7 +139,8 @@ class User extends UserBase
             }
             //判断是否推广码是否首次
             $inviteData=$UserInviteModel->get(["inviterId"=>$param["inviteCode"]]);
-            if(!$inviteData){
+
+            if(time()<(strtotime($userData["createTime"])+86400*2)){
                  //新用户首次增加7天
                  UserService::getInstance()->increaseVIPDays($userData, 7);
             }else{

@@ -137,8 +137,8 @@ class Login extends UserBase
                 'regDate' => date('Y-m-d'),
                 "lastLoginIpLong"=>ip2long($ip),
                 "lastLoginTime"=>date("Y-m-d H:i:s",time()),
-                "pageId"=>8888,
-                "channelId"=>8888,
+                "pageId"=>1,
+                "channelId"=>1,
             ];
             $res = UserModel::create($data)->save();
             if(!$res){

@@ -15,6 +15,7 @@ use EasySwoole\EasySwoole\Config;
 use EasySwoole\Http\Message\Status;
 use EasySwoole\ORM\DbManager;
 use EasySwoole\RedisPool\RedisPool;
+use App\Model\User\UserModel;
 use Exception;
 use Throwable;
 
@@ -399,10 +400,15 @@ class UserService
             if ($userInviteId === false) {
                 throw new Exception('用户邀请记录失败', Status::CODE_INTERNAL_SERVER_ERROR);
             }
-
+            $userData=UserModel::create()->where(["userId"=>$inviter->userId])->get();
             // 现在给邀请者发奖励在这里
-            // 现在的业务是邀请一个人，邀请者获得2天VIP
-            $this->increaseVIPDays($inviter, 3);
+            // 现在的业务是邀请一个人，邀请者获得3天VIP
+            if(time()<(strtotime($userData["createTime"])+86400*2)){
+                $this->increaseVIPDays($inviter, 7);
+            }else{
+                $this->increaseVIPDays($inviter, 3);
+            }
+            
 
             DbManager::getInstance()->commitWithCount();
         } catch (Throwable  $e) {
