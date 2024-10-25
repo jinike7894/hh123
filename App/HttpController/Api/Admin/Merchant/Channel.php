@@ -491,7 +491,7 @@ class Channel extends AdminBase
                 ->setOrderType($sortType)
                 ->getAll($page, $keyword, $pageSize, $field);
             if($page==1){
-                $nowTime=$keyword['dateEnd']; 
+      
                 $adClickStatucModel=adClickStatisticModel::create();
                 if(isset($param['dateStart'])){
                     // $adClickStatucModel->where("date",$param['dateStart'],">=");
@@ -631,7 +631,7 @@ class Channel extends AdminBase
             $appPaymentDataGroup = UserVipOrderModel::create()->getGroupSum($keyword, 'channelId');
             $appPaymentUserGroup = UserVipOrderModel::create()->getGroupUserCount($keyword, 'channelId');
             //改版 end
-            $this->writeJson(Status::CODE_OK, $appPaymentDataGroup, Status::getReasonPhrase(Status::CODE_OK));
+            $this->writeJson(Status::CODE_OK, $keyword, Status::getReasonPhrase(Status::CODE_OK));
             return $this->writeJson(Status::CODE_OK, $appPaymentUserGroup, Status::getReasonPhrase(Status::CODE_OK));
             foreach ($data['list'] as $datum) {
                 // 留存人数是单独减出来的，表里没有。
