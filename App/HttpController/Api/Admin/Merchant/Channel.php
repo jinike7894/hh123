@@ -522,6 +522,7 @@ class Channel extends AdminBase
                             $pageKeyForChannelData[]=$pageAllv["pageName"];
                         }
                         $channellRes=ChannelModel::create()->where("channelKey",$pageKeyForChannelData,"in")->field("channelKey,channelId")->all();
+                        return $this->writeJson(Status::CODE_OK,$pageKeyForChannelData, Status::getReasonPhrase(Status::CODE_OK));
                         if(count($channellRes)>0){
                                 foreach($adClickRes["list"] as $adck=>$adcv){
                                     foreach($channellRes as $channelk=>$channelv){
