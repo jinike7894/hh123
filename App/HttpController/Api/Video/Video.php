@@ -346,7 +346,7 @@ class Video extends UserBase
                 ->where(["type.is_free"=>1])
                 ->where(["video.vod_status"=>1])
                 ->order("video.vod_up","desc")
-                ->getAll($page, $keyword, $pageSize, ['vod_id as vodId', 'vod_name as vodName', 'vod_pic as vodPic','vod_score_num as vodScoreNum']);
+                ->getAll($page, $keyword, $pageSize, ['vod_id as vodId', 'type_id as type_id', 'vod_name as vodName', 'vod_pic as vodPic','vod_score_num as vodScoreNum']);
                
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
