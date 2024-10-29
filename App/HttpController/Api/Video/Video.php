@@ -374,7 +374,7 @@ class Video extends UserBase
             ->where("is_uppro",0)
             ->where("vod_status",1)
             ->order("vod_id","desc")
-            ->limit(50)
+            ->limit(500)
             ->all([]);
               foreach($data as $k=>$v){
                 $imgUrl=$v->vod_pic_thumb;
