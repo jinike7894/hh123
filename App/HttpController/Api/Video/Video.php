@@ -373,6 +373,7 @@ class Video extends UserBase
                 'secret' => $this->s3Config[OssConfigKey::AWS_S3_ACCESS_KEY],
             ],
         ]);
+        
         $videoModel=VideoNewModel::create();
         $data = $videoModel
             ->where("is_uppro",0)
