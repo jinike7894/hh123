@@ -373,7 +373,7 @@ class Video extends UserBase
         $data = $videoModel
             ->where("is_uppro",0)
             ->order("vod_id","desc")
-            ->limit(1000)
+            ->limit(500)
             ->all([]);
               foreach($data as $k=>$v){
                 $imgUrl=$v->vod_pic_thumb;
