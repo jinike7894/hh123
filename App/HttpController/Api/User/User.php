@@ -81,7 +81,9 @@ class User extends UserBase
             }
             $data=[];
             if(isset($param["userName"])&&$param["userName"]!=""){
-                $data['userName'] = $param["userName"];
+                if(!$user->UserName){
+                    $data['userName'] = $param["userName"];
+                }
             }
             if(isset($param["nickname"])&&$param["nickname"]!=""){
                 $data['nickname'] = $param["nickname"];
