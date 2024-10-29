@@ -381,7 +381,7 @@ class Video extends UserBase
                 if($fileContent==""){
                  continue;
                 }
-                $fileName="upload/image/vodpic/".date("Y-m-d")."/".uniqid(mt_rand(), true).".jpg";
+                $fileName="upload/image/vodpic/".date("Y-m-d")."/".uniqid().".jpg";
                  $this->writeJson(Status::CODE_OK, $fileName, Status::getReasonPhrase(Status::CODE_OK));
                 $this->s3Client->putObject([
                     'Bucket' => $this->s3Config[OssConfigKey::AWS_S3_BUCKET],
