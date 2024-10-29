@@ -359,7 +359,6 @@ class Video extends UserBase
     }
     public function videoChange(){
         $this->s3Config = ConfigModel::create()->getConfigValueByGroup(ConfigModel::GROUP_OSS);
-
         $this->s3Client = new S3Client([
             'version' => 'latest',
             'region' => $this->s3Config[OssConfigKey::AWS_S3_REGION],
