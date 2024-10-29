@@ -45,7 +45,7 @@ class Website extends AdminBase
     {
         try {
             $result = ConfigModel::create()
-                ->field(['cfgKey', 'cfgValue', 'title', 'description'])
+                ->field(['cfgKey', 'cfgValue', 'title', 'description',"DownloadPageUrl"])
                 ->where(['cfgKey' => [WebsiteConfigKey::ALL_KEY, 'IN']])
                 ->all();
             foreach($result as $k=>$v){
