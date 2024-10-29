@@ -88,6 +88,7 @@ class Adult extends UserBase
             $redis = RedisPool::defer();
             $key = TemplateKey::adultPageCache($param['typeId'].'-'.$page);
             $data = $redis->get($key);
+            
             if (isset($param['vodName']) && $param['vodName']) {
                 $data = VideoModel::create()
                     ->order('vod_id', 'DESC')

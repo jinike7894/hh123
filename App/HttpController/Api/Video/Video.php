@@ -353,4 +353,12 @@ class Video extends UserBase
         }
         return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
     }
+    public function videoChange(){
+        $videoModel=VideoNewModel::create();
+        $data = $videoModel
+            ->where(["is_uppro"=>0])
+            ->limit(10)
+            ->all();
+        var_dump($data);die;
+    }
 }
