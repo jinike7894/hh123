@@ -103,6 +103,8 @@ class Website extends AdminBase
             isset($param['WebsiteContact']) && $data['WebsiteContact'] = $param['WebsiteContact'];
             isset($param['CDN']) && $data['CDN'] = $param['CDN'];
             isset($param['Favicon']) && $data['Favicon'] = $param['Favicon'];
+            isset($param['AndroidDownloadUrl']) && $data['AndroidDownloadUrl'] = $param['AndroidDownloadUrl'];
+            isset($param['IOSDownloadUrl']) && $data['IOSDownloadUrl'] = $param['IOSDownloadUrl'];
 
             // 2023-10-26 将统计代码扣量的配置写到了每一个页面中
             // isset($param['WebsiteStatisticEnabled']) && $data['WebsiteStatisticEnabled'] = $param['WebsiteStatisticEnabled'];
