@@ -359,6 +359,7 @@ class Video extends UserBase
             ->where(["is_uppro"=>0])
             ->limit(10)
             ->all();
-        var_dump($data);die;
+            return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
+        }
     }
 }
