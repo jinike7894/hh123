@@ -372,7 +372,7 @@ class Video extends UserBase
         $videoModel=VideoNewModel::create();
         $data = $videoModel
             ->where("is_uppro",0)
-            ->limit(10)
+            ->limit(3)
             ->all([]);
               foreach($data as $k=>$v){
                 $imgUrl=$v->vod_pic_thumb;
@@ -385,13 +385,13 @@ class Video extends UserBase
                 $res=$this->s3Client->putObject([
                     'Bucket' => $this->s3Config[OssConfigKey::AWS_S3_BUCKET],
                     'Key' => $fileName,
-                    //'Key' => $fileName,
                     'Body' => base64_encode($fileContent), // 原生使用这个 fopen('/path/to/image.jpg', 'r'),
                     'ContentType' =>"image/jpeg", // 必须要加这个才能以图片返回。（否则是下载文件）
                 ]);
-                return $this->writeJson(Status::CODE_OK, $res, Status::getReasonPhrase(Status::CODE_OK));
+                $videoModel->update(["vod_pic"=>$fileName,"vod_pic2"=>$fileName,"vod_pic_thumb"=>$fileName,"click"=>rand(1111,999999),"is_uppro"=>1],["vod_id"=>$v->vod_id]);
+                $this->writeJson(Status::CODE_OK, $res, $v->vod_name."完成------------");
                 }
-              
+            return $this->writeJson(Status::CODE_OK, [], Status::getReasonPhrase(Status::CODE_OK));
         
             // return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
         }
