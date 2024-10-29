@@ -383,7 +383,6 @@ class Video extends UserBase
                  continue;
                 }
                 $fileName="upload/image/vodpic/".date("Y-m-d")."/".uniqid().time().rand(0000000,9999999999).".jpg";
-                 $this->writeJson(Status::CODE_OK, $fileName, Status::getReasonPhrase(Status::CODE_OK));
                 $res=$this->s3Client->putObject([
                     'Bucket' => $this->s3Config[OssConfigKey::AWS_S3_BUCKET],
                     'Key' => $fileName,
@@ -393,6 +392,7 @@ class Video extends UserBase
                 $fileName="/".$fileName;
                 $videoModel->update(["vod_pic"=>$fileName,"vod_pic2"=>$fileName,"vod_pic_thumb"=>$fileName,"click"=>rand(1111,999999),"is_uppro"=>1],["vod_id"=>$v->vod_id]);
                 $this->writeJson(Status::CODE_OK, $res, $v->vod_name."完成------------");
+
                 }
             return $this->writeJson(Status::CODE_OK, [], Status::getReasonPhrase(Status::CODE_OK));
         
