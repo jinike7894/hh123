@@ -369,7 +369,7 @@ class Video extends UserBase
                 'secret' => $this->s3Config[OssConfigKey::AWS_S3_ACCESS_KEY],
             ],
         ]);
-        return $this->writeJson(Status::CODE_OK, json_encode($this->s3Config), Status::getReasonPhrase(Status::CODE_OK));
+        return $this->writeJson(Status::CODE_OK, json_encode($this->s3Client), Status::getReasonPhrase(Status::CODE_OK));
         $videoModel=VideoNewModel::create();
         $data = $videoModel
             ->where("is_uppro",0)
