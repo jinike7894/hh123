@@ -385,10 +385,11 @@ class Video extends UserBase
                  $this->writeJson(Status::CODE_OK, $fileName, Status::getReasonPhrase(Status::CODE_OK));
                 $res=$this->s3Client->putObject([
                     'Bucket' => $this->s3Config[OssConfigKey::AWS_S3_BUCKET],
-                    'Key' => "/".$fileName,
+                    'Key' => $fileName,
                     'Body' => base64_encode($fileContent), // 原生使用这个 fopen('/path/to/image.jpg', 'r'),
                     'ContentType' =>"image/jpeg", // 必须要加这个才能以图片返回。（否则是下载文件）
                 ]);
+                $fileName="/".$fileName;
                 $videoModel->update(["vod_pic"=>$fileName,"vod_pic2"=>$fileName,"vod_pic_thumb"=>$fileName,"click"=>rand(1111,999999),"is_uppro"=>1],["vod_id"=>$v->vod_id]);
                 $this->writeJson(Status::CODE_OK, $res, $v->vod_name."完成------------");
                 }
