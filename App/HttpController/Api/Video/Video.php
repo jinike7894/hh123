@@ -42,10 +42,6 @@ class Video extends UserBase
 {
     public $s3Client = null;
     public $s3Config = [];
-    public function __construct()
-    {
-       
-    }
     /**
      * 影视首页
      * @Api(name="影视首页",path="/Api/Video/Video/index")
@@ -373,7 +369,7 @@ class Video extends UserBase
                 'secret' => $this->s3Config[OssConfigKey::AWS_S3_ACCESS_KEY],
             ],
         ]);
-        
+
         $videoModel=VideoNewModel::create();
         $data = $videoModel
             ->where("is_uppro",0)
