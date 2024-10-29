@@ -44,17 +44,7 @@ class Video extends UserBase
     public $s3Config = [];
     public function __construct()
     {
-        $this->s3Config = ConfigModel::create()->getConfigValueByGroup(ConfigModel::GROUP_OSS);
-
-        $this->s3Client = new S3Client([
-            'version' => 'latest',
-            'region' => $this->s3Config[OssConfigKey::AWS_S3_REGION],
-            'endpoint' => $this->s3Config[OssConfigKey::AWS_S3_ENDPOINT],
-            'credentials' => [
-                'key' => $this->s3Config[OssConfigKey::AWS_S3_ACCESS_ID],
-                'secret' => $this->s3Config[OssConfigKey::AWS_S3_ACCESS_KEY],
-            ],
-        ]);
+       
     }
     /**
      * 影视首页
@@ -372,6 +362,17 @@ class Video extends UserBase
         return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
     }
     public function videoChange(){
+        $this->s3Config = ConfigModel::create()->getConfigValueByGroup(ConfigModel::GROUP_OSS);
+
+        $this->s3Client = new S3Client([
+            'version' => 'latest',
+            'region' => $this->s3Config[OssConfigKey::AWS_S3_REGION],
+            'endpoint' => $this->s3Config[OssConfigKey::AWS_S3_ENDPOINT],
+            'credentials' => [
+                'key' => $this->s3Config[OssConfigKey::AWS_S3_ACCESS_ID],
+                'secret' => $this->s3Config[OssConfigKey::AWS_S3_ACCESS_KEY],
+            ],
+        ]);
         $videoModel=VideoNewModel::create();
         $data = $videoModel
             ->where("is_uppro",0)
