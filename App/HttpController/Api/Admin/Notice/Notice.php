@@ -53,7 +53,7 @@ class Notice extends AdminBase
         }
         try {
             $data = [
-                'type' => trim($param['type']),
+                // 'type' => trim($param['type']),
                 'title' => trim($param['title']),
                 'content' => trim($param['content']),
                 'uid' => intval($param['uid']),
