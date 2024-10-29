@@ -382,18 +382,18 @@ class Video extends UserBase
                 }
                 $fileName="upload/image/vodpic/".date("Y-m-d")."/".uniqid().".jpg";
                  $this->writeJson(Status::CODE_OK, $fileName, Status::getReasonPhrase(Status::CODE_OK));
-                $this->s3Client->putObject([
+                $res=$this->s3Client->putObject([
                     'Bucket' => $this->s3Config[OssConfigKey::AWS_S3_BUCKET],
                     'Key' => $fileName,
                     //'Key' => $fileName,
                     'Body' => base64_encode($fileContent), // 原生使用这个 fopen('/path/to/image.jpg', 'r'),
                     'ContentType' =>"image/jpeg", // 必须要加这个才能以图片返回。（否则是下载文件）
                 ]);
-                return $this->writeJson(Status::CODE_OK, $fileName, Status::getReasonPhrase(Status::CODE_OK));
+                return $this->writeJson(Status::CODE_OK, $res, Status::getReasonPhrase(Status::CODE_OK));
                 }
               
         
-            return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
+            // return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
         }
     
 }
