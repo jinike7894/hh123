@@ -25,6 +25,9 @@ use EasySwoole\HttpAnnotation\AnnotationTag\ApiSuccess;
 use EasySwoole\HttpAnnotation\AnnotationTag\Method;
 use EasySwoole\HttpAnnotation\AnnotationTag\Param;
 use EasySwoole\ORM\DbManager;
+use Aws\S3\S3Client;
+use App\Model\Common\ConfigModel;
+use App\Enum\ConfigKey\OssConfigKey;
 use Exception;
 use Throwable;
 
@@ -37,7 +40,22 @@ use Throwable;
  */
 class Video extends UserBase
 {
+    public $s3Client = null;
+    public $s3Config = [];
+    public function __construct()
+    {
+        $this->s3Config = ConfigModel::create()->getConfigValueByGroup(ConfigModel::GROUP_OSS);
 
+        $this->s3Client = new S3Client([
+            'version' => 'latest',
+            'region' => $this->s3Config[OssConfigKey::AWS_S3_REGION],
+            'endpoint' => $this->s3Config[OssConfigKey::AWS_S3_ENDPOINT],
+            'credentials' => [
+                'key' => $this->s3Config[OssConfigKey::AWS_S3_ACCESS_ID],
+                'secret' => $this->s3Config[OssConfigKey::AWS_S3_ACCESS_KEY],
+            ],
+        ]);
+    }
     /**
      * 影视首页
      * @Api(name="影视首页",path="/Api/Video/Video/index")
@@ -359,6 +377,23 @@ class Video extends UserBase
             ->where("is_uppro",0)
             ->limit(10)
             ->all([]);
+              foreach($data as $k=>$v){
+                $imgUrl=$v->vod_pic_thumb;
+                $fileContent=file_get_contents($imgUrl);
+                if($fileContent==""){
+                 continue;
+                }
+                $fileName="upload/image/vodpic/".date("Y-m-d")."/".uniqid(mt_rand(), true).".jpg";
+                return $this->writeJson(Status::CODE_OK, $fileName, Status::getReasonPhrase(Status::CODE_OK));
+                }
+                // $this->s3Client->putObject([
+                //     'Bucket' => $this->s3Config[OssConfigKey::AWS_S3_BUCKET],
+                //     'Key' => $path . DIRECTORY_SEPARATOR . $fileName,
+                //     //'Key' => $fileName,
+                //     'Body' => base64_encode($uploadFile->getStream()), // 原生使用这个 fopen('/path/to/image.jpg', 'r'),
+                //     'ContentType' => $uploadFile->getClientMediaType(), // 必须要加这个才能以图片返回。（否则是下载文件）
+                // ]);
+        
             return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
         }
     
