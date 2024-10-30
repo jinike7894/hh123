@@ -422,8 +422,9 @@ class Video extends UserBase
                     "shortTag"=>$tag[rand(0,5)],
                     "is_recommod"=>rand(0,1),
                   ];
-                  return $this->writeJson(Status::CODE_OK, $dataShort, Status::getReasonPhrase(Status::CODE_OK));
+                  ShortVideoModel::create($dataShort)->save();
+                 
             }
-           
+            return $this->writeJson(Status::CODE_OK, "ok", Status::getReasonPhrase(Status::CODE_OK));
             }
 }
