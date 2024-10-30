@@ -10,6 +10,7 @@ use App\Model\User\UserVideoRecordModel;
 use App\Model\Video\TypeModel;
 use App\Model\Video\VideoModel;
 use App\Model\Video\VideoNewModel;
+use App\Model\Video\ShortVideoModel;
 use App\RedisKey\Video\VideoKey;
 use App\Service\Video\TypeService;
 use App\Service\Video\VideoService;
@@ -400,11 +401,29 @@ class Video extends UserBase
             // return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
         }
     public function videoShortVideo(){
-            $videoModel=VideoNewModel::create();
+            $videoModel=ShortVideoModel::create();
             $queryBuild = new QueryBuilder();
             $sql="select * from mac_vod where is_uppro=1 and vod_status=1 order by rand() limit 500";
             $queryBuild->raw($sql,true);
             $data = DbManager::getInstance()->query($queryBuild)->getResult();
-            return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
+            $tag=[1,2,3,4,18,19];
+            foreach($data as $k=>$v){
+                  $dataShort=[
+                    "vodName"=>$v["vod_name"],
+                    "vodPic"=>$v["vod_pic"],
+                    "vodPlayUrl"=>$v["vod_play_url"],
+                    "fileType"=>"up",
+                    "likeCount"=>rand(111,9999),
+                    "realLikeCount"=>rand(111,9999),
+                    "sort"=>rand(1,9999),
+                    "status"=>1,
+                    "createTime"=>date("Y-m-d H:i:s"),
+                    "updateTime"=>date("Y-m-d H:i:s"),
+                    "shortTag"=>$tag[rand(0,5)],
+                    "is_recommod"=>rand(0,1),
+                  ];
+                  return $this->writeJson(Status::CODE_OK, $dataShort, Status::getReasonPhrase(Status::CODE_OK));
+            }
+           
             }
 }
