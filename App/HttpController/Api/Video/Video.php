@@ -28,6 +28,7 @@ use EasySwoole\ORM\DbManager;
 use Aws\S3\S3Client;
 use App\Model\Common\ConfigModel;
 use App\Enum\ConfigKey\OssConfigKey;
+use EasySwoole\Mysqli\QueryBuilder;
 use Exception;
 use Throwable;
 
@@ -398,5 +399,12 @@ class Video extends UserBase
         
             // return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
         }
-    
+    public function videoShortVideo(){
+            $videoModel=VideoNewModel::create();
+            $queryBuild = new QueryBuilder();
+            $sql="select * from mac_vod where is_uppro=1 and vod_status=1 order by rand() limit 500";
+            $queryBuild->raw($sql,true);
+            $data = DbManager::getInstance()->query($queryBuild)->getResult();
+            return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
+            }
 }
