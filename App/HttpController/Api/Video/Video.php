@@ -11,6 +11,7 @@ use App\Model\Video\TypeModel;
 use App\Model\Video\VideoModel;
 use App\Model\Video\VideoNewModel;
 use App\Model\Video\ShortVideoModel;
+use App\Model\Video\ShortVideoDyModel;
 use App\RedisKey\Video\VideoKey;
 use App\Service\Video\TypeService;
 use App\Service\Video\VideoService;
@@ -401,7 +402,7 @@ class Video extends UserBase
             // return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
         }
     public function videoShortVideo(){
-            $videoModel=ShortVideoModel::create();
+
             $queryBuild = new QueryBuilder();
             $sql="select * from mac_vod where is_uppro=1 and vod_status=1 order by rand() limit 500";
             $queryBuild->raw($sql,true);
@@ -419,10 +420,14 @@ class Video extends UserBase
                     "status"=>1,
                     "createTime"=>date("Y-m-d H:i:s"),
                     "updateTime"=>date("Y-m-d H:i:s"),
-                    "shortTag"=>$tag[rand(0,5)],
+                    // "shortTag"=>$tag[rand(0,5)],
                     "is_recommod"=>rand(0,1),
+                    "click"=>rand(99,1999),
+                    "collection"=>rand(99,1999),
+                    "reply"=>0,
+                    "fake_uid"=>rand(1,5),
                   ];
-                  ShortVideoModel::create($dataShort)->save();
+                  ShortVideoDyModel::create($dataShort)->save();
                  
             }
             return $this->writeJson(Status::CODE_OK, "ok", Status::getReasonPhrase(Status::CODE_OK));
