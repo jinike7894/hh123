@@ -14,6 +14,7 @@ use EasySwoole\HttpAnnotation\AnnotationTag\Method;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiRequestExample;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiSuccess;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiFail;
+use App\Model\Merchant\ChannelModel;
 
 use Exception;
 use Throwable;
@@ -41,12 +42,23 @@ class User extends AdminBase
             if(isset($param["nickname"])){
                 $model->where(["nickname"=> ['%' . $param['nickname'] . '%', 'LIKE']]);
             }
+            if(isset($param["userId"])){
+                $model->where(["userId"=>$param['userId']]);
+            }
             $field = [
                 '*',
             ];
             $data = $model
                 ->order("userId","desc")
                 ->getAll($page, $keyword, $pageSize, $field);
+            if($data["list"]){
+                $channelArray=[];
+                foreach($data["list"] as $k=>$v){
+                    $channelArray[]=$v->channelId;
+                }
+                $this->writeJson(Status::CODE_OK, $channelArray, Status::getReasonPhrase(Status::CODE_OK));
+            }
+          
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
