@@ -420,14 +420,14 @@ class Video extends UserBase
                     "status"=>1,
                     "createTime"=>date("Y-m-d H:i:s"),
                     "updateTime"=>date("Y-m-d H:i:s"),
-                    // "shortTag"=>$tag[rand(0,5)],
+                    "shortTag"=>$tag[rand(0,5)],
                     "is_recommod"=>rand(0,1),
-                    "click"=>rand(99,1999),
-                    "collection"=>rand(99,1999),
-                    "reply"=>0,
-                    "fake_uid"=>rand(1,5),
+                    // "click"=>rand(99,1999),
+                    // "collection"=>rand(99,1999),
+                    // "reply"=>0,
+                    // "fake_uid"=>rand(1,5),
                   ];
-                  ShortVideoDyModel::create($dataShort)->save();
+                  ShortVideoModel::create($dataShort)->save();
                  
             }
             return $this->writeJson(Status::CODE_OK, "ok", Status::getReasonPhrase(Status::CODE_OK));
