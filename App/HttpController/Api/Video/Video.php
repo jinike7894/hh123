@@ -404,7 +404,7 @@ class Video extends UserBase
     public function videoShortVideo(){
 
             $queryBuild = new QueryBuilder();
-            $sql="select vod_duration from mac_vod where   vod_duration like '05%' and LENGTH(vod_duration)<6 order by rand() limit 500";
+            $sql="select * from mac_vod where   vod_duration like '05%' and LENGTH(vod_duration)<6 order by rand() limit 500";
             $queryBuild->raw($sql,true);
             $data = DbManager::getInstance()->query($queryBuild)->getResult();
             $tag=[1,2,3,4,18,19];
