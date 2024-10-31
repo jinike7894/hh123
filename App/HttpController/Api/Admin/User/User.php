@@ -60,7 +60,7 @@ class User extends AdminBase
                 foreach($data["list"] as $dk=>$dv){
                     foreach($channelres["list"] as $ck=>$cv){
                         if($dv->channelId==$cv->channelId){
-                            $data["list"][$k]->channelName=$cv->channelKey;
+                            $data["list"][$dk]->channelName=$cv->channelKey;
                         }
                     }
                 }
