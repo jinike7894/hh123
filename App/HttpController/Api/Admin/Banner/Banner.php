@@ -130,6 +130,7 @@ class Banner extends AdminBase
                 'sort' => intval($param['sort']),
                 'status' => trim($param['status']),
                 'update_at' =>time(),
+                'adId' =>$param['adId'],
             ];
 
             $result = BannerModel::create()->update($data,["id"=>$param["id"]]);
