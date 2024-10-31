@@ -56,7 +56,15 @@ class User extends AdminBase
                 foreach($data["list"] as $k=>$v){
                     $channelArray[]=$v->channelId;
                 }
-                $this->writeJson(Status::CODE_OK, $channelArray, Status::getReasonPhrase(Status::CODE_OK));
+                $channelres=ChannelModel::create()->where("channelId",$channelArray,"in")->getAll();
+                foreach($data["list"] as $dk=>$dv){
+                    foreach($channelres["list"] as $ck=>$cv){
+                        if($dv->channelId==$cv->channelId){
+                            $data["list"][$k]->channelName=$cv->channelKey;
+                        }
+                    }
+                }
+              
             }
           
         } catch (Throwable $e) {
