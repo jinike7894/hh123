@@ -429,6 +429,7 @@ class Video extends UserBase
                     "vod_time_add"=>time(),
                     "vod_content"=>$v->video_title,
                     "vod_play_url"=>$v->video_url,
+                    "vod_plot_name"=>$v->video_title,
                     "vod_down_url"=>$v->video_url,
                     "is_uppro"=>2,
                     "click"=>rand(11111,999999),
