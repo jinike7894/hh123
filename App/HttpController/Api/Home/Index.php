@@ -101,9 +101,9 @@ class Index extends ApiBase
         try {
             $redis = RedisPool::defer(RedisDb::REDIS_DB_STATISTIC);
             $AdFontData=$redis->get("Ad:Font");
-            if($AdFontData){
-                return $this->writeJson(Status::CODE_OK, $AdFontData, Status::getReasonPhrase(Status::CODE_OK));
-            }
+            // if($AdFontData){
+            //     return $this->writeJson(Status::CODE_OK, $AdFontData, Status::getReasonPhrase(Status::CODE_OK));
+            // }
             //查询文字广告内容
             $adGroupRelationModel=AdGroupRelationModel::create()->alias('relation');
             $res=$adGroupRelationModel
@@ -124,9 +124,9 @@ class Index extends ApiBase
         try {
             $redis = RedisPool::defer(RedisDb::REDIS_DB_STATISTIC);
             $AdFontData=$redis->get("Ad:Money");
-            if($AdFontData){
-                return $this->writeJson(Status::CODE_OK, $AdFontData, Status::getReasonPhrase(Status::CODE_OK));
-            }
+            // if($AdFontData){
+            //     return $this->writeJson(Status::CODE_OK, $AdFontData, Status::getReasonPhrase(Status::CODE_OK));
+            // }
             //查询文字广告内容
             $adGroupRelationModel=AdGroupRelationModel::create()->alias('relation');
             $res=$adGroupRelationModel
@@ -147,9 +147,9 @@ class Index extends ApiBase
         try {
             $redis = RedisPool::defer(RedisDb::REDIS_DB_STATISTIC);
             $AdFontData=$redis->get("Ad:jiaoyou");
-            if($AdFontData){
-                return $this->writeJson(Status::CODE_OK, $AdFontData, Status::getReasonPhrase(Status::CODE_OK));
-            }
+            // if($AdFontData){
+            //     return $this->writeJson(Status::CODE_OK, $AdFontData, Status::getReasonPhrase(Status::CODE_OK));
+            // }
             //查询同城交友广告
             $adGroupRelationModel=AdGroupRelationModel::create()->alias('relation');
             $res=$adGroupRelationModel
@@ -170,9 +170,9 @@ class Index extends ApiBase
         try {
             $redis = RedisPool::defer(RedisDb::REDIS_DB_STATISTIC);
             $AdFontData=$redis->get("Ad:live");
-            if($AdFontData){
-                return $this->writeJson(Status::CODE_OK, $AdFontData, Status::getReasonPhrase(Status::CODE_OK));
-            }
+            // if($AdFontData){
+            //     return $this->writeJson(Status::CODE_OK, $AdFontData, Status::getReasonPhrase(Status::CODE_OK));
+            // }
             //查询直播广告
             $adGroupRelationModel=AdGroupRelationModel::create()->alias('relation');
             $res=$adGroupRelationModel
@@ -193,9 +193,9 @@ class Index extends ApiBase
         try {
             $redis = RedisPool::defer(RedisDb::REDIS_DB_STATISTIC);
             $AdFontData=$redis->get("Ad:qingqu");
-            if($AdFontData){
-                return $this->writeJson(Status::CODE_OK, $AdFontData, Status::getReasonPhrase(Status::CODE_OK));
-            }
+            // if($AdFontData){
+            //     return $this->writeJson(Status::CODE_OK, $AdFontData, Status::getReasonPhrase(Status::CODE_OK));
+            // }
             //查询直播广告
             $adGroupRelationModel=AdGroupRelationModel::create()->alias('relation');
             $res=$adGroupRelationModel

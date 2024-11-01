@@ -10,6 +10,7 @@ use App\Model\User\UserVideoRecordModel;
 use App\Model\Video\TypeModel;
 use App\Model\Video\VideoModel;
 use App\Model\Video\VideoNewModel;
+use App\Model\Video\MovieModel;
 use App\Model\Video\ShortVideoModel;
 use App\Model\Video\ShortVideoDyModel;
 use App\RedisKey\Video\VideoKey;
@@ -372,15 +373,15 @@ class Video extends UserBase
             ],
         ]);
        
-        $videoModel=VideoNewModel::create();
+        $videoModel=MovieModel::create();
         $data = $videoModel
-            ->where("is_uppro",0)
-            ->where("vod_status",1)
+            ->where("vod_status",0)
             ->order("vod_id","desc")
-            ->limit(500)
+            ->limit(2)
             ->all([]);
               foreach($data as $k=>$v){
-                $imgUrl=$v->vod_pic_thumb;
+                $imgUrl=substr($v->video_cover, 0, -3);
+                return $this->writeJson(Status::CODE_OK, $imgUrl, Status::getReasonPhrase(Status::CODE_OK));
                 $fileContent=file_get_contents($imgUrl);
                 if($fileContent==""){
                  continue;

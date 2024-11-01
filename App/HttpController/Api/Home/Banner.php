@@ -72,9 +72,9 @@ class Banner extends ApiBase
         try {
             $redis = RedisPool::defer(RedisDb::REDIS_DB_STATISTIC);
             $AdFontData=$redis->get("Ad:Banner");
-            if($AdFontData){
-                return $this->writeJson(Status::CODE_OK, $AdFontData, Status::getReasonPhrase(Status::CODE_OK));
-            }
+            // if($AdFontData){
+            //     return $this->writeJson(Status::CODE_OK, $AdFontData, Status::getReasonPhrase(Status::CODE_OK));
+            // }
             //查询文字广告内容
             $adGroupRelationModel=AdGroupRelationModel::create()->alias('relation');
             $res=$adGroupRelationModel
