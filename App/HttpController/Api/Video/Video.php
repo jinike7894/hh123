@@ -379,10 +379,29 @@ class Video extends UserBase
         $videoModel=MovieModel::create();
         $data = $videoModel
             ->order("id","desc")
-            ->getAll($page, [], 300,[]);
+            ->getAll($page, [], 500,[]);
             // return $this->writeJson(Status::CODE_OK,$data, Status::getReasonPhrase(Status::CODE_OK));
+            $category=[
+                "8"=>"27",//福利
+                "10"=>"27",//福利
+                "19"=>"27",//福利
+                "24"=>"29",//口交
+                "49"=>"30",//美乳
+                "47"=>"31",//国产
+                "4"=>"32",//动漫
+                "51"=>"34",//传媒
+                "52"=>"34",//传媒
+                "53"=>"34",//传媒
+                "54"=>"34",//传媒
+                "55"=>"34",//传媒
+                "57"=>"34",//传媒
+                "31"=>"49",//热门
+                "59"=>"49",//热门
+            ];
               foreach($data["list"] as $k=>$v){
-             
+                if(!$category[$v->category_id]){
+                    continue;
+                }
                 $imgUrl=substr($v->video_cover, 0, -3);
                 if(!$v->category_id){
                     continue;
@@ -401,26 +420,8 @@ class Video extends UserBase
                     'ContentType' =>"image/jpeg", // 必须要加这个才能以图片返回。（否则是下载文件）
                 ]);
                 $fileName="/".$fileName;
-                $category=[
-                    "8"=>"27",//福利
-                    "10"=>"27",//福利
-                    "19"=>"27",//福利
-                    "24"=>"29",//口交
-                    "49"=>"30",//美乳
-                    "47"=>"31",//国产
-                    "4"=>"32",//动漫
-                    "51"=>"34",//传媒
-                    "52"=>"34",//传媒
-                    "53"=>"34",//传媒
-                    "54"=>"34",//传媒
-                    "55"=>"34",//传媒
-                    "57"=>"34",//传媒
-                    "31"=>"49",//热门
-                    "59"=>"49",//热门
-                ];
-                if(!$category[$v->category_id]){
-                    continue;
-                }
+                
+              
                 $videoDataParam=[
                     "type_id"=>$category[$v->category_id],
                     "type_id_1"=>$category[$v->category_id],
