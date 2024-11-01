@@ -7,6 +7,7 @@ use App\Enum\ConfigKey\VideoConfigKey;
 use App\HttpController\Api\ApiBase;
 use App\HttpController\Api\User\UserBase;
 use App\Model\Common\ConfigModel;
+use App\Model\Common\ConfigNewModel;
 use App\Model\User\UserVideoRecordModel;
 use App\Model\Video\VideoModel;
 use App\Model\Video\typeModel;
@@ -145,9 +146,9 @@ class Adult extends UserBase
             if (!$data) {
                 throw new Exception('无效的vodId参数', Status::CODE_BAD_REQUEST);
             }
-            foreach( $data as $dk=>$dv){
+            foreach($data as $dk=>$dv){
                     if($dv["is_aws"]==1){
-                        $awsHost=ConfigModel::create()->where("cfgKey","AwsS3Host")->get();
+                        $awsHost=ConfigNewModel::create()->where("cfgKey","AwsS3Host")->get();
                         $data[$dk]["vod_play_url"]=$awsHost["cfgValue"].$dv["vod_play_url"];
                     }
             }
