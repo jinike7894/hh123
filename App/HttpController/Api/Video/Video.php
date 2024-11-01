@@ -362,6 +362,7 @@ class Video extends UserBase
         return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
     }
     public function videoChange(){
+        $page = (int)($param['page'] ?? 1);
         $this->s3Config = ConfigModel::create()->getConfigValueByGroup(ConfigModel::GROUP_OSS);
         $this->s3Client = new S3Client([
             'version' => 'latest',
@@ -376,8 +377,9 @@ class Video extends UserBase
         $videoModel=MovieModel::create();
         $data = $videoModel
             ->order("id","desc")
-            ->limit(300)
+            ->limit(300,$page*300)
             ->all([]);
+            return $this->writeJson(Status::CODE_OK,$data, Status::getReasonPhrase(Status::CODE_OK));
               foreach($data as $k=>$v){
                 $imgUrl=substr($v->video_cover, 0, -3);
                 
