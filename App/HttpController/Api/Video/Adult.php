@@ -147,6 +147,7 @@ class Adult extends UserBase
                 throw new Exception('无效的vodId参数', Status::CODE_BAD_REQUEST);
             }
             foreach($data as $dk=>$dv){
+                return $this->writeJson(Status::CODE_OK, $dv["is_aws"], Status::getReasonPhrase(Status::CODE_OK));
                     if($dv["is_aws"]==1){
                         $awsHost=ConfigNewModel::create()->where("cfgKey","AwsS3Host")->get();
                         $data[$dk]["vodPlayUrl"]=$awsHost["cfgValue"].$dv["vodPlayUrl"];
