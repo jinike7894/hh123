@@ -382,7 +382,7 @@ class Video extends UserBase
             ->getAll($page, [], 300,[]);
             // return $this->writeJson(Status::CODE_OK,$data, Status::getReasonPhrase(Status::CODE_OK));
               foreach($data["list"] as $k=>$v){
-                 $this->writeJson(Status::CODE_OK,$v->category_id, Status::getReasonPhrase(Status::CODE_OK));
+             
                 $imgUrl=substr($v->video_cover, 0, -3);
                 if(!$v->category_id){
                     continue;
@@ -418,7 +418,9 @@ class Video extends UserBase
                     "31"=>"49",//热门
                     "59"=>"49",//热门
                 ];
-             
+                if(!$category[$v->category_id]){
+                    continue;
+                }
                 $videoDataParam=[
                     "type_id"=>$category[$v->category_id],
                     "type_id_1"=>$category[$v->category_id],
