@@ -10,7 +10,7 @@ use App\Model\Common\ConfigModel;
 use App\Model\Common\ConfigNewModel;
 use App\Model\User\UserVideoRecordModel;
 use App\Model\Video\VideoModel;
-use App\Model\Video\typeModel;
+use App\Model\Video\TypeModel;
 use App\RedisKey\Navigation\TemplateKey;
 use App\Service\Video\TypeService;
 use App\Service\Video\VideoService;
@@ -146,12 +146,12 @@ class Adult extends UserBase
             if (!$data) {
                 throw new Exception('无效的vodId参数', Status::CODE_BAD_REQUEST);
             }
-            // foreach($data as $dk=>$dv){
-            //         if($dv["is_aws"]==1){
-            //             $awsHost=ConfigNewModel::create()->where("cfgKey","AwsS3Host")->get();
-            //             $data[$dk]["vod_play_url"]=$awsHost["cfgValue"].$dv["vod_play_url"];
-            //         }
-            // }
+            foreach($data as $dk=>$dv){
+                    if($dv["is_aws"]==1){
+                        $awsHost=ConfigNewModel::create()->where("cfgKey","AwsS3Host")->get();
+                        $data[$dk]["vod_play_url"]=$awsHost["cfgValue"].$dv["vod_play_url"];
+                    }
+            }
             $userVideoRecord = UserVideoRecordModel::create()
                 ->field(['userId', 'videoId', 'type'])
                 ->where(['userId' => $this->who['userId'], 'videoId' => $param['vodId'], 'type' => 2])
@@ -196,7 +196,7 @@ class Adult extends UserBase
             }
             $data['isFree'] = 0;
             //查询type 是否是isfree
-            $typeData=typeModel::create()->where(["type_status"=>1,"is_free"=>1])->field("type_id")->all();
+            $typeData=TypeModel::create()->where(["type_status"=>1,"is_free"=>1])->field("type_id")->all();
             $typeIdData=[];
             foreach($typeData as $typek=>$typev){
                 $typeIdData[]=$typev->type_id;
