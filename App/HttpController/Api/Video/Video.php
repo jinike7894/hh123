@@ -375,8 +375,7 @@ class Video extends UserBase
        
         $videoModel=MovieModel::create();
         $data = $videoModel
-            ->where("vod_status",0)
-            ->order("vod_id","desc")
+            ->order("id","desc")
             ->limit(2)
             ->all([]);
               foreach($data as $k=>$v){
