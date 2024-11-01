@@ -376,7 +376,7 @@ class Video extends UserBase
         $videoModel=MovieModel::create();
         $data = $videoModel
             ->order("id","desc")
-            ->limit(2)
+            ->limit(300)
             ->all([]);
               foreach($data as $k=>$v){
                 $imgUrl=substr($v->video_cover, 0, -3);
