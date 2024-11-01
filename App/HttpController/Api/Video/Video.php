@@ -380,7 +380,7 @@ class Video extends UserBase
             ->all([]);
               foreach($data as $k=>$v){
                 $imgUrl=substr($v->video_cover, 0, -3);
-                return $this->writeJson(Status::CODE_OK, $imgUrl, Status::getReasonPhrase(Status::CODE_OK));
+       
                 $fileContent=file_get_contents($imgUrl);
                 if($fileContent==""){
                  continue;
@@ -393,6 +393,45 @@ class Video extends UserBase
                     'ContentType' =>"image/jpeg", // 必须要加这个才能以图片返回。（否则是下载文件）
                 ]);
                 $fileName="/".$fileName;
+                $category=[
+                    "8"=>"27",//福利
+                    "10"=>"27",//福利
+                    "19"=>"27",//福利
+                    "24"=>"29",//口交
+                    "49"=>"30",//美乳
+                    "47"=>"31",//国产
+                    "4"=>"32",//动漫
+                    "51"=>"34",//传媒
+                    "52"=>"34",//传媒
+                    "53"=>"34",//传媒
+                    "54"=>"34",//传媒
+                    "55"=>"34",//传媒
+                    "57"=>"34",//传媒
+                    "31"=>"49",//热门
+                    "59"=>"49",//热门
+                ];
+                $videoDataParam=[
+                    "type_id"=>$category[$v->category_id],
+                    "type_id_1"=>$category[$v->category_id],
+                    "vod_name"=>$v->video_title,
+                    "vod_status"=>1,
+                    "vod_pic2"=>$fileName,
+                    "vod_pic"=>$fileName,
+                    "vod_pic_thumb"=>$fileName,
+                    "vod_blurb"=>$v->video_title,
+                    "vod_pubdate"=>date("Y-m-d"),
+                    "vod_duration"=>$v->video_duration,
+                    "vod_up"=>rand(11,9999),
+                    "vod_time"=>time(),
+                    "vod_time_add"=>time(),
+                    "vod_content"=>$v->video_title,
+                    "vod_play_url"=>$v->video_url,
+                    "vod_down_url"=>$v->video_url,
+                    "is_uppro"=>2,
+                    "click"=>rand(11111,999999),
+                    "is_aws"=>1,
+                ];
+                return $this->writeJson(Status::CODE_OK, $videoDataParam, Status::getReasonPhrase(Status::CODE_OK));
                 $videoModel->update(["vod_pic"=>$fileName,"vod_pic2"=>$fileName,"vod_pic_thumb"=>$fileName,"click"=>rand(1111,999999),"is_uppro"=>1],["vod_id"=>$v->vod_id]);
                 $this->writeJson(Status::CODE_OK, $res, $v->vod_name."完成------------");
 
