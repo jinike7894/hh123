@@ -105,7 +105,7 @@ class Notice extends AdminBase
                 'type' => intval($param['type']),
                 'title' => trim($param['title']),
                 'content' => trim($param['content']),
-                'property' => trim($param['property']),
+                // 'property' => trim($param['property']),
                 'uid' => intval($param['uid']),
                 'update_at' =>time(),
             ];

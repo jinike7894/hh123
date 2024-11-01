@@ -35,7 +35,8 @@ class Notice extends UserBase
             ];
             $model = NoticeModel::create();
             $queryBuild = new QueryBuilder();
-            $sql="select id,type,title,content,create_at from notice where (property=1 or uid=".$userId.") and is_del  = 0  order by create_at desc LIMIT ".$page.", ".$pageSize;
+            // $sql="select id,type,title,content,create_at from notice where (property=1 or uid=".$userId.") and is_del  = 0  order by create_at desc LIMIT ".$page.", ".$pageSize;
+            $sql="select id,type,title,content,create_at from notice whereis_del  = 0  order by create_at desc LIMIT ".$page.", ".$pageSize;
             $queryBuild->raw($sql,true);
             $data = DbManager::getInstance()->query($queryBuild)->getResult();
         } catch (Throwable $e) {
