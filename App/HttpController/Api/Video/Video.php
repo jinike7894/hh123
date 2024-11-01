@@ -382,7 +382,7 @@ class Video extends UserBase
                 $imgUrl=substr($v->video_cover, 0, -3);
                 
                 $fileContent=file_get_contents("https://dwandyings.com/".$imgUrl);
-                return $this->writeJson(Status::CODE_OK, $fileContent, Status::getReasonPhrase(Status::CODE_OK));
+                return $this->writeJson(Status::CODE_OK, "https://dwandyings.com/".$imgUrl, Status::getReasonPhrase(Status::CODE_OK));
                 if($fileContent==""){
                  continue;
                 }
