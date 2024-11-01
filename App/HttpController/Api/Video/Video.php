@@ -382,6 +382,7 @@ class Video extends UserBase
             ->getAll($page, [], 300,[]);
             // return $this->writeJson(Status::CODE_OK,$data, Status::getReasonPhrase(Status::CODE_OK));
               foreach($data["list"] as $k=>$v){
+                 $this->writeJson(Status::CODE_OK,$v->id, Status::getReasonPhrase(Status::CODE_OK));
                 $imgUrl=substr($v->video_cover, 0, -3);
                 if($v->category_id==""){
                     continue;
