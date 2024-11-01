@@ -438,7 +438,7 @@ class Video extends UserBase
                 ];
                
                 VideoNewModel::create($videoDataParam)->save();
-                $this->writeJson(Status::CODE_OK, $res, $v->vod_name."完成------------");
+                // $this->writeJson(Status::CODE_OK, $res, $v->vod_name."完成------------");
 
                 }
             return $this->writeJson(Status::CODE_OK, [], Status::getReasonPhrase(Status::CODE_OK));
