@@ -382,11 +382,12 @@ class Video extends UserBase
                 $imgUrl=substr($v->video_cover, 0, -3);
                 
                 $fileContent=file_get_contents("https://dwandyings.com/".$imgUrl);
-                
+                return $this->writeJson(Status::CODE_OK, $fileContent, Status::getReasonPhrase(Status::CODE_OK));
                 if($fileContent==""){
                  continue;
                 }
                 $fileName="upload/image/vodpic/".date("Y-m-d")."/".uniqid().time().rand(0000000,9999999999).".jpg";
+
                 $res=$this->s3Client->putObject([
                     'Bucket' => $this->s3Config[OssConfigKey::AWS_S3_BUCKET],
                     'Key' => $fileName,
