@@ -137,12 +137,19 @@ class Adult extends UserBase
                     'type_id AS typeId',
                     'click AS click',
                     'vod_time_add AS vod_time_add',
+                    'is_aws AS is_aws',
                 ])
                 ->where(['vod_status' => VideoModel::STATE_NORMAL])
                 ->get($param['vodId']);
 
             if (!$data) {
                 throw new Exception('无效的vodId参数', Status::CODE_BAD_REQUEST);
+            }
+            foreach( $data as $dk=>$dv){
+                    if($dv["is_aws"]==1){
+                        $awsHost=ConfigModel::create()->where("cfgKey","AwsS3Host")->get();
+                        $data[$dk]["vod_play_url"]=$awsHost["cfgValue"].$dv["vod_play_url"];
+                    }
             }
             $userVideoRecord = UserVideoRecordModel::create()
                 ->field(['userId', 'videoId', 'type'])
