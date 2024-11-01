@@ -149,7 +149,7 @@ class Adult extends UserBase
             foreach($data as $dk=>$dv){
                     if($dv["is_aws"]==1){
                         $awsHost=ConfigNewModel::create()->where("cfgKey","AwsS3Host")->get();
-                        $data[$dk]["vod_play_url"]=$awsHost["cfgValue"].$dv["vod_play_url"];
+                        $data[$dk]["vodPlayUrl"]=$awsHost["cfgValue"].$dv["vodPlayUrl"];
                     }
             }
             $userVideoRecord = UserVideoRecordModel::create()
