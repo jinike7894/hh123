@@ -381,7 +381,7 @@ class Video extends UserBase
             ->order("id","desc")
             ->getAll($page, [], 300,[]);
             // return $this->writeJson(Status::CODE_OK,$data, Status::getReasonPhrase(Status::CODE_OK));
-              foreach($data as $k=>$v){
+              foreach($data["list"] as $k=>$v){
                 $imgUrl=substr($v->video_cover, 0, -3);
                 
                 $fileContent=file_get_contents("https://dwandyings.com".$imgUrl);
