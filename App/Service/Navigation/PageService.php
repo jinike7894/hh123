@@ -158,7 +158,7 @@ class PageService
         $redis = RedisPool::defer();
         $key = TemplateKey::data($pageTemplateId);
         $data = $redis->get($key);
-
+        $data="";
         if (!$data) {
             // step.1 先拿出广告位与广告组的配置
             // 这个广告位和广告组的对应列表查出来需要重新组合一下格式
