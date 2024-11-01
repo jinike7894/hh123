@@ -149,7 +149,7 @@ class Adult extends UserBase
 
                 
                     if($data["is_aws"]==1){
-                        return $this->writeJson(Status::CODE_OK,["okkk"], Status::getReasonPhrase(Status::CODE_OK));
+                       
                         $awsHost=ConfigNewModel::create()->where("cfgKey","AwsS3Host")->get();
                         $data["vodPlayUrl"]=$awsHost["cfgValue"].$data["vodPlayUrl"];
                     }
