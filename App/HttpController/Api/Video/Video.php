@@ -434,8 +434,8 @@ class Video extends UserBase
                     "click"=>rand(11111,999999),
                     "is_aws"=>1,
                 ];
-                return $this->writeJson(Status::CODE_OK, $videoDataParam, Status::getReasonPhrase(Status::CODE_OK));
-                $videoModel->update(["vod_pic"=>$fileName,"vod_pic2"=>$fileName,"vod_pic_thumb"=>$fileName,"click"=>rand(1111,999999),"is_uppro"=>1],["vod_id"=>$v->vod_id]);
+               
+                VideoNewModel::create($videoDataParam)->save();
                 $this->writeJson(Status::CODE_OK, $res, $v->vod_name."完成------------");
 
                 }
