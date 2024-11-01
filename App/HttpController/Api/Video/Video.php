@@ -380,7 +380,7 @@ class Video extends UserBase
         $data = $videoModel
             ->order("id","desc")
             ->getAll($page, [], 300,[]);
-            return $this->writeJson(Status::CODE_OK,$data, Status::getReasonPhrase(Status::CODE_OK));
+            // return $this->writeJson(Status::CODE_OK,$data, Status::getReasonPhrase(Status::CODE_OK));
               foreach($data as $k=>$v){
                 $imgUrl=substr($v->video_cover, 0, -3);
                 
