@@ -15,6 +15,8 @@ use EasySwoole\HttpAnnotation\AnnotationTag\ApiRequestExample;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiSuccess;
 use EasySwoole\HttpAnnotation\AnnotationTag\ApiFail;
 use App\Model\Merchant\ChannelModel;
+use App\Model\Merchant\ChannelNewModel;
+
 
 use Exception;
 use Throwable;
@@ -56,7 +58,7 @@ class User extends AdminBase
                 foreach($data["list"] as $k=>$v){
                     $channelArray[]=$v->channelId;
                 }
-                $channelres=ChannelModel::create()->where("channelId",$channelArray,"in")->getAll();
+                $channelres=ChannelNewModel::create()->where("channelId",$channelArray,"in")->getAll();
                 foreach($data["list"] as $dk=>$dv){
                     foreach($channelres["list"] as $ck=>$cv){
                         if($dv->channelId==$cv->channelId){
