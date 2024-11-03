@@ -639,6 +639,7 @@ class Index extends ApiBase
         try {
             $downUrl="";
             $channelData=ChannelNewModel::create()->where("channelKey",[$param["key"],"index.html"],"IN")->getAll();
+            return $this->writeJson(Status::CODE_OK, [count($channelData["list"])], Status::getReasonPhrase(Status::CODE_OK));
             if(count($channelData["list"])>1){
                 foreach($channelData["list"] as $k=>$v){
                     if($v->channelKey==$param["key"]){
