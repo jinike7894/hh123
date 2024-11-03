@@ -138,7 +138,7 @@ class ShortVideoDy extends UserBase
                 $awsHost=ConfigNewModel::create()->where("cfgKey","AwsS3Host")->get();
                 foreach($data["list"] as $kll=>$dll){
                     if($dll->is_aws==1){
-                        $data["list"][$kll]["vodPlayUrl"]=$awsHost["cfgValue"].$data["vodPlayUrl"];
+                        $data["list"][$kll]["vodPlayUrl"]=$awsHost["cfgValue"].$dll["vodPlayUrl"];
                     }
                 }
             }
