@@ -11,6 +11,7 @@ use App\Model\Merchant\ChannelDownloadModel;
 use App\Model\Merchant\ChannelInstallModel;
 use App\Model\Merchant\ChannelInstallStatisticModel;
 use App\Model\Merchant\ChannelModel;
+use App\Model\Merchant\ChannelNewModel;
 use App\Model\Merchant\MerchantModel;
 use App\Model\Navigation\AdClickStatisticModel;
 use App\Model\Navigation\PageModel;
@@ -163,8 +164,16 @@ class Channel extends AdminBase
                 'coefficient' => floatval($param['coefficient']),
                 'remark' => trim($param['remark']),
                 'status' => intval($param['status']),
+                'androidDownUrl' => trim($param['androidDownUrl']),
+                'iosDownUrl' => trim($param['iosDownUrl']),
             ];
-
+            if(ChannelNewModel::create()->where("channelKey",$data['channelKey'])->get()){
+                return $this->writeJson(
+                    Status::CODE_OK,
+                    [],
+                   "渠道key不能重复，请重新命名"
+                );
+            }
             $result = ChannelService::getInstance()->addChannel($data);
 
         } catch (Throwable $e) {
@@ -209,8 +218,16 @@ class Channel extends AdminBase
                 'coefficient' => floatval($param['coefficient']),
                 'remark' => trim($param['remark']),
                 'status' => intval($param['status']),
+                'androidDownUrl' => trim($param['androidDownUrl']),
+                'iosDownUrl' => trim($param['iosDownUrl']),
             ];
-
+            if(ChannelNewModel::create()->where("channelKey",$data['channelKey'])->get()){
+                return $this->writeJson(
+                    Status::CODE_OK,
+                    [],
+                   "渠道key不能重复，请重新命名"
+                );
+            }
             $result = ChannelService::getInstance()->editChannel($data);
 
         } catch (Throwable $e) {
