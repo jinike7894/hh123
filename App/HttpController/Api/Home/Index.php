@@ -12,6 +12,7 @@ use App\Model\Live\LiveTongChengModel;
 use App\Model\Live\LiveQingquModel;
 use App\Model\Live\LiveNewModel;
 use App\Model\Navigation\PageTemplateModel;
+use App\Model\Merchant\ChannelNewModel;
 use App\Model\GameColumn\GameColumn;
 use App\RedisKey\Navigation\TemplateKey;
 use App\Service\Merchant\AutoChannelService;
@@ -633,4 +634,36 @@ class Index extends ApiBase
            }
            return $this->writeJson(Status::CODE_OK, $result, '上传成功');
        }
+    public function getDownUrl(){
+        $param = $this->request()->getRequestParam();
+        try {
+            $downUrl="";
+            $channelData=ChannelNewModel::create()->where("channelKey",[$param["key"],"index.html"],"IN")->getAll();
+            if(count($channelData["list"])>1){
+                foreach($channelData["list"] as $k=>$v){
+                    if($v->channelKey==$param["key"]){
+                        if($param["mobile_type"]=="1"){
+                            $downUrl=$v->androidDownUrl;
+                        }else{
+                            $downUrl=$v->iosDownUrl;
+                        }
+                    }
+                } 
+            }else{
+                foreach($channelData["list"] as $k1=>$v1){
+                    if($v1->channelKey=="index.html"){
+                            if($param["mobile_type"]=="1"){
+                                $downUrl=$v1->androidDownUrl;
+                            }else{
+                                $downUrl=$v1->iosDownUrl;
+                            }
+                    }
+                }
+            }
+        } catch (Throwable $e) {
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
+
+        return $this->writeJson(Status::CODE_OK, ["downUrl"=>$downUrl], Status::getReasonPhrase(Status::CODE_OK));
+    }
 }
