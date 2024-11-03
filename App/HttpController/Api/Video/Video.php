@@ -497,21 +497,21 @@ class Video extends UserBase
             ],
         ]);
             $queryBuild = new QueryBuilder();
-            $sql="select * from t_movie where video_duration<1200 order by id desc ";
+            $sql="select * from t_movie where video_duration<600 order by id desc limit 500 ";
             $queryBuild->raw($sql,true);
             $data = DbManager::getInstance()->query($queryBuild)->getResult();
             $tag=[
-                "25"=>1, //血腥暴力
-                "27"=>2,//人妖变态
-                "7"=>3,//男同女同
-                "26"=>4,//孕妇淫妻
-                "24"=>18,//少女学生
-                "19"=>19//泄密吃瓜
+                1, //血腥暴力
+                2,//人妖变态
+                3,//男同女同
+                4,//孕妇淫妻
+                18,//少女学生
+                19//泄密吃瓜
             ];
             foreach($data as $k=>$v){
-                if(!$tag[$v->category_id]){
-                    continue;
-                }
+                // if(!$tag[$v->category_id]){
+                //     continue;
+                // }
                 $imgUrl=substr($v["video_cover"], 0, -3);
                 $fileContent=file_get_contents("https://dwandyings.com".$imgUrl);
                 if($fileContent==""){
@@ -538,7 +538,7 @@ class Video extends UserBase
                     "createTime"=>date("Y-m-d H:i:s"),
                     "updateTime"=>date("Y-m-d H:i:s"),
                     "click"=>rand(111,9999),
-                    "shortTag"=>$tag[$v->category_id],
+                    "shortTag"=>$tag[rand(0,5)],
                     "is_recommod"=>rand(0,1),
                     "is_aws"=>1,
                     // "fake_uid"=>rand(8,11),
