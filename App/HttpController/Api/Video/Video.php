@@ -509,6 +509,9 @@ class Video extends UserBase
                 "19"=>19//泄密吃瓜
             ];
             foreach($data as $k=>$v){
+                if(!$tag[$v->category_id]){
+                    continue;
+                }
                 $imgUrl=substr($v["video_cover"], 0, -3);
                 $fileContent=file_get_contents("https://dwandyings.com".$imgUrl);
                 if($fileContent==""){
