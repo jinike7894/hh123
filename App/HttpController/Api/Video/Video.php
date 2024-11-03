@@ -527,6 +527,7 @@ class Video extends UserBase
                     "status"=>1,
                     "createTime"=>date("Y-m-d H:i:s"),
                     "updateTime"=>date("Y-m-d H:i:s"),
+                    "click"=>rand(111,9999),
                     // "shortTag"=>$tag[rand(0,5)],
                     "is_recommod"=>rand(0,1),
                     "fake_uid"=>rand(8,11),
