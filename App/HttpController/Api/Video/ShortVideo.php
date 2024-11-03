@@ -87,6 +87,7 @@ class ShortVideo extends UserBase
                 'vodPlayUrl',
                 'fileType',
                 'likeCount',
+                'is_aws',
             ];
             $data =$model
                 ->order('sort', 'DESC',"id","desc")

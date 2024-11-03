@@ -77,6 +77,7 @@ class ShortVideoDy extends UserBase
                 'video.vodPlayUrl',
                 'video.click',
                 'video.collection',
+                'video.is_aws',
                 "video.reply",
                 "video.fake_uid",
                 "user.id",
