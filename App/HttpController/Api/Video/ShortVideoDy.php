@@ -23,6 +23,7 @@ use EasySwoole\HttpAnnotation\AnnotationTag\Method;
 use EasySwoole\HttpAnnotation\AnnotationTag\Param;
 use EasySwoole\RedisPool\RedisPool;
 use EasySwoole\ORM\DbManager;
+use App\Model\Common\ConfigNewModel;
 use Exception;
 use Throwable;
 
@@ -132,6 +133,14 @@ class ShortVideoDy extends UserBase
             }
             // 短视频分页还是按照正常的顺序分页，但是返回的列表打乱一下顺序保证每次都不一样。
             shuffle($data['list']);
+            if($data["list"]){
+                $awsHost=ConfigNewModel::create()->where("cfgKey","AwsS3Host")->get();
+                foreach($data["list"] as $kll=>$dll){
+                    if($dll->is_aws==1){
+                        $data["vodPlayUrl"]=$awsHost["cfgValue"].$data["vodPlayUrl"];
+                    }
+                }
+            }
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
