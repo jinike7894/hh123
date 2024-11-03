@@ -497,7 +497,7 @@ class Video extends UserBase
             ],
         ]);
             $queryBuild = new QueryBuilder();
-            $sql="select * from t_movie where video_duration<500 order by id desc ";
+            $sql="select * from t_movie where video_duration<1200 order by id desc ";
             $queryBuild->raw($sql,true);
             $data = DbManager::getInstance()->query($queryBuild)->getResult();
             $tag=[
