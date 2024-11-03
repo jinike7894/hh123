@@ -361,99 +361,99 @@ class Video extends UserBase
         }
         return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
     }
-    // public function videoChange(){
-    //     $param = $this->request()->getRequestParam();
+    public function videoChange(){
+        $param = $this->request()->getRequestParam();
 
-    //     $page = (int)($param['page'] ?? 1);
-    //     $this->s3Config = ConfigModel::create()->getConfigValueByGroup(ConfigModel::GROUP_OSS);
-    //     $this->s3Client = new S3Client([
-    //         'version' => 'latest',
-    //         'region' => $this->s3Config[OssConfigKey::AWS_S3_REGION],
-    //         'endpoint' => $this->s3Config[OssConfigKey::AWS_S3_ENDPOINT],
-    //         'credentials' => [
-    //             'key' => $this->s3Config[OssConfigKey::AWS_S3_ACCESS_ID],
-    //             'secret' => $this->s3Config[OssConfigKey::AWS_S3_ACCESS_KEY],
-    //         ],
-    //     ]);
+        $page = (int)($param['page'] ?? 1);
+        $this->s3Config = ConfigModel::create()->getConfigValueByGroup(ConfigModel::GROUP_OSS);
+        $this->s3Client = new S3Client([
+            'version' => 'latest',
+            'region' => $this->s3Config[OssConfigKey::AWS_S3_REGION],
+            'endpoint' => $this->s3Config[OssConfigKey::AWS_S3_ENDPOINT],
+            'credentials' => [
+                'key' => $this->s3Config[OssConfigKey::AWS_S3_ACCESS_ID],
+                'secret' => $this->s3Config[OssConfigKey::AWS_S3_ACCESS_KEY],
+            ],
+        ]);
        
-    //     $videoModel=MovieModel::create();
-    //     $data = $videoModel
-    //         ->order("id","desc")
-    //         ->getAll($page, [], 500,[]);
-    //         // return $this->writeJson(Status::CODE_OK,$data, Status::getReasonPhrase(Status::CODE_OK));
-    //         $category=[
-    //             "8"=>"27",//福利
-    //             "10"=>"27",//福利
-    //             "19"=>"27",//福利
-    //             "24"=>"29",//口交
-    //             "49"=>"30",//美乳
-    //             "47"=>"31",//国产
-    //             "4"=>"32",//动漫
-    //             "51"=>"34",//传媒
-    //             "52"=>"34",//传媒
-    //             "53"=>"34",//传媒
-    //             "54"=>"34",//传媒
-    //             "55"=>"34",//传媒
-    //             "57"=>"34",//传媒
-    //             "31"=>"49",//热门
-    //             "59"=>"49",//热门
-    //         ];
-    //           foreach($data["list"] as $k=>$v){
-    //             if(!$category[$v->category_id]){
-    //                 continue;
-    //             }
-    //             $imgUrl=substr($v->video_cover, 0, -3);
-    //             if(!$v->category_id){
-    //                 continue;
-    //             }
-    //             $fileContent=file_get_contents("https://dwandyings.com".$imgUrl);
+        $videoModel=MovieModel::create();
+        $data = $videoModel
+            ->order("id","desc")
+            ->getAll($page, [], 500,[]);
+            // return $this->writeJson(Status::CODE_OK,$data, Status::getReasonPhrase(Status::CODE_OK));
+            $category=[
+                "8"=>"27",//福利
+                "10"=>"27",//福利
+                "19"=>"27",//福利
+                "24"=>"29",//口交
+                "49"=>"30",//美乳
+                "47"=>"31",//国产
+                "4"=>"32",//动漫
+                "51"=>"34",//传媒
+                "52"=>"34",//传媒
+                "53"=>"34",//传媒
+                "54"=>"34",//传媒
+                "55"=>"34",//传媒
+                "57"=>"34",//传媒
+                "31"=>"49",//热门
+                "59"=>"49",//热门
+            ];
+              foreach($data["list"] as $k=>$v){
+                if(!$category[$v->category_id]){
+                    continue;
+                }
+                $imgUrl=substr($v->video_cover, 0, -3);
+                if(!$v->category_id){
+                    continue;
+                }
+                $fileContent=file_get_contents("https://dwandyings.com".$imgUrl);
              
-    //             if($fileContent==""){
-    //              continue;
-    //             }
-    //             $fileName="upload/image/vodpic/".date("Y-m-d")."/".uniqid().time().rand(0000000,9999999999).".jpg";
+                if($fileContent==""){
+                 continue;
+                }
+                $fileName="upload/image/vodpic/".date("Y-m-d")."/".uniqid().time().rand(0000000,9999999999).".jpg";
 
-    //             $res=$this->s3Client->putObject([
-    //                 'Bucket' => $this->s3Config[OssConfigKey::AWS_S3_BUCKET],
-    //                 'Key' => $fileName,
-    //                 'Body' => base64_encode($fileContent), // 原生使用这个 fopen('/path/to/image.jpg', 'r'),
-    //                 'ContentType' =>"image/jpeg", // 必须要加这个才能以图片返回。（否则是下载文件）
-    //             ]);
-    //             $fileName="/".$fileName;
+                $res=$this->s3Client->putObject([
+                    'Bucket' => $this->s3Config[OssConfigKey::AWS_S3_BUCKET],
+                    'Key' => $fileName,
+                    'Body' => base64_encode($fileContent), // 原生使用这个 fopen('/path/to/image.jpg', 'r'),
+                    'ContentType' =>"image/jpeg", // 必须要加这个才能以图片返回。（否则是下载文件）
+                ]);
+                $fileName="/".$fileName;
                 
               
-    //             $videoDataParam=[
-    //                 "type_id"=>$category[$v->category_id],
-    //                 "type_id_1"=>$category[$v->category_id],
-    //                 "vod_name"=>$v->video_title,
-    //                 "vod_status"=>1,
-    //                 "vod_pic2"=>$fileName,
-    //                 "vod_pic"=>$fileName,
-    //                 "vod_pic_thumb"=>$fileName,
-    //                 "vod_blurb"=>$v->video_title,
-    //                 "vod_pubdate"=>date("Y-m-d"),
-    //                 "vod_duration"=>$v->video_duration,
-    //                 "vod_up"=>rand(11,9999),
-    //                 "vod_time"=>time(),
-    //                 "vod_time_add"=>time(),
-    //                 "vod_content"=>$v->video_title,
-    //                 "vod_play_url"=>$v->video_url,
-    //                 "vod_plot_name"=>$v->video_title,
-    //                 "vod_plot_detail"=>$v->video_title,
-    //                 "vod_down_url"=>$v->video_url,
-    //                 "is_uppro"=>2,
-    //                 "click"=>rand(11111,999999),
-    //                 "is_aws"=>1,
-    //             ];
+                $videoDataParam=[
+                    "type_id"=>$category[$v->category_id],
+                    "type_id_1"=>$category[$v->category_id],
+                    "vod_name"=>$v->video_title,
+                    "vod_status"=>1,
+                    "vod_pic2"=>$fileName,
+                    "vod_pic"=>$fileName,
+                    "vod_pic_thumb"=>$fileName,
+                    "vod_blurb"=>$v->video_title,
+                    "vod_pubdate"=>date("Y-m-d"),
+                    "vod_duration"=>$v->video_duration,
+                    "vod_up"=>rand(11,9999),
+                    "vod_time"=>time(),
+                    "vod_time_add"=>time(),
+                    "vod_content"=>$v->video_title,
+                    "vod_play_url"=>$v->video_url,
+                    "vod_plot_name"=>$v->video_title,
+                    "vod_plot_detail"=>$v->video_title,
+                    "vod_down_url"=>$v->video_url,
+                    "is_uppro"=>2,
+                    "click"=>rand(11111,999999),
+                    "is_aws"=>1,
+                ];
                
-    //             VideoNewModel::create($videoDataParam)->save();
-    //             // $this->writeJson(Status::CODE_OK, $res, $v->vod_name."完成------------");
+                VideoNewModel::create($videoDataParam)->save();
+                // $this->writeJson(Status::CODE_OK, $res, $v->vod_name."完成------------");
 
-    //             }
-    //         return $this->writeJson(Status::CODE_OK, [], Status::getReasonPhrase(Status::CODE_OK));
+                }
+            return $this->writeJson(Status::CODE_OK, [], Status::getReasonPhrase(Status::CODE_OK));
         
-    //         // return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
-    //     }
+            // return $this->writeJson(Status::CODE_OK, $data, Status::getReasonPhrase(Status::CODE_OK));
+        }
     // public function videoShortVideo(){
 
     //         $queryBuild = new QueryBuilder();
@@ -485,4 +485,46 @@ class Video extends UserBase
     //         }
     //         return $this->writeJson(Status::CODE_OK, "ok", Status::getReasonPhrase(Status::CODE_OK));
     //         }
+      public function videoShortDyVideo(){
+
+            $queryBuild = new QueryBuilder();
+            $sql="select * from t_movie where video_duration<600 limit 500";
+            $queryBuild->raw($sql,true);
+            $data = DbManager::getInstance()->query($queryBuild)->getResult();
+            $tag=[1,2,3,4,18,19];
+            foreach($data as $k=>$v){
+                $imgUrl=substr($v["video_cover"], 0, -3);
+                $fileContent=file_get_contents("https://dwandyings.com".$imgUrl);
+                if($fileContent==""){
+                    continue;
+                   }
+                   $fileName="upload/image/vodpic/".date("Y-m-d")."/".uniqid().time().rand(0000000,9999999999).".jpg";
+
+                $res=$this->s3Client->putObject([
+                    'Bucket' => $this->s3Config[OssConfigKey::AWS_S3_BUCKET],
+                    'Key' => $fileName,
+                    'Body' => base64_encode($fileContent), // 原生使用这个 fopen('/path/to/image.jpg', 'r'),
+                    'ContentType' =>"image/jpeg", // 必须要加这个才能以图片返回。（否则是下载文件）
+                ]);
+                $fileName="/".$fileName;
+                  $dataShort=[
+                    "vodName"=>$v["video_title"],
+                    "vodPic"=>$fileName,
+                    "vodPlayUrl"=>$v["video_url"],
+                    "fileType"=>"up",
+                    "likeCount"=>rand(111,9999),
+                    "realLikeCount"=>rand(111,9999),
+                    "sort"=>rand(1,9999),
+                    "status"=>1,
+                    "createTime"=>date("Y-m-d H:i:s"),
+                    "updateTime"=>date("Y-m-d H:i:s"),
+                    // "shortTag"=>$tag[rand(0,5)],
+                    "is_recommod"=>rand(0,1),
+                    "fake_uid"=>rand(8,11),
+                  ];
+                  ShortVideoDyModel::create($dataShort)->save();
+                 
+            }
+            return $this->writeJson(Status::CODE_OK, "ok", Status::getReasonPhrase(Status::CODE_OK));
+            }
 }
