@@ -497,10 +497,17 @@ class Video extends UserBase
             ],
         ]);
             $queryBuild = new QueryBuilder();
-            $sql="select * from t_movie where video_duration<600 limit 500";
+            $sql="select * from t_movie where video_duration<500 order by id limit 500 ";
             $queryBuild->raw($sql,true);
             $data = DbManager::getInstance()->query($queryBuild)->getResult();
-            $tag=[1,2,3,4,18,19];
+            $tag=[
+                "25"=>1, //血腥暴力
+                "27"=>2,//人妖变态
+                "7"=>3,//男同女同
+                "26"=>4,//孕妇淫妻
+                "24"=>18,//少女学生
+                "19"=>19//泄密吃瓜
+            ];
             foreach($data as $k=>$v){
                 $imgUrl=substr($v["video_cover"], 0, -3);
                 $fileContent=file_get_contents("https://dwandyings.com".$imgUrl);
@@ -528,9 +535,10 @@ class Video extends UserBase
                     "createTime"=>date("Y-m-d H:i:s"),
                     "updateTime"=>date("Y-m-d H:i:s"),
                     "click"=>rand(111,9999),
-                    // "shortTag"=>$tag[rand(0,5)],
+                    "shortTag"=>$tag[$v->category_id],
                     "is_recommod"=>rand(0,1),
-                    "fake_uid"=>rand(8,11),
+                    "is_aws"=>1,
+                    // "fake_uid"=>rand(8,11),
                   ];
                   ShortVideoDyModel::create($dataShort)->save();
                  
