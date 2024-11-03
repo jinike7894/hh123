@@ -294,6 +294,7 @@ class AdService
                 DbManager::getInstance()->startTransactionWithCount();
 
                 $channelInstall = ChannelInstallModel::create()->where(['deviceId' => $param['deviceId']])->get();
+                
                 if ($channelInstall && $channelInstall['createDate'] < date('Y-m-d')) {
                     $retained = true;
                     // $duplicate['retainedClickCount'] = QueryBuilder::inc();

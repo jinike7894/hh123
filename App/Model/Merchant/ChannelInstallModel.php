@@ -42,6 +42,7 @@ class ChannelInstallModel extends BaseModel
     const SOURCE_APP_LIST = [
         self::SOURCE_ANDROID,
         self::SOURCE_IOS,
+        self::SOURCE_IOS_BOOKMARK,
     ];
 
     public function parseKeywordToWhere($keyword)
