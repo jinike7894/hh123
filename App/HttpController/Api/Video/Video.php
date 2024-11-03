@@ -486,7 +486,16 @@ class Video extends UserBase
     //         return $this->writeJson(Status::CODE_OK, "ok", Status::getReasonPhrase(Status::CODE_OK));
     //         }
       public function videoShortDyVideo(){
-
+        $this->s3Config = ConfigModel::create()->getConfigValueByGroup(ConfigModel::GROUP_OSS);
+        $this->s3Client = new S3Client([
+            'version' => 'latest',
+            'region' => $this->s3Config[OssConfigKey::AWS_S3_REGION],
+            'endpoint' => $this->s3Config[OssConfigKey::AWS_S3_ENDPOINT],
+            'credentials' => [
+                'key' => $this->s3Config[OssConfigKey::AWS_S3_ACCESS_ID],
+                'secret' => $this->s3Config[OssConfigKey::AWS_S3_ACCESS_KEY],
+            ],
+        ]);
             $queryBuild = new QueryBuilder();
             $sql="select * from t_movie where video_duration<600 limit 500";
             $queryBuild->raw($sql,true);
