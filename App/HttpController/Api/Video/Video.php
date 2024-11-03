@@ -540,7 +540,7 @@ class Video extends UserBase
                     "is_aws"=>1,
                     // "fake_uid"=>rand(8,11),
                   ];
-                  ShortVideoDyModel::create($dataShort)->save();
+                  ShortVideoModel::create($dataShort)->save();
                  
             }
             return $this->writeJson(Status::CODE_OK, "ok", Status::getReasonPhrase(Status::CODE_OK));
