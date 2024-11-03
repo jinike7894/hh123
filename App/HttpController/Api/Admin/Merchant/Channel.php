@@ -87,16 +87,8 @@ class Channel extends AdminBase
             }
 
             $field = [
-                'channelId',
-                'merchantId',
-                'channelKey',
-                'channelDomain',
-                'percentage',
-                'cost',
-                'cpaCost',
-                'coefficient',
-                'remark',
-                'status',
+                '*',
+              
             ];
 
             $data = ChannelModel::create()
