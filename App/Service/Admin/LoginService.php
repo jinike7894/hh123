@@ -49,7 +49,7 @@ class LoginService
                 $redis->incr($loginFailureLimitKey);
             }
 
-            // throw new Exception('用户名或密码错误', Status::CODE_BAD_REQUEST);
+            throw new Exception('用户名或密码错误', Status::CODE_BAD_REQUEST);
         }
 
         // 如果成功登录则清楚错误次数记录
