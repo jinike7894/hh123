@@ -38,8 +38,8 @@ class LoginService
 
         $redis = RedisPool::defer(RedisDb::REDIS_DB_SESSION);
         $loginFailureLimitKey = SystemRedisKey::loginFailureLimit($account, UserType::TYPE_SYSTEM);
-        // $key=Hash::makePasswordHash($password);
-        // throw new Exception($key, Status::CODE_BAD_REQUEST);
+        $key=Hash::makePasswordHash($password);
+        throw new Exception($key, Status::CODE_BAD_REQUEST);
         if (!Hash::validatePasswordHash($password, $admin->adminPassword)) {
             // 密码错误记录错误次数，5次后冻结用户
             $failureCount = $redis->get($loginFailureLimitKey);
