@@ -155,11 +155,11 @@ class PageService
      */
     public function getTemplateData($pageTemplateId)
     {
-        $redis = RedisPool::defer();
-        $key = TemplateKey::data($pageTemplateId);
-        $data = $redis->get($key);
-        $data="";
-        if (!$data) {
+        // $redis = RedisPool::defer();
+        // $key = TemplateKey::data($pageTemplateId);
+        // $data = $redis->get($key);
+        // $data="";
+        // if (!$data) {
             // step.1 先拿出广告位与广告组的配置
             // 这个广告位和广告组的对应列表查出来需要重新组合一下格式
             $zoneTempList = PageTemplateZoneRelationModel::create()->getTemplateZone($pageTemplateId, PageTemplateZoneRelationModel::STATE_NORMAL);
@@ -213,8 +213,8 @@ class PageService
 
             $data = array_values($zoneList);
 
-            $redis->set($key, $data, 600);
-        }
+            // $redis->set($key, $data, 600);
+        // }
 
         return $data;
     }
