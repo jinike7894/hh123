@@ -94,7 +94,7 @@ class Upload extends AdminBase
             }
             $url=$AwsS3Host.$url;
         }
-        return $url;
+   
         $fileData=file_get_contents($url);
     } catch (\Throwable $e) {
         return "";
