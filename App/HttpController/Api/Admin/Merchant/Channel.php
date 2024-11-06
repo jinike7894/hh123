@@ -214,11 +214,11 @@ class Channel extends AdminBase
                 'iosDownUrl' => trim($param['iosDownUrl']),
             ];
             if(ChannelNewModel::create()->where("channelKey",$data['channelKey'])->where("channelId",$param['channelId'],'<>')->get()){
-                return $this->writeJson(
-                    Status::CODE_OK,
-                    [],
-                    DbManager::getInstance()->getLastQuery()->getLastQuery()
-                );
+                // return $this->writeJson(
+                //     Status::CODE_OK,
+                //     [],
+                //     DbManager::getInstance()->getLastQuery()->getLastQuery()
+                // );
                 return $this->writeJson(
                     Status::CODE_OK,
                     [],
