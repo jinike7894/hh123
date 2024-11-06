@@ -217,6 +217,11 @@ class Channel extends AdminBase
                 return $this->writeJson(
                     Status::CODE_OK,
                     [],
+                    DbManager::getInstance()->getLastQuery()->getLastQuery()
+                );
+                return $this->writeJson(
+                    Status::CODE_OK,
+                    [],
                    "渠道key不能重复，请重新命名"
                 );
             }
