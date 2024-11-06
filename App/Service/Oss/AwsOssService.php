@@ -92,6 +92,7 @@ class AwsOssService
             //'Key' => $fileName,
             'Body' => base64_encode($uploadFile->getStream()), // 原生使用这个 fopen('/path/to/image.jpg', 'r'),
             'ContentType' => $uploadFile->getClientMediaType(), // 必须要加这个才能以图片返回。（否则是下载文件）
+            'ACL'=>"public-read",
         ]);
 
         return [
@@ -126,6 +127,7 @@ class AwsOssService
             //'Key' => $fileName,
             'Body' => base64_encode($uploadFile->getStream()), // 原生使用这个 fopen('/path/to/image.jpg', 'r'),
             'ContentType' => $uploadFile->getClientMediaType(), // 必须要加这个才能以图片返回。（否则是下载文件）
+            'ACL'=>"public-read",
         ]);
         // return $this->writeJson(Status::CODE_OK, [
         //     'Bucket' => $this->s3Config[OssConfigKey::AWS_S3_BUCKET],
