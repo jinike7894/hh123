@@ -116,11 +116,11 @@ class Upload extends AdminBase
    public function  getUrlImageAd($url){
     try {
         if(!$this->isValidUrl($url)){
-            $config=ConfigModel::create()->where("cfgKey",["AwsS3HostAd","AwsS3Bucket"],"in")->all();
+            $config=ConfigModel::create()->where("cfgKey",["AwsS3Host","AwsS3Bucket"],"in")->all();
             $AwsS3Host="";
             $AwsS3Bucket="";
             foreach($config as $k=>$v){
-                if($v["cfgKey"]=="AwsS3HostAd"){
+                if($v["cfgKey"]=="AwsS3Host"){
                     $AwsS3Host=$v["cfgValue"];
                 }
  
@@ -131,11 +131,11 @@ class Upload extends AdminBase
             $url=$AwsS3Host.$url;
         }
    
-        // $fileData=file_get_contents($url);
+        $fileData=file_get_contents($url);
     } catch (\Throwable $e) {
         return "";
     }
-        return  $url;
+        return "data:image/jpeg;base64,".$fileData;
    }
    public function isValidUrl($url) {
         $pattern = '/\b(?:https?|ftp):\/\/[a-z0-9-]+(\.[a-z0-9-]+)+\b(?:\/[^\s]*)?/i';
