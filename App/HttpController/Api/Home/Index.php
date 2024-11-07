@@ -138,8 +138,9 @@ class Index extends ApiBase
             ->order("relation.sort","desc")
             ->all();
             if($res){
+                $AwsS3Bucket=ConfigModel::create()->where(["cfgKey"=>"AwsS3Bucket"])->get();
                 foreach($res as $k=>$v){
-                    $this->writeJson(Status::CODE_OK, $v, Status::getReasonPhrase(Status::CODE_OK));
+                    $res[$k]["imageUrl"]=$AwsS3Bucket["cfgValue"]. $v["imageUrl"];
                 }
             }
             //存入缓存
