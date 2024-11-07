@@ -82,8 +82,14 @@ class Banner extends ApiBase
             ->where(["relation.adGroupId"=>81,"banner.is_del"=>0,"banner.status"=>1])
             ->order("banner.sort","desc")
             ->all();
+            if($res){
+                $AwsS3Bucket=ConfigModel::create()->where(["cfgKey"=>"AwsS3Host"])->get();
+                foreach($res as $k=>$v){
+                    $res[$k]["img_src"]=$AwsS3Bucket["cfgValue"]. $v["img_src"];
+                }
+            }
             //存入缓存
-            $redis->set("Ad:Banner",$res,60*5);
+            // $redis->set("Ad:Banner",$res,60*5);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }

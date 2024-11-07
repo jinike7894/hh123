@@ -166,8 +166,14 @@ class Index extends ApiBase
             ->where(["relation.adGroupId"=>78,"tongcheng.status"=>1])
             ->order("tongcheng.sort","desc")
             ->all();
+            if($res){
+                $AwsS3Bucket=ConfigModel::create()->where(["cfgKey"=>"AwsS3Host"])->get();
+                foreach($res as $k=>$v){
+                    $res[$k]["cover"]=$AwsS3Bucket["cfgValue"]. $v["cover"];
+                }
+            }
             //存入缓存
-            $redis->set("Ad:jiaoyou",$res,60*5);
+            // $redis->set("Ad:jiaoyou",$res,60*5);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
@@ -189,8 +195,14 @@ class Index extends ApiBase
             ->where(["relation.adGroupId"=>79,"live.status"=>1])
             ->order("live.sort","desc")
             ->all();
+            if($res){
+                $AwsS3Bucket=ConfigModel::create()->where(["cfgKey"=>"AwsS3Host"])->get();
+                foreach($res as $k=>$v){
+                    $res[$k]["cover"]=$AwsS3Bucket["cfgValue"]. $v["cover"];
+                }
+            }
             //存入缓存
-            $redis->set("Ad:live",$res,60*5);
+            // $redis->set("Ad:live",$res,60*5);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
@@ -212,8 +224,14 @@ class Index extends ApiBase
             ->where(["relation.adGroupId"=>80,"qingqu.status"=>1])
             ->order("qingqu.sort","desc")
             ->all();
+            if($res){
+                $AwsS3Bucket=ConfigModel::create()->where(["cfgKey"=>"AwsS3Host"])->get();
+                foreach($res as $k=>$v){
+                    $res[$k]["cover"]=$AwsS3Bucket["cfgValue"]. $v["cover"];
+                }
+            }
             //存入缓存
-            $redis->set("Ad:qingqu",$res,60*5);
+            // $redis->set("Ad:qingqu",$res,60*5);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
