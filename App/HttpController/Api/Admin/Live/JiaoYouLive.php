@@ -54,7 +54,7 @@ class JiaoYouLive extends AdminBase
                 if($data["list"]){
                     foreach($data["list"] as $k=>$v){
                         $imgData=new uploadNew();
-                        $data["list"][$k]->cover=$imgData->getUrlImage($v["cover"]);
+                        $data["list"][$k]->cover=$imgData->getUrlImageAd($v["cover"]);
                     }
                 }
         } catch (Throwable $e) {
@@ -74,7 +74,7 @@ class JiaoYouLive extends AdminBase
                     'status' => [LiveTongChengModel::STATE_DELETED, '>'],
                 ]);
                 $imgData=new uploadNew();
-                $vipGoods["img_show"]=$imgData->getUrlImage($vipGoods["cover"]);
+                $vipGoods["img_show"]=$imgData->getUrlImageAd($vipGoods["cover"]);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }

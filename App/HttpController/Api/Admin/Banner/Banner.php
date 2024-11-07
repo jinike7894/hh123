@@ -54,7 +54,7 @@ class Banner extends AdminBase
                  foreach($data["list"] as $k=>$v){
                     $data["list"][$k]->create_at=date("Y-m-d H:i:s",$v->create_at);
                     $imgData=new uploadNew();
-                    $data["list"][$k]->img_src=$imgData->getUrlImage($v["img_src"]);
+                    $data["list"][$k]->img_src=$imgData->getUrlImageAd($v["img_src"]);
                  }
 
             }
@@ -108,7 +108,7 @@ class Banner extends AdminBase
                 ]);
                 $imgData=new uploadNew();
                 $res["fileType"]="up";
-                $res["img_show"]=$imgData->getUrlImage($res["img_src"]);
+                $res["img_show"]=$imgData->getUrlImageAd($res["img_src"]);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
