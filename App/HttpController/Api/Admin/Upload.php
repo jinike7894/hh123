@@ -50,7 +50,18 @@ class Upload extends AdminBase
 
         return $this->writeJson(Status::CODE_OK, $result, '上传成功');
     }
+    public function image_ad()
+    {
+        $param = $this->request()->getRequestParam();
+        try {
+            //$result = LocalOssService::getInstance()->uploadImage($this->request(), $param['type']);
+            $result = AwsOssService::getInstance()->uploadImage_ad($this->request(), $param['type']);
+        } catch (\Throwable $e) {
+            return $this->writeJson($e->getCode(), [], $e->getMessage());
+        }
 
+        return $this->writeJson(Status::CODE_OK, $result, '上传成功');
+    }
    public function getImage(){
     $param = $this->request()->getRequestParam();
     try {
