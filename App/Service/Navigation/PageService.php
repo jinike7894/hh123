@@ -113,7 +113,7 @@ class PageService
         $config = ConfigModel::create()->getConfigValueList(array_merge(
             WebsiteConfigKey::ALL_KEY,
             AppConfigKey::ALL_KEY,
-            [OssConfigKey::AWS_S3_HOST]
+            [OssConfigKey::AWS_S3_HOST],
         ));
 
         // 2023-10-26 将统计代码扣量的配置写到了每一个页面中

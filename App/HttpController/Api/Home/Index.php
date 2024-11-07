@@ -97,6 +97,10 @@ class Index extends ApiBase
 
         return $this->writeJson(Status::CODE_OK, $result, Status::getReasonPhrase(Status::CODE_OK));
     }
+    public function getAdHost(){
+        $config=ConfigModel::create()->where("cfgKey","AwsS3HostAd")->get();
+        return $this->writeJson(Status::CODE_OK, ["host"=>$config["cfgValue"]], Status::getReasonPhrase(Status::CODE_OK));
+    }
     //文字广告
     public function fontAd(){
         try {
