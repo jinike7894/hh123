@@ -112,11 +112,7 @@ class Index extends ApiBase
             ->where(["relation.adGroupId"=>76,"ad.status"=>1])
             ->order("relation.sort","desc")
             ->all();
-            if($res["list"]){
-                foreach($res["list"] as $k=>$v){
-                    $this->writeJson(Status::CODE_OK, $v, Status::getReasonPhrase(Status::CODE_OK));
-                }
-            }
+          
            
             //存入缓存
             // $redis->set("Ad:Font",$res,60*5);
@@ -141,8 +137,13 @@ class Index extends ApiBase
             ->where(["relation.adGroupId"=>77,"ad.status"=>1])
             ->order("relation.sort","desc")
             ->all();
+            if($res["list"]){
+                foreach($res["list"] as $k=>$v){
+                    $this->writeJson(Status::CODE_OK, $v, Status::getReasonPhrase(Status::CODE_OK));
+                }
+            }
             //存入缓存
-            $redis->set("Ad:Money",$res,60*5);
+            // $redis->set("Ad:Money",$res,60*5);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
