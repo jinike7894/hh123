@@ -11,7 +11,7 @@ class OssConfigKey
     const AWS_S3_REGION = 'AwsS3Region'; // 地区
     const AWS_S3_BUCKET = 'AwsS3Bucket'; // 桶名
     const AWS_S3_HOST = 'AwsS3Host'; // 域名
-
+    const AWS_S3_HOST_AD = 'AwsS3HostAd'; // 域名
     const ALL_KEY = [
         self::AWS_S3_ENABLED,
         self::AWS_S3_ACCESS_ID,
@@ -20,5 +20,6 @@ class OssConfigKey
         self::AWS_S3_REGION,
         self::AWS_S3_BUCKET,
         self::AWS_S3_HOST,
+        self::AWS_S3_HOST_AD
     ];
 }
