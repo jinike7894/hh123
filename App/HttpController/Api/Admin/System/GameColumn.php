@@ -29,7 +29,7 @@ class GameColumn extends AdminBase
                 ->where(["id"=>1])
                 ->get();
                 $imgData=new uploadNew();
-                $data["img_show"]=$imgData->getUrlImage($data["img"]);
+                $data["img_show"]=$imgData->getUrlImageAd($data["img"]);
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
