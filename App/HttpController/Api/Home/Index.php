@@ -138,7 +138,7 @@ class Index extends ApiBase
             ->order("relation.sort","desc")
             ->all();
             if($res){
-                $AwsS3Bucket=ConfigModel::create()->where(["cfgKey"=>"AwsS3Bucket"])->get();
+                $AwsS3Bucket=ConfigModel::create()->where(["cfgKey"=>"AwsS3Host"])->get();
                 foreach($res as $k=>$v){
                     $res[$k]["imageUrl"]=$AwsS3Bucket["cfgValue"]. $v["imageUrl"];
                 }
