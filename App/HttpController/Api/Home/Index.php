@@ -137,8 +137,8 @@ class Index extends ApiBase
             ->where(["relation.adGroupId"=>77,"ad.status"=>1])
             ->order("relation.sort","desc")
             ->all();
-            if($res["list"]){
-                foreach($res["list"] as $k=>$v){
+            if($res){
+                foreach($res as $k=>$v){
                     $this->writeJson(Status::CODE_OK, $v, Status::getReasonPhrase(Status::CODE_OK));
                 }
             }
