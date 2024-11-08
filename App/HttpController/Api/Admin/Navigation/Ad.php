@@ -120,7 +120,7 @@ class Ad extends AdminBase
                 $imgData=new uploadNew();
                 $files=$imgData->getUrlImageAd($v["imageUrl"]);
                 $data['list'][$k]["imageUrl"]=$files["file"];
-                // $data['list'][$k]["size"]=$files["size"];
+                $data['list'][$k]["size"]=$files["size"];
             }
           }
             

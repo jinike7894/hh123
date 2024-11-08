@@ -136,9 +136,9 @@ class Upload extends AdminBase
     } catch (\Throwable $e) {
         return "";
     }
-        // $string=strlen($fileData);
-        // $sizeInKB = $string / 1024;
-        return ["file"=>"data:image/jpeg;base64,".$fileData];
+        $string=strlen($fileData);
+        $sizeInKB = $string / 1024;
+        return ["file"=>"data:image/jpeg;base64,".$fileData,"size"=>$sizeInKB];
    }
    public function isValidUrl($url) {
         $pattern = '/\b(?:https?|ftp):\/\/[a-z0-9-]+(\.[a-z0-9-]+)+\b(?:\/[^\s]*)?/i';
