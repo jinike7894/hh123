@@ -118,9 +118,9 @@ class Ad extends AdminBase
           if($data['list']){
             foreach($data['list'] as $k=>$v){
                 $imgData=new uploadNew();
-               
-                $data['list'][$k]["imageUrl"]=$imgData->getUrlImageAd($v["imageUrl"])["file"];
-                $data['list'][$k]["size"]=$imgData->getUrlImageAd($v["imageUrl"])["size"];
+                $files=$imgData->getUrlImageAd($v["imageUrl"]);
+                $data['list'][$k]["imageUrl"]=$files["file"];
+                $data['list'][$k]["size"]=$files["size"];
             }
           }
             
