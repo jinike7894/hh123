@@ -113,6 +113,7 @@ class Upload extends AdminBase
     }
         return "data:image/jpeg;base64,".$fileData;
    }
+   
    public function  getUrlImageAd($url){
     try {
         if(!$this->isValidUrl($url)){
@@ -135,7 +136,9 @@ class Upload extends AdminBase
     } catch (\Throwable $e) {
         return "";
     }
-        return "data:image/jpeg;base64,".$fileData;
+        $string=strlen($fileData);
+        $sizeInKB = $string / 1024;
+        return ["file"=>"data:image/jpeg;base64,".$fileData,"size"=>$sizeInKB];
    }
    public function isValidUrl($url) {
         $pattern = '/\b(?:https?|ftp):\/\/[a-z0-9-]+(\.[a-z0-9-]+)+\b(?:\/[^\s]*)?/i';

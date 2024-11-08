@@ -119,7 +119,8 @@ class Ad extends AdminBase
             foreach($data['list'] as $k=>$v){
                 $imgData=new uploadNew();
                
-                $data['list'][$k]["imageUrl"]=$imgData->getUrlImageAd($v["imageUrl"]);
+                $data['list'][$k]["imageUrl"]=$imgData->getUrlImageAd($v["imageUrl"])["file"];
+                $data['list'][$k]["imageUrl"]=$imgData->getUrlImageAd($v["imageUrl"])["size"];
             }
           }
             
@@ -154,7 +155,7 @@ class Ad extends AdminBase
             $data['adGroup'] = $ad->adGroup;
             $data['extension'] = json_decode($data['extension'], true);
             $imgData=new uploadNew();
-            $data["img_show"]=$imgData->getUrlImageAd($data["imageUrl"]);   
+            $data["img_show"]=$imgData->getUrlImage($data["imageUrl"]);   
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
