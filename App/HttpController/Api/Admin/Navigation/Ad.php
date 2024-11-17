@@ -206,7 +206,7 @@ class Ad extends AdminBase
                 'cost' => floatval($param['cost']),
                 'remark' => trim($param['remark']),
                 'status' => intval($param['status']),
-                'transit_img' => intval($param['transit_img']),//中转页图片路径
+                'transit_img' => trim($param['transit_img']),//中转页图片路径
             ];
 
             $this->verifyAdParamStep1($param);
@@ -269,7 +269,7 @@ class Ad extends AdminBase
                 'cost' => floatval($param['cost']),
                 'remark' => trim($param['remark']),
                 'status' => intval($param['status']),
-                'transit_img' => intval($param['transit_img']),//中转页图片路径
+                'transit_img' => trim($param['transit_img']),//中转页图片路径
             ];
 
             $this->verifyAdParamStep1($param);
