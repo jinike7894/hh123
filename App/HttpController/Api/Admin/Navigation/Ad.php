@@ -157,6 +157,7 @@ class Ad extends AdminBase
             $data['extension'] = json_decode($data['extension'], true);
             $imgData=new uploadNew();
             $data["img_show"]=$imgData->getUrlImage($data["imageUrl"]);   
+            $data["transit_img_show"]=$imgData->getUrlImage($data["transit_img"]);   
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());
         }
