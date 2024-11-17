@@ -122,7 +122,7 @@ order by adGroupId ASC, sort ASC, adId ASC;*/
         return $this->alias('a')
             //->field(['a.adId', 'agr.adGroupId', 'agr.sort', 'a.adName', 'a.fileType', 'a.imageUrl', 'a.extension'])
             // 2023-07-27 把url跳转链接直接返回给前端，使点击后直接跳转避免被拦截。
-            ->field(['a.adId', 'agr.adGroupId', 'agr.sort', 'a.adName', 'a.fileType', 'a.imageUrl', 'a.imageUrl2', 'a.url', 'a.extension'])
+            ->field(['a.adId', 'agr.adGroupId', 'agr.sort', 'a.adName', 'a.fileType', 'a.imageUrl', 'a.imageUrl2', 'a.url', 'a.extension','a.transit_img'])
             ->join(AdGroupRelationModel::create()->getTableName() . ' AS agr', 'a.adId = agr.adId', 'LEFT')
             ->where([
                 'adGroupId' => [$groupIdList, 'IN'],
