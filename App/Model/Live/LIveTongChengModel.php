@@ -30,7 +30,7 @@ class LiveTongChengModel extends BaseModel implements CommonStatusInterface
     protected $createTime = 'createTime';
     protected $updateTime = 'updateTime';
 
-    
+
     const FILE_TYPE_UP = 'up';
     const FILE_TYPE_URL = 'url';
     const FILE_TYPE_AWS_S3 = 'awsS3';
