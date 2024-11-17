@@ -84,14 +84,14 @@ class PageViewService
                 $isCounted = $this->getStatisticTemporaryIpHash($date, $pageId, $ipLong);
 
                 // 如果已经被统计过了，则只增加pv
-                $duplicate = ['pv' => QueryBuilder::inc()];
+                // $duplicate = ['pv' => QueryBuilder::inc()];
                 if (!$isCounted) {
                     // 如果未被统计过，则增加pv ip，以及记录redis
-                    $duplicate['ip'] = QueryBuilder::inc();
+                    // $duplicate['ip'] = QueryBuilder::inc();
 
                     // 2023-10-30增加扣量ip的统计
                     if ($ipState) {
-                        $duplicate['reducedIp'] = QueryBuilder::inc();
+                        // $duplicate['reducedIp'] = QueryBuilder::inc();
                     }
 
                     $this->setStatisticTemporaryIpHash($date, $pageId, $ipLong, 1);

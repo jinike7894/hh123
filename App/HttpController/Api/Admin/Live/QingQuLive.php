@@ -47,7 +47,8 @@ class QingQuLive extends AdminBase
                 if($data["list"]){
                     foreach($data["list"] as $k=>$v){
                         $imgData=new uploadNew();
-                        $data["list"][$k]->cover=$imgData->getUrlImage($v["cover"]);
+                        // $data["list"][$k]->cover=$imgData->getUrlImage($v["cover"]);
+                        $data["list"][$k]->cover="";
                     }
                 }
         } catch (Throwable $e) {

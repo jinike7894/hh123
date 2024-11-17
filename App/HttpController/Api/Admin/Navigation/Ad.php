@@ -118,9 +118,10 @@ class Ad extends AdminBase
           if($data['list']){
             foreach($data['list'] as $k=>$v){
                 $imgData=new uploadNew();
-                $files=$imgData->getUrlImageAd($v["imageUrl"]);
-                $data['list'][$k]["imageUrl"]=$files["file"];
-                $data['list'][$k]["size"]=$files["size"];
+                // $files=$imgData->getUrlImageAd($v["imageUrl"]);
+                // $data['list'][$k]["imageUrl"]=$files["file"];
+                // $data['list'][$k]["size"]=$files["size"];
+                $data['list'][$k]["imageUrl"]="";
             }
           }
             
@@ -204,6 +205,7 @@ class Ad extends AdminBase
                 'cost' => floatval($param['cost']),
                 'remark' => trim($param['remark']),
                 'status' => intval($param['status']),
+                'transit_img' => intval($param['transit_img']),//中转页图片路径
             ];
 
             $this->verifyAdParamStep1($param);
@@ -266,6 +268,7 @@ class Ad extends AdminBase
                 'cost' => floatval($param['cost']),
                 'remark' => trim($param['remark']),
                 'status' => intval($param['status']),
+                'transit_img' => intval($param['transit_img']),//中转页图片路径
             ];
 
             $this->verifyAdParamStep1($param);

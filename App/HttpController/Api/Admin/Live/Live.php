@@ -58,7 +58,8 @@ class Live extends AdminBase
                 ->getAll($page, $keyword, $pageSize, $field);
             foreach($data["list"] as $k=>$v){
                     $imgData=new uploadNew();
-                    $data["list"][$k]->cover=$imgData->getUrlImage($v["cover"]);
+                    // $data["list"][$k]->cover=$imgData->getUrlImage($v["cover"]);
+                    $data["list"][$k]->cover="";
                 }
         } catch (Throwable $e) {
             return $this->writeJson($e->getCode(), [], $e->getMessage());

@@ -86,9 +86,9 @@ class Adult extends UserBase
                 'type_id as type_id'
             ];
 
-            $redis = RedisPool::defer();
-            $key = TemplateKey::adultPageCache($param['typeId'].'-'.$page);
-            $data = $redis->get($key);
+            // $redis = RedisPool::defer();
+            // $key = TemplateKey::adultPageCache($param['typeId'].'-'.$page);
+            // $data = $redis->get($key);
             
             if (isset($param['vodName']) && $param['vodName']) {
                 $data = VideoModel::create()
@@ -96,13 +96,13 @@ class Adult extends UserBase
                     ->setOrderType($orderType)
                     ->getAll($page, $keyword, $pageSize, $field);
             }else{
-                if(!$data){
+                // if(!$data){
                     $data = VideoModel::create()
                         ->order('vod_id', 'DESC')
                         ->setOrderType($orderType)
                         ->getAll($page, $keyword, $pageSize, $field);
-                    $redis->set($key, $data, 7200);
-                }
+                //     $redis->set($key, $data, 7200);
+                // }
             }
 
 

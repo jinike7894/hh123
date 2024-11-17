@@ -161,7 +161,7 @@ class Channel extends AdminBase
             ];
             if(ChannelNewModel::create()->where("channelKey",$data['channelKey'])->get()){
                 return $this->writeJson(
-                    Status::CODE_OK,
+                    404,
                     [],
                    "渠道key不能重复，请重新命名"
                 );
@@ -213,18 +213,18 @@ class Channel extends AdminBase
                 'androidDownUrl' => trim($param['androidDownUrl']),
                 'iosDownUrl' => trim($param['iosDownUrl']),
             ];
-            if(ChannelNewModel::create()->where("channelKey",$data['channelKey'])->where("channelId",$param['channelId'],'<>')->get()){
-                // return $this->writeJson(
-                //     Status::CODE_OK,
-                //     [],
-                //     DbManager::getInstance()->getLastQuery()->getLastQuery()
-                // );
-                return $this->writeJson(
-                    Status::CODE_OK,
-                    [],
-                   "渠道key不能重复，请重新命名"
-                );
-            }
+            // if(ChannelNewModel::create()->where("channelKey",$data['channelKey'])->where("channelId",$param['channelId'],'<>')->get()){
+            //     // return $this->writeJson(
+            //     //     Status::CODE_OK,
+            //     //     [],
+            //     //     DbManager::getInstance()->getLastQuery()->getLastQuery()
+            //     // );
+            //     return $this->writeJson(
+            //         Status::CODE_OK,
+            //         [],
+            //        "渠道key不能重复，请重新命名"
+            //     );
+            // }
             $result = ChannelService::getInstance()->editChannel($data);
 
         } catch (Throwable $e) {
