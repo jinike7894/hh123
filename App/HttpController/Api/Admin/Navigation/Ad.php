@@ -270,6 +270,7 @@ class Ad extends AdminBase
                 'remark' => trim($param['remark']),
                 'status' => intval($param['status']),
                 'transit_img' => trim($param['transit_img']),//中转页图片路径
+                
             ];
 
             $this->verifyAdParamStep1($param);
